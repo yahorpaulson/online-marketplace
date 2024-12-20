@@ -1,5 +1,10 @@
 <div class="retail-container">
     <h1>Retail Marketplace</h1>
 
-    <router-outlet></router-outlet>
+
+    <input type="text" placeholder="Search products..." [(ngModel)]="searchTerm" (input)="filterProducts()"
+        class="search-input" />
+
+
+    <app-product-list></app-product-list>
 </div>

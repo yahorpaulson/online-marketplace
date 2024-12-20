@@ -13,4 +13,15 @@ export class ProductListComponent {
     { id: 2, name: 'Product 2', price: 200 },
     { id: 3, name: 'Product 3', price: 300 },
   ];
+
+  filteredProducts = [...this.products];
+
+
+  filterProducts(searchTerm: string) {
+    this.filteredProducts = this.products.filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }
+
+
 }
