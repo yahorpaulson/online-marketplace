@@ -1,5 +1,5 @@
 # online-marketplace
-"Retail Marketplace Web Application"
+"Marketplace Web Application"
 
 A comprehensive web-based marketplace application where users can:
 
