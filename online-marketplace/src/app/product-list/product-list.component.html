@@ -1,6 +1,5 @@
-<h2>Product List</h2>
 <div class="product-grid">
-    <div *ngFor="let product of filteredProducts" class="product-card">
+    <div *ngFor="let product of filteredProducts" class="product-card" (click)="navigateToDetails(product)">
         <h3>{{ product.name }}</h3>
         <p>{{ product.price }} €</p>
     </div>
