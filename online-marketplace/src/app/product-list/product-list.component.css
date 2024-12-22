@@ -1,25 +1,87 @@
+.page-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.sidebar {
+    width: 20%;
+    padding: 1rem;
+    background-color: #f8f8f8;
+    border-right: 1px solid #ddd;
+}
+
+.sidebar h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar li {
+    margin: 0.5rem 0;
+}
+
+.sidebar li span {
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.sidebar li span:hover {
+    text-decoration: underline;
+}
+
+.sidebar ul ul {
+    margin-left: 1.5rem;
+}
+
+.main-content {
+    flex: 1;
+    padding: 1rem;
+}
+
+.main-content h2 {
+    margin-top: 0;
+}
+
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(4, 250px);
-    /* 4 колонки, фиксированная ширина 250px */
-    grid-auto-rows: 300px;
-    /* Фиксированная высота строк */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1rem;
-    /* Расстояние между карточками */
-    justify-content: center;
-    /* Центрирование сетки */
+    margin-top: 1rem;
 }
 
 .product-card {
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     border-radius: 8px;
     padding: 1rem;
-    text-align: center;
     background-color: #fff;
+    text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
 }
 
 .product-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.product-card h3 {
+    margin: 0.5rem 0;
     cursor: pointer;
+    color: #007bff;
+}
+
+.product-card h3:hover {
+    text-decoration: underline;
+}
+
+.product-card p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    font-weight: bold;
 }

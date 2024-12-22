@@ -1,6 +1,25 @@
-<div class="product-grid">
-    <div *ngFor="let product of filteredProducts" class="product-card" (click)="navigateToDetails(product)">
-        <h3>{{ product.name }}</h3>
-        <p>{{ product.price }} €</p>
+<div class="page-container">
+    <div class="sidebar">
+        <h3>Categories</h3>
+        <ul>
+            <li *ngFor="let category of getTopLevelCategories()">
+                <span (click)="filterProductsByCategory(category.id)">{{ category.name }}</span>
+                <ul *ngIf="hasChildCategories(category.id)">
+                    <li *ngFor="let subcategory of getSubcategories(category.id)">
+                        <span (click)="filterProductsByCategory(subcategory.id)">{{ subcategory.name }}</span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <h2>Product List</h2>
+        <div class="product-grid">
+            <div *ngFor="let product of filteredProducts" class="product-card">
+                <h3 (click)="navigateToDetails(product)">{{ product.name }}</h3>
+                <p>{{ product.price }} €</p>
+            </div>
+        </div>
     </div>
 </div>
