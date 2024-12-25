@@ -34,6 +34,7 @@ export class ProductService {
   }
 
   addProduct(product: any) {
+    product.id = this.products.length > 0 ? this.products[this.products.length - 1].id + 1 : 1;
     this.products.push(product);
   }
 }
