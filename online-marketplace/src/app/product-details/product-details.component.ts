@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthserviceService } from '../authservice.service';
+
+import { ProductService } from '../services/product.service';
 
 
 @Component({
@@ -14,7 +17,10 @@ export class ProductDetailsComponent implements OnInit {
   isChatOpen: boolean = true;
   chatMessages: string[] = [];
 
-  constructor(private route: ActivatedRoute, private router: Router) { }
+  constructor(private route: ActivatedRoute,
+    private router: Router,
+    private authService: AuthserviceService,
+    private productService: ProductService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -23,7 +29,8 @@ export class ProductDetailsComponent implements OnInit {
         name: params['name'],
         price: params['price'],
         description: params['description'],
-        images: params['images'] ? params['images'].split(',') : []
+        images: params['images'] ? params['images'].split(',') : [],
+        ownerId: params['ownerId']
       };
       console.log(this.product);
     });
@@ -31,6 +38,19 @@ export class ProductDetailsComponent implements OnInit {
       this.chatMessages.push("Hello! How can I help you?");
     }, 1000);
 
+  }
+  isProductOwner(): boolean {
+    console.log(this.authService.getUserId());
+    //return this.authService.getUserId() === this.product.ownerId;
+    return true;
+  }
+
+  deleteProduct(): void {
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.productService.deleteProduct(this.product.id);
+      console.log(`Product with ID: ${this.product.id}  deleted.`);
+      this.router.navigate(['/retail']);
+    }
   }
 
   closeChat() {
@@ -49,4 +69,6 @@ export class ProductDetailsComponent implements OnInit {
 
     this.router.navigate(['/retail']);
   }
+
+
 }

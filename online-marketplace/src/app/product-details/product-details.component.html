@@ -8,8 +8,12 @@
         <p>{{ product.description }}</p>
         <p><strong>Price:</strong> {{ product.price }} €</p>
         <button (click)="goBack()">Back to products</button>
+        <button *ngIf="isProductOwner()" (click)="deleteProduct()" class="btn btn-danger">
+            Delete Product
+        </button>
     </div>
 </div>
+
 
 <div *ngIf="isChatOpen" class="chat-popup">
     <span class="close-btn" (click)="closeChat()">×</span>

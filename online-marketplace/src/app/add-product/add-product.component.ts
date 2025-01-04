@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../services/product.service';
+import { AuthserviceService } from '../authservice.service';
 
 @Component({
   selector: 'app-add-product',
@@ -17,12 +18,13 @@ export class AddProductComponent {
     price: null,
     images: [] as string[],
     id: 0,
+    ownerId: null as number | null
   };
 
   categories: any[] = [];
-  errorMessage: string | null = null;
 
-  constructor(private router: Router, private productService: ProductService) {
+
+  constructor(private router: Router, private productService: ProductService, private authService: AuthserviceService) {
 
     this.categories = this.productService.getCategories();
 
@@ -30,7 +32,14 @@ export class AddProductComponent {
 
   addProduct() {
 
-    this.productService.addProduct(this.product);
+    const userId = this.authService.getUserId();
+    if (userId === null) {
+      alert('You need to be logged in to add a product.');
+      return;
+    }
+    this.product.ownerId = this.authService.getUserId()
+
+    this.productService.addProduct(this.product);;
     console.log(`${this.product.name} is added`, this.product);
     this.router.navigate(['/retail']);
   }

@@ -24,6 +24,11 @@ export class ProductListComponent {
     this.filteredProducts = [...this.products];
   }
 
+  updateProductList(): void {
+    this.products = this.productService.getProducts();
+    this.filteredProducts = [...this.products];
+  }
+
 
   filterProducts(searchTerm: string) {
     console.log('Search term:', searchTerm);
