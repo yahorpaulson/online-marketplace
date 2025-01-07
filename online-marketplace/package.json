@@ -1,8 +1,10 @@
 {
   "name": "online-marketplace",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "ng": "ng",
+    "start:dev": "nodemon --watch src --exec \"npx tsc && node dist/online-marketplace/server/server.mjs\"",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
@@ -21,8 +23,10 @@
     "@angular/platform-server": "^19.0.0",
     "@angular/router": "^19.0.0",
     "@angular/ssr": "^19.0.4",
+    "@nguniversal/express-engine": "^7.0.2",
     "component": "^1.1.0",
     "express": "^4.18.2",
+    "pg": "^8.13.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
@@ -34,12 +38,14 @@
     "@types/express": "^4.17.17",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^18.18.0",
+    "@types/node-fetch": "^2.6.12",
+    "@types/pg": "^8.11.10",
     "jasmine-core": "~5.4.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.6.2"
+    "typescript": "^5.6.3"
   }
 }

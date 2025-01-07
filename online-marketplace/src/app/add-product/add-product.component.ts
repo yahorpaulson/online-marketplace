@@ -1,48 +1,73 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../services/product.service';
 import { AuthserviceService } from '../authservice.service';
+import { Category, Product } from '../models/product.model';
 
 @Component({
   selector: 'app-add-product',
+  standalone: true,
   templateUrl: './add-product.component.html',
   styleUrls: ['./add-product.component.css'],
   imports: [CommonModule, FormsModule]
 })
-export class AddProductComponent {
-  product = {
+export class AddProductComponent implements OnInit {
+  product: Product = {
     name: '',
     categoryId: null,
     price: null,
-    images: [] as string[],
+    images: [],
     id: 0,
-    ownerId: null as number | null
+    ownerId: null,
+    description: '',
   };
 
-  categories: any[] = [];
+  categories: Category[] = [];
 
+  constructor(
+    private router: Router,
+    private productService: ProductService,
+    private authService: AuthserviceService
+  ) { }
 
-  constructor(private router: Router, private productService: ProductService, private authService: AuthserviceService) {
-
-    this.categories = this.productService.getCategories();
-
+  ngOnInit(): void {
+    this.loadCategories();
   }
 
-  addProduct() {
 
+  loadCategories(): void {
+    this.productService.getCategories().subscribe(
+      (data: Category[]) => {
+        this.categories = data;
+      },
+      (error) => {
+        console.error('Error loading categories:', error);
+      }
+    );
+  }
+
+  addProduct(): void {
     const userId = this.authService.getUserId();
     if (userId === null) {
-      alert('You need to be logged in to add a product.');
+      alert('Login to add a product.');
       return;
     }
-    this.product.ownerId = this.authService.getUserId()
 
-    this.productService.addProduct(this.product);;
-    console.log(`${this.product.name} is added`, this.product);
-    this.router.navigate(['/retail']);
+    this.product.ownerId = userId;
+
+    this.productService.addProduct(this.product).subscribe(
+      () => {
+        console.log(`${this.product.name} added`, this.product);
+        this.router.navigate(['/retail']);
+      },
+      (error) => {
+        console.error('Error while addition a product:', error);
+      }
+    );
   }
+
 
   onFileChange(event: any): void {
     const files: FileList = event.target.files;
@@ -51,37 +76,44 @@ export class AddProductComponent {
     });
   }
 
-  getTopLevelCategories() {
-    return this.categories.filter(c => !c.parentId);
+  getTopLevelCategories(): Category[] {
+    return this.categories.filter((c) => !c.parentId);
   }
+
+
   isLeafCategory(categoryId: number | null): boolean {
     if (categoryId === null) {
       return false;
     }
     const childCategories = this.categories.filter((category) => category.parentId === categoryId);
-
     return childCategories.length === 0;
   }
-  getCategoryPrefix(categoryId: number): string {
-    let prefix = '';
-    let currentCategory = this.categories.find(c => c.id === categoryId);
 
-    //goes up to root category and adds a prefix before the name of each category
+
+  getCategoryPrefix(categoryId: number | null): string {
+    if (categoryId === null) {
+      return '';
+    }
+
+    let prefix = '';
+    let currentCategory = this.categories.find((c) => c.id === categoryId);
+
+    // Поднимаемся к родительской категории
     while (currentCategory && currentCategory.parentId) {
       prefix += '- ';
-      currentCategory = this.categories.find(c => c.id === currentCategory.parentId);
+      currentCategory = this.categories.find((c) => c.id === currentCategory!.parentId);
     }
 
     return prefix;
   }
 
-  getSubcategories(parentId: number) {
-    return this.categories.filter(c => c.parentId === parentId);
+
+  getSubcategories(parentId: number): Category[] {
+    return this.categories.filter((c) => c.parentId === parentId);
   }
 
 
-
-  onSubmit() {
+  onSubmit(): void {
     this.addProduct();
   }
 }

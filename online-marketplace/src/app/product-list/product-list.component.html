@@ -2,16 +2,27 @@
     <div class="sidebar">
         <h3>Categories</h3>
         <ul>
-            <li *ngFor="let category of getTopLevelCategories()">
-                <span (click)="filterProductsByCategory(category.id)">{{ category.name }}</span>
-                <ul *ngIf="hasChildCategories(category.id)">
-                    <li *ngFor="let subcategory of getSubcategories(category.id)">
-                        <span (click)="filterProductsByCategory(subcategory.id)">{{ subcategory.name }}</span>
-                    </li>
+            <ng-container *ngFor="let category of categoryTree">
+                <ng-container *ngTemplateOutlet="renderCategory; context: { category: category }"></ng-container>
+            </ng-container>
+        </ul>
+
+        <ng-template #renderCategory let-category="category">
+            <li>
+                <span (click)="filterProductsByCategory(category.id)">
+                    {{ category.name }}
+                </span>
+                <ul *ngIf="category.children && category.children.length > 0">
+                    <ng-container *ngFor="let child of category.children">
+                        <ng-container *ngTemplateOutlet="renderCategory; context: { category: child }"></ng-container>
+                    </ng-container>
                 </ul>
             </li>
-        </ul>
+        </ng-template>
     </div>
+
+
+
 
     <div class="main-content">
         <h2>Product List</h2>

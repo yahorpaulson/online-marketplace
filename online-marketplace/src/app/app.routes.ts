@@ -5,10 +5,16 @@ import { RetailComponent } from './retail/retail.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { AddProductComponent } from './add-product/add-product.component';
-export const routes: Routes = [
-    { path: 'retail', component: RetailComponent, children: [{ path: '', component: ProductListComponent }] },
-    { path: '', component: HomeComponent },
-    { path: 'retail/product/:id', component: ProductDetailsComponent },
-    { path: 'retail/add-product', component: AddProductComponent }
-];
 
+export const routes: Routes = [
+    {
+        path: 'retail',
+        component: RetailComponent,
+        children: [
+            { path: '', component: ProductListComponent },
+            { path: 'product/:id', component: ProductDetailsComponent },
+            { path: 'add-product', component: AddProductComponent },
+        ],
+    },
+    { path: '', component: HomeComponent },
+];
