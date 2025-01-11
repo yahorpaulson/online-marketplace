@@ -12,12 +12,14 @@ import * as bodyParser from 'body-parser';
 import { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import express from 'express';
+import jwt from 'jsonwebtoken';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+const SECRET_KEY = 'ITSASECRETKEY';
 
 // Configure PostgreSQL pool
 const pool = new Pool({
@@ -52,7 +54,7 @@ app.use((req, res, next) => {
   console.log('Request Body:', req.body);
   next();
 });
-// Регистрация пользователя
+
 app.post('/api/register', async (req: Request, res: Response) => {
   try {
     const { username, password, role } = req.body;
@@ -76,15 +78,53 @@ app.post('/api/register', async (req: Request, res: Response) => {
   }
 });
 
-// Обработка всех остальных запросов Angular
-app.use('/**', (req: Request, res: Response, next: NextFunction) => {
-  angularApp
-    .handle(req)
-    .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next(),
-    )
-    .catch(next);
+app.post('/api/login', async (req: Request, res: Response) => {
+  try {
+    const { username, password } = req.body;
+    console.log('Login request received');
+
+
+    if (!username || !password) {
+      return res.status(400).json({ message: 'Username and password are required' });
+    }
+
+
+    const query = 'SELECT * FROM users WHERE username = $1';
+    const result = await pool.query(query, [username]);
+
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({ message: 'Invalid username or password' });
+    }
+
+    const user = result.rows[0];
+
+
+    if (user.password !== password) {
+      return res.status(401).json({ message: 'Invalid username or password' });
+    }
+
+    // Create JWT
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        username: user.username,
+        role: user.role,
+      },
+      SECRET_KEY,
+      { expiresIn: '1h' }
+    );
+
+
+    return res.status(200).json({ token });
+  } catch (error) {
+    console.error('Error during login:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
 });
+
+
+
 
 
 app.get('/api/products', async (req: Request, res: Response) => {
@@ -109,7 +149,7 @@ app.get('/api/categories', async (req: Request, res: Response) => {
 });
 
 app.post('/api/messages', async (req: Request, res: Response) => {
-  console.log('Request body:', req.body); // Log request body for debugging
+  console.log('Request body:', req.body);
   try {
     const { product_id, buyer_id, seller_id, content } = req.body;
 
@@ -126,14 +166,14 @@ app.post('/api/messages', async (req: Request, res: Response) => {
       RETURNING *;
     `;
     const values = [product_id, buyer_id, seller_id, content];
-    console.log('Executing query:', query, values); // Log query and values
+    console.log('Executing query:', query, values);
 
     const result = await pool.query(query, values);
-    console.log('Message saved:', result.rows[0]); // Log saved message
+    console.log('Message saved:', result.rows[0]);
 
-    return res.status(201).json(result.rows[0]); // Return saved message
+    return res.status(201).json(result.rows[0]);
   } catch (error) {
-    console.error('Error saving message:', error); // Log error
+    console.error('Error saving message:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -149,12 +189,15 @@ app.use('/**', (req: Request, res: Response, next: NextFunction) => {
 });
 
 
+
 // Start the server
 if (isMainModule(import.meta.url)) {
   const port = process.env['PORT'] || 4000;
   app.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
+
+
 }
 
 // Export handler for Angular CLI
