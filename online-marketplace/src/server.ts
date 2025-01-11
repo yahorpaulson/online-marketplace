@@ -10,10 +10,6 @@ import { fileURLToPath } from 'node:url';
 import { Pool } from 'pg';
 import * as bodyParser from 'body-parser';
 import { Request, Response, NextFunction } from 'express';
-
-
-
-
 import cors from 'cors';
 import express from 'express';
 
@@ -23,6 +19,7 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 const app = express();
 const angularApp = new AngularNodeAppEngine();
 
+// Configure PostgreSQL pool
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
@@ -31,10 +28,16 @@ const pool = new Pool({
   port: 5433,
 });
 
+// Middleware for request parsing and CORS
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+// Serve static files from the public folder
+app.use(express.static('public'));
 
+// Serve static files for Angular browser app
 app.use(
   express.static(browserDistFolder, {
     maxAge: '1y',
@@ -43,37 +46,13 @@ app.use(
   }),
 );
 
+// Request logger middleware
 app.use((req, res, next) => {
   console.log(`Request: ${req.method} ${req.url}`);
   next();
 });
 
-/**
- * Handle all other requests by rendering the Angular application.
- */
-app.use('/**', (req: Request, res: Response, next: NextFunction) => {
-  angularApp
-    .handle(req)
-    .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next(),
-    )
-    .catch(next);
-});
-
-
-/**
- * Start the server if this module is the main entry point.
- * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
- */
-if (isMainModule(import.meta.url)) {
-  const port = process.env['PORT'] || 4000;
-  app.listen(port, () => {
-    console.log(`Node Express server listening on http://localhost:${port}`);
-  });
-}
-app.use(express.static('public'));
-
-
+// API: Get all products
 app.get('/api/products', async (req: Request, res: Response) => {
   try {
     const result = await pool.query('SELECT * FROM products');
@@ -84,6 +63,7 @@ app.get('/api/products', async (req: Request, res: Response) => {
   }
 });
 
+// API: Get all categories
 app.get('/api/categories', async (req: Request, res: Response) => {
   try {
     const result = await pool.query('SELECT * FROM categories');
@@ -94,9 +74,54 @@ app.get('/api/categories', async (req: Request, res: Response) => {
   }
 });
 
+// API: Save a message
+app.post('/api/messages', async (req: Request, res: Response) => {
+  console.log('Request body:', req.body); // Log request body for debugging
+  try {
+    const { product_id, buyer_id, seller_id, content } = req.body;
+
+    // Validate request body
+    if (!product_id || !buyer_id || !seller_id || !content) {
+      console.error('Missing required fields:', { product_id, buyer_id, seller_id, content });
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // SQL query to insert a new message
+    const query = `
+      INSERT INTO messages (product_id, buyer_id, seller_id, content)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *;
+    `;
+    const values = [product_id, buyer_id, seller_id, content];
+    console.log('Executing query:', query, values); // Log query and values
+
+    const result = await pool.query(query, values);
+    console.log('Message saved:', result.rows[0]); // Log saved message
+
+    return res.status(201).json(result.rows[0]); // Return saved message
+  } catch (error) {
+    console.error('Error saving message:', error); // Log error
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 
-/**
- * The request handler used by the Angular CLI (dev-server and during build).
- */
+app.use('/**', (req: Request, res: Response, next: NextFunction) => {
+  angularApp
+    .handle(req)
+    .then((response) =>
+      response ? writeResponseToNodeResponse(response, res) : next(),
+    )
+    .catch(next);
+});
+
+// Start the server
+if (isMainModule(import.meta.url)) {
+  const port = process.env['PORT'] || 4000;
+  app.listen(port, () => {
+    console.log(`Node Express server listening on http://localhost:${port}`);
+  });
+}
+
+// Export handler for Angular CLI
 export const reqHandler = createNodeRequestHandler(app);

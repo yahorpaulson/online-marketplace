@@ -26,3 +26,10 @@
         <button (click)="sendMessage(chatInput)">Send</button>
     </div>
 </div>
+<div class="chat-messages">
+    <div *ngFor="let message of chatMessages">
+        <strong *ngIf="message.buyer_id === authService.getUserId()">You:</strong>
+        <strong *ngIf="message.seller_id === product.ownerId">Seller:</strong>
+        {{ message.content }}
+    </div>
+</div>

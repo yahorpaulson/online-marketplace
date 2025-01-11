@@ -31,7 +31,7 @@ export class AuthserviceService {
     const token = this.getToken();
     if (token) {
       try {
-        const payload = JSON.parse(atob(token.split('.')[1])); // Декодируем payload из токена
+        const payload = JSON.parse(atob(token.split('.')[1]));
         return payload.role || null;
       } catch (error) {
         console.error('Invalid token format');

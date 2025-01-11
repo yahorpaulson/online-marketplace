@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthserviceService } from '../authservice.service';
-
+import { MessageService } from '../services/message.service';
+import { Message } from '../models/message.model';
 import { ProductService } from '../services/product.service';
 
 
@@ -15,12 +16,13 @@ import { ProductService } from '../services/product.service';
 export class ProductDetailsComponent implements OnInit {
   product: any = {};
   isChatOpen: boolean = true;
-  chatMessages: string[] = [];
+  chatMessages: Message[] = [];
 
   constructor(private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthserviceService,
-    private productService: ProductService) { }
+    public authService: AuthserviceService,
+    private productService: ProductService,
+    private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -35,7 +37,12 @@ export class ProductDetailsComponent implements OnInit {
       console.log(this.product);
     });
     setTimeout(() => {
-      this.chatMessages.push("Hello! How can I help you?");
+      this.chatMessages.push({
+        product_id: this.product.id,
+        buyer_id: 0,
+        seller_id: this.product.owner_id,
+        content: "Hello! How can I help you?",
+      });
     }, 1000);
 
     console.log(this.product.images);
@@ -60,12 +67,22 @@ export class ProductDetailsComponent implements OnInit {
     this.chatMessages = [];
   }
 
-  sendMessage(input: HTMLInputElement) {
-    if (input.value.trim() !== "") {
-      this.chatMessages.push(input.value.trim());
-      input.value = "";
+  sendMessage(input: HTMLInputElement): void {
+    if (input.value.trim() !== '') {
+      const newMessage: Message = {
+        product_id: this.product.id,
+        buyer_id: this.authService.getUserId()!,
+        seller_id: this.product.ownerId,
+        content: input.value.trim(),
+      };
+
+      this.messageService.sendMessage(newMessage).subscribe((savedMessage) => {
+        this.chatMessages.push(savedMessage);
+        input.value = '';
+      });
     }
   }
+
 
   goBack(): void {
 
