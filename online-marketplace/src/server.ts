@@ -48,11 +48,45 @@ app.use(
 
 // Request logger middleware
 app.use((req, res, next) => {
-  console.log(`Request: ${req.method} ${req.url}`);
+  console.log(`Request Method: ${req.method}, URL: ${req.url}`);
+  console.log('Request Body:', req.body);
   next();
 });
+// Регистрация пользователя
+app.post('/api/register', async (req: Request, res: Response) => {
+  try {
+    const { username, password, role } = req.body;
 
-// API: Get all products
+    if (!username || !password || !role) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    const query = `
+      INSERT INTO users (username, password, role)
+      VALUES ($1, $2, $3)
+      RETURNING *;
+    `;
+    const values = [username, password, role];
+
+    const result = await pool.query(query, values);
+    return res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error('Error during registration:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// Обработка всех остальных запросов Angular
+app.use('/**', (req: Request, res: Response, next: NextFunction) => {
+  angularApp
+    .handle(req)
+    .then((response) =>
+      response ? writeResponseToNodeResponse(response, res) : next(),
+    )
+    .catch(next);
+});
+
+
 app.get('/api/products', async (req: Request, res: Response) => {
   try {
     const result = await pool.query('SELECT * FROM products');
@@ -63,7 +97,7 @@ app.get('/api/products', async (req: Request, res: Response) => {
   }
 });
 
-// API: Get all categories
+
 app.get('/api/categories', async (req: Request, res: Response) => {
   try {
     const result = await pool.query('SELECT * FROM categories');
@@ -74,7 +108,6 @@ app.get('/api/categories', async (req: Request, res: Response) => {
   }
 });
 
-// API: Save a message
 app.post('/api/messages', async (req: Request, res: Response) => {
   console.log('Request body:', req.body); // Log request body for debugging
   try {
@@ -114,6 +147,7 @@ app.use('/**', (req: Request, res: Response, next: NextFunction) => {
     )
     .catch(next);
 });
+
 
 // Start the server
 if (isMainModule(import.meta.url)) {

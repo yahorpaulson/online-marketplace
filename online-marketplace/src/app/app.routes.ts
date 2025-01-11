@@ -5,17 +5,20 @@ import { RetailComponent } from './retail/retail.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { AddProductComponent } from './add-product/add-product.component';
+import { RegisterComponent } from './register/register.component';
+import { LoginComponent } from './login/login.component';
 
 export const routes: Routes = [
     {
         path: 'retail',
         component: RetailComponent,
         children: [
-            { path: '', component: ProductListComponent }, // Рендерит список продуктов
-            { path: 'product/:id', component: ProductDetailsComponent }, // Рендерит детали продукта
-            { path: 'add-product', component: AddProductComponent }, // Рендерит форму добавления
+            { path: '', component: ProductListComponent },
+            { path: 'product/:id', component: ProductDetailsComponent },
+            { path: 'add-product', component: AddProductComponent },
         ],
     },
+    { path: 'register', component: RegisterComponent },
+    { path: 'login', component: LoginComponent },
     { path: '', component: HomeComponent },
 ];
-
