@@ -11,10 +11,11 @@ export const routes: Routes = [
         path: 'retail',
         component: RetailComponent,
         children: [
-            { path: '', component: ProductListComponent },
-            { path: 'product/:id', component: ProductDetailsComponent },
-            { path: 'add-product', component: AddProductComponent },
+            { path: '', component: ProductListComponent }, // Рендерит список продуктов
+            { path: 'product/:id', component: ProductDetailsComponent }, // Рендерит детали продукта
+            { path: 'add-product', component: AddProductComponent }, // Рендерит форму добавления
         ],
     },
     { path: '', component: HomeComponent },
 ];
+

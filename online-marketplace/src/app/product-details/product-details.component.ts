@@ -38,6 +38,8 @@ export class ProductDetailsComponent implements OnInit {
       this.chatMessages.push("Hello! How can I help you?");
     }, 1000);
 
+    console.log(this.product.images);
+
   }
   isProductOwner(): boolean {
     console.log(this.authService.getUserId());

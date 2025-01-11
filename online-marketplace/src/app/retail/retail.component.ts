@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-retail',
-  imports: [RouterModule, FormsModule, ProductListComponent],
+  imports: [RouterModule, FormsModule],
   templateUrl: './retail.component.html',
   styleUrl: './retail.component.css',
   standalone: true,

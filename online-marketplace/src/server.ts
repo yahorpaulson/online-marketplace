@@ -71,7 +71,7 @@ if (isMainModule(import.meta.url)) {
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
 }
-
+app.use(express.static('public'));
 
 
 app.get('/api/products', async (req: Request, res: Response) => {
