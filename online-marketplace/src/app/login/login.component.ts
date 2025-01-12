@@ -23,7 +23,7 @@ export class LoginComponent {
       next: (response) => {
         localStorage.setItem('authToken', response.token);
         alert('Login successful!');
-        this.router.navigate(['/']);
+        this.router.navigate(['/retail']);
       },
       error: (error) => {
         alert(`Error: ${error.error.message || 'Login failed'}`);

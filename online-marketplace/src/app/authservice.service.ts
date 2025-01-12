@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthserviceService {
   private tokenKey = 'authToken';
@@ -13,13 +13,12 @@ export class AuthserviceService {
 
   getToken(): string | null {
     const token = localStorage.getItem(this.tokenKey);
-    if (token && !this.isTokenExpired()) {
+    if (token && !this.checkTokenExpiration(token)) {
       return token;
     }
     this.logout();
     return null;
   }
-
 
   setToken(token: string): void {
     localStorage.setItem(this.tokenKey, token);
@@ -28,58 +27,45 @@ export class AuthserviceService {
   getUserId(): number | null {
     const token = this.getToken();
     if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        return payload.userId;
-      } catch (error) {
-        console.error('Invalid token format');
-        return null;
-      }
+      const payload = this.decodeToken(token);
+      return payload?.userId || null;
     }
     return null;
   }
+
   register(payload: { username: string; password: string; role: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, payload);
   }
 
-
-  getPayload(): any | null {
-    const token = this.getToken();
-    if (token) {
-      try {
-        const base64Payload = token.split('.')[1];
-        const payload = atob(base64Payload);
-        return JSON.parse(payload);
-      } catch (error) {
-        console.error('Failed to decode token payload:', error);
-        return null;
-      }
+  decodeToken(token: string): any | null {
+    try {
+      const base64Payload = token.split('.')[1];
+      const payload = atob(base64Payload);
+      return JSON.parse(payload);
+    } catch (error) {
+      console.error('Failed to decode token:', error);
+      return null;
     }
-    return null;
   }
-
 
   getUserRole(): string | null {
     const token = this.getToken();
     if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        return payload.role || null;
-      } catch (error) {
-        console.error('Invalid token format');
-        return null;
-      }
+      const payload = this.decodeToken(token);
+      return payload?.role || null;
     }
     return null;
   }
-  isTokenExpired(): boolean {
-    const payload = this.getPayload();
+
+  checkTokenExpiration(token: string): boolean {
+    const payload = this.decodeToken(token);
     if (payload?.exp) {
       const expirationDate = new Date(payload.exp * 1000);
       return expirationDate < new Date();
     }
     return true;
   }
+
   isAuthenticated(): boolean {
     return !!this.getToken();
   }
@@ -88,12 +74,9 @@ export class AuthserviceService {
     return this.getUserRole() === role;
   }
 
-
   isSeller(): boolean {
-    return this.getUserRole() === 'seller';
+    return this.hasRole('seller');
   }
-
-
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);

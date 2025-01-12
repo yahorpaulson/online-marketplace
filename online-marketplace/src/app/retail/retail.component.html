@@ -4,6 +4,8 @@
     <input type="text" placeholder="Search products..." [(ngModel)]="searchTerm" (input)="filterProducts()"
         class="search-input" />
 
+    <button *ngIf="showAddProductButton" (click)="navigateToAddProduct()">Add Product</button>
+
 
     <router-outlet></router-outlet>
 </div>
