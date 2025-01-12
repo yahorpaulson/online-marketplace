@@ -148,6 +148,50 @@ app.get('/api/categories', async (req: Request, res: Response) => {
   }
 });
 
+app.post('/api/products', async (req: Request, res: Response) => {
+  console.log('Request body:', req.body);
+
+  try {
+    const { name, categoryId, price, ownerId, description, images } = req.body;
+
+
+    if (!name || !categoryId || !price || !ownerId) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+
+    let formattedImages: string | null = null;
+    if (images && images.length > 0) {
+
+      formattedImages = `{${images.join(',')}}`;
+    }
+
+
+    const query = `
+      INSERT INTO products (name, category_id, price, owner_id, description, images)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *;
+    `;
+    const values = [
+      name,
+      categoryId,
+      price,
+      ownerId,
+      description || '',
+      formattedImages,
+    ];
+
+    const result = await pool.query(query, values);
+    console.log('Product added:', result.rows[0]);
+    return res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error('Error adding product:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
+
 app.post('/api/messages', async (req: Request, res: Response) => {
   console.log('Request body:', req.body);
   try {

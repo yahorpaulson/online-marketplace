@@ -63,7 +63,9 @@ export class AddProductComponent implements OnInit {
         this.router.navigate(['/retail']);
       },
       (error) => {
+        alert(`Failed to add product: ${error.error?.message || error.message}`);
         console.error('Error while addition a product:', error);
+
       }
     );
   }
@@ -98,7 +100,7 @@ export class AddProductComponent implements OnInit {
     let prefix = '';
     let currentCategory = this.categories.find((c) => c.id === categoryId);
 
-    // Поднимаемся к родительской категории
+
     while (currentCategory && currentCategory.parentId) {
       prefix += '- ';
       currentCategory = this.categories.find((c) => c.id === currentCategory!.parentId);
