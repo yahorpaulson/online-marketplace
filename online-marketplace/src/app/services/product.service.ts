@@ -6,6 +6,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -26,6 +27,18 @@ export class ProductService {
         return throwError(error);
       })
     );
+
+  }
+
+  getProductById(productId: number): Observable<Product> {
+    console.log(`Fetching product with ID: ${productId}`);
+    return this.http.get<Product>(`${this.apiUrl}/products/${productId}`).pipe(
+      tap((product) => console.log('Product fetched:', product)),
+      catchError((error) => {
+        console.error('Error getting product by ID:', error);
+        return throwError(error);
+      })
+    )
   }
   getCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(`${this.apiUrl}/categories`);

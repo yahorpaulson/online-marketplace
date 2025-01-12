@@ -21,7 +21,6 @@ const app = express();
 const angularApp = new AngularNodeAppEngine();
 const SECRET_KEY = 'ITSASECRETKEY';
 
-// Configure PostgreSQL pool
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
@@ -125,6 +124,23 @@ app.post('/api/login', async (req: Request, res: Response) => {
 
 
 
+app.get('/api/products/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const query = 'SELECT * FROM products WHERE id = $1';
+    const result = await pool.query(query, [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    return res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    return res.status(500).send('SERVER ERROR');
+  }
+});
+
 
 
 app.get('/api/products', async (req: Request, res: Response) => {
@@ -197,13 +213,13 @@ app.post('/api/messages', async (req: Request, res: Response) => {
   try {
     const { product_id, buyer_id, seller_id, content } = req.body;
 
-    // Validate request body
+
     if (!product_id || !buyer_id || !seller_id || !content) {
       console.error('Missing required fields:', { product_id, buyer_id, seller_id, content });
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // SQL query to insert a new message
+
     const query = `
       INSERT INTO messages (product_id, buyer_id, seller_id, content)
       VALUES ($1, $2, $3, $4)

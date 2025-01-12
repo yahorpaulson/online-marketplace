@@ -25,34 +25,30 @@ export class ProductDetailsComponent implements OnInit {
     private messageService: MessageService) { }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      this.product = {
-        id: +this.route.snapshot.paramMap.get('id')!,
-        name: params['name'],
-        price: params['price'],
-        description: params['description'],
-        images: params['images'] ? params['images'].split(',') : [],
-        ownerId: params['ownerId']
-      };
+    const productId = +this.route.snapshot.paramMap.get('id')!;
+    this.productService.getProductById(productId).subscribe((product) => {
+      this.product = product;
       console.log(this.product);
+
+      setTimeout(() => {
+        this.chatMessages.push({
+          product_id: this.product.id,
+          buyer_id: this.authService.getUserId()!,
+          seller_id: this.product.ownerId,
+          content: 'Hello! How can I help you?',
+        });
+      }, 1000);
     });
-    setTimeout(() => {
-      this.chatMessages.push({
-        product_id: this.product.id,
-        buyer_id: 0,
-        seller_id: this.product.owner_id,
-        content: "Hello! How can I help you?",
-      });
-    }, 1000);
-
-    console.log(this.product.images);
-
   }
+
   isProductOwner(): boolean {
-    console.log(this.authService.getUserId());
-    //return this.authService.getUserId() === this.product.ownerId;
-    return true;
+    const userId = this.authService.getUserId();
+    const ownerId = this.product.owner_id;
+    console.log('Current User ID:', userId);
+    console.log('Product Owner ID:', ownerId);
+    return userId === ownerId;
   }
+
 
   deleteProduct(): void {
     if (confirm('Are you sure you want to delete this product?')) {
