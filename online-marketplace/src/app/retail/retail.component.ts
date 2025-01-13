@@ -45,6 +45,10 @@ export class RetailComponent {
     this.productFilterService.updateSearchTerm(this.searchTerm);
   }
 
+  backToMainPage(): void {
+    this.router.navigate(['/retail']);
+  }
+
 
 
 

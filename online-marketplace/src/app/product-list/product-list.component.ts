@@ -34,32 +34,45 @@ export class ProductListComponent {
   }
   loadProducts(): void {
     this.productService.getProducts().subscribe({
-      next: (products) => {
-        console.log('Products loaded:', products);
-        this.products = products;
+      next: (products: any[]) => {
+        console.log('Raw products loaded:', products);
+
+
+        this.products = products.map((product) => ({
+          ...product,
+          categoryId: product.category_id,
+        }));
         this.filteredProducts = [...this.products];
+        console.log('Products after mapping:', this.products);
       },
       error: (error) => {
         console.error('Error loading products:', error);
       },
-      complete: () => {
-        console.log('Finished loading products.');
-      }
     });
   }
+
   loadCategories(): void {
     this.productService.getCategories().subscribe({
-      next: (categories) => {
-        console.log('Categories loaded:', categories);
-        this.categories = categories;
-        this.categoryTree = this.buildCategoryTree(categories);
-        console.log('Category Tree:', this.categoryTree);
+      next: (categories: any[]) => {
+        console.log('Raw categories loaded:', categories);
+
+
+        this.categories = categories.map((category) => ({
+          ...category,
+          parentId: category.parent_id,
+        }));
+
+
+        this.categoryTree = this.buildCategoryTree(this.categories);
+
+        console.log('Processed Category Tree:', this.categoryTree);
       },
       error: (error) => {
         console.error('Error loading categories:', error);
       },
     });
   }
+
 
 
 
@@ -123,10 +136,15 @@ export class ProductListComponent {
   }
 
   filterProductsByCategory(categoryId: number): void {
+    console.log('Category clicked:', categoryId);
+
     const allCategoryIds = this.getAllChildCategoryIds(categoryId);
+    console.log('All category IDs for filtering:', allCategoryIds);
+    console.log('Products before filtering by category' + this.products)
     this.filteredProducts = this.products.filter((product) =>
       allCategoryIds.includes(product.categoryId!)
     );
+    console.log('Filtered products:', this.filteredProducts);
   }
 
   getAllChildCategoryIds(categoryId: number): number[] {
