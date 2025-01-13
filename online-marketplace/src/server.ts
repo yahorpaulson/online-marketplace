@@ -163,23 +163,15 @@ app.get('/api/categories', async (req: Request, res: Response) => {
     res.status(500).send('SERVER ERROR');
   }
 });
-
 app.post('/api/products', async (req: Request, res: Response) => {
   console.log('Request body:', req.body);
 
   try {
     const { name, categoryId, price, ownerId, description, images } = req.body;
 
-
+    // Проверка обязательных полей
     if (!name || !categoryId || !price || !ownerId) {
       return res.status(400).json({ message: 'Missing required fields' });
-    }
-
-
-    let formattedImages: string | null = null;
-    if (images && images.length > 0) {
-
-      formattedImages = `{${images.join(',')}}`;
     }
 
 
@@ -194,8 +186,9 @@ app.post('/api/products', async (req: Request, res: Response) => {
       price,
       ownerId,
       description || '',
-      formattedImages,
+      images && images.length > 0 ? `{${images.join(',')}}` : null,
     ];
+
 
     const result = await pool.query(query, values);
     console.log('Product added:', result.rows[0]);
@@ -205,6 +198,7 @@ app.post('/api/products', async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
 
 
 app.post('/api/messages', async (req: Request, res: Response) => {
@@ -218,7 +212,7 @@ app.post('/api/messages', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Validate sender
+
     if (sender !== 'buyer' && sender !== 'seller') {
       console.error('Invalid sender:', sender);
       return res.status(400).json({ error: 'Invalid sender. Must be "buyer" or "seller".' });

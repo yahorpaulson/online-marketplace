@@ -90,7 +90,7 @@ export class ProductListComponent {
         name: product.name,
         price: product.price,
         description: product.description,
-        images: product.images.join(','),
+        images: product.images ? product.images.join(',') : '',
       },
     });
   }

@@ -1,4 +1,3 @@
-<p>add-product works!</p>
 <div class="add-product-container">
     <h2>Add new product</h2>
     <form (ngSubmit)="onSubmit()" #productForm="ngForm">
@@ -11,30 +10,12 @@
         <div class="form-group">
             <label for="category">Category</label>
             <select id="category" name="category" class="form-control" [(ngModel)]="product.categoryId" required>
-                <ng-container *ngFor="let category of getTopLevelCategories()">
-
-                    <option [value]="category.id" [disabled]="!isLeafCategory(category.id)">
-                        {{ getCategoryPrefix(category.id) }} {{ category.name }}
-                    </option>
-
-                    <ng-container
-                        *ngTemplateOutlet="subcategoryTemplate; context: { parentId: category.id }"></ng-container>
-                </ng-container>
+                <option *ngFor="let category of categories" [value]="category.id"
+                    [disabled]="!isLeafCategory(category.id)">
+                    {{ getCategoryPrefix(category.id) }} {{ category.name }}
+                </option>
             </select>
-
-
-            <ng-template #subcategoryTemplate let-parentId="parentId">
-                <ng-container *ngFor="let subcategory of getSubcategories(parentId)">
-                    <option [value]="subcategory.id" [disabled]="!isLeafCategory(subcategory.id)">
-                        {{ getCategoryPrefix(subcategory.id) }} {{ subcategory.name }}
-                    </option>
-                    <ng-container
-                        *ngTemplateOutlet="subcategoryTemplate; context: { parentId: subcategory.id }"></ng-container>
-                </ng-container>
-            </ng-template>
         </div>
-
-
 
         <div class="form-group">
             <label for="price">Price (€)</label>
@@ -43,15 +24,12 @@
 
         <div class="form-group">
             <label for="images">Photos</label>
-            <input type="file" id="images" name="images" class="form-control" (change)="onFileChange($event)" multiple
-                required />
+            <input type="file" id="images" name="images" class="form-control" (change)="onFileChange($event)"
+                multiple />
         </div>
 
         <button type="submit" class="btn btn-primary" [disabled]="!productForm.form.valid">
             Add product
         </button>
-
-
     </form>
-
 </div>

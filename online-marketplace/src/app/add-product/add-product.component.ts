@@ -39,14 +39,19 @@ export class AddProductComponent implements OnInit {
 
   loadCategories(): void {
     this.productService.getCategories().subscribe(
-      (data: Category[]) => {
-        this.categories = data;
+      (data: any[]) => {
+        this.categories = data.map((category) => ({
+          ...category,
+          parentId: category.parent_id,
+        }));
+        console.log('Categories:', this.categories);
       },
       (error) => {
         console.error('Error loading categories:', error);
       }
     );
   }
+
 
   addProduct(): void {
     const userId = this.authService.getUserId();
@@ -87,9 +92,19 @@ export class AddProductComponent implements OnInit {
     if (categoryId === null) {
       return false;
     }
+    console.log(`Checking if category ${categoryId} is a leaf.`);
+
+    console.log('Current category ID:', categoryId);
+    console.log('All categories:', this.categories);
+
     const childCategories = this.categories.filter((category) => category.parentId === categoryId);
+
+    console.log(`Child categories for ${categoryId}:`, childCategories);
+    console.log(`Category ID: ${categoryId}, has children: ${childCategories.length > 0}`);
     return childCategories.length === 0;
   }
+
+
 
 
   getCategoryPrefix(categoryId: number | null): string {
