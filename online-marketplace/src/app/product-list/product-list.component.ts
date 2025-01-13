@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { ProductService } from '../services/product.service';
 import { Category, Product } from '../models/product.model';
+import { ProductfilterService } from '../productfilter.service';
 
 
 @Component({
@@ -12,6 +13,7 @@ import { Category, Product } from '../models/product.model';
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
 
+
 })
 export class ProductListComponent {
   products: Product[] = [];
@@ -19,13 +21,16 @@ export class ProductListComponent {
   filteredProducts: Product[] = [];
   categoryTree: any[] = [];
 
-  constructor(private productService: ProductService, private router: Router) {
+  constructor(private productService: ProductService, private router: Router, private productFilterService: ProductfilterService) {
 
 
   }
   ngOnInit(): void {
     this.loadProducts();
     this.loadCategories();
+    this.productFilterService.searchTerm$.subscribe(term => {
+      this.filterProducts(term);
+    });
   }
   loadProducts(): void {
     this.productService.getProducts().subscribe({
