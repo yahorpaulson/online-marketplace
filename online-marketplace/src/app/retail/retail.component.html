@@ -1,11 +1,15 @@
 <div class="retail-container">
-    <h1>Retail Marketplace</h1>
+    <div class="header">
+        <h1>Retail Marketplace</h1>
+        <button class="logout-button" (click)="logout()">Logout</button>
+    </div>
 
-    <input type="text" placeholder="Search products..." [(ngModel)]="searchTerm" (input)="filterProducts()"
-        class="search-input" />
+    <div class="search-bar">
+        <input type="text" placeholder="Search products..." [(ngModel)]="searchTerm" (input)="filterProducts()"
+            class="search-input" />
 
-    <button *ngIf="showAddProductButton" (click)="navigateToAddProduct()">Add Product</button>
+        <button *ngIf="showAddProductButton" (click)="navigateToAddProduct()">Add Product</button>
+    </div>
 
-
-    <router-outlet></router-outlet>
+    <app-product-list></app-product-list>
 </div>

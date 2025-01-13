@@ -43,20 +43,34 @@ export class ProductDetailsComponent implements OnInit {
 
   isProductOwner(): boolean {
     const userId = this.authService.getUserId();
-    const ownerId = this.product.owner_id;
+    const ownerId = this.product.ownerId || this.product.owner_id;
+
+    const isSeller = this.authService.hasRole('seller');
+
     console.log('Current User ID:', userId);
     console.log('Product Owner ID:', ownerId);
-    return userId === ownerId;
+
+    return isSeller && userId === ownerId;
   }
+
 
 
   deleteProduct(): void {
     if (confirm('Are you sure you want to delete this product?')) {
-      this.productService.deleteProduct(this.product.id);
-      console.log(`Product with ID: ${this.product.id}  deleted.`);
-      this.router.navigate(['/retail']);
+      this.productService.deleteProduct(this.product.id).subscribe(
+        () => {
+          console.log(`Product with ID: ${this.product.id} deleted.`);
+          alert('Product successfully deleted.');
+          this.router.navigate(['/retail']);
+        },
+        (error) => {
+          console.error('Error deleting product:', error);
+          alert('Failed to delete product. Please try again later.');
+        }
+      );
     }
   }
+
 
   closeChat() {
     this.isChatOpen = false;

@@ -238,6 +238,29 @@ app.post('/api/messages', async (req: Request, res: Response) => {
   }
 });
 
+app.delete('/api/products/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const query = 'DELETE FROM products WHERE id = $1 RETURNING *';
+    const result = await pool.query(query, [id]);
+
+    console.log('SQL Query Result:', result);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    console.log(`Product with ID ${id} deleted.`);
+    return res.status(200).json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+
+
 
 app.use('/**', (req: Request, res: Response, next: NextFunction) => {
   angularApp

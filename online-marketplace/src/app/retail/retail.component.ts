@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-retail',
-  imports: [RouterModule, FormsModule, CommonModule],
+  imports: [RouterModule, FormsModule, CommonModule, ProductListComponent],
   templateUrl: './retail.component.html',
   styleUrl: './retail.component.css',
   standalone: true,
@@ -37,8 +37,17 @@ export class RetailComponent {
   @ViewChild(ProductListComponent) productListComponent!: ProductListComponent;
 
 
+
+
   filterProducts() {
     this.productListComponent.filterProducts(this.searchTerm);
   }
 
+
+
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 }

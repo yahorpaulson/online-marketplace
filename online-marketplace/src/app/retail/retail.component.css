@@ -1,0 +1,46 @@
+.retail-container {
+    position: relative;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+.logout-button {
+    background-color: #5f64b6;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.logout-button:hover {
+    background-color: #d32f2f;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px 20px;
+}
+
+.search-input {
+    flex: 1;
+
+    padding: 10px;
+    font-size: 14px;
+}
+
+button {
+    font-size: 14px;
+    cursor: pointer;
+}

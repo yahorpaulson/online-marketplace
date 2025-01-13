@@ -7,10 +7,12 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
 import { AddProductComponent } from './add-product/add-product.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     {
         path: 'retail',
+        canActivate: [AuthGuard],
         component: RetailComponent,
         children: [
             { path: '', component: ProductListComponent },
