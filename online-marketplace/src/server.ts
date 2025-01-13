@@ -207,25 +207,29 @@ app.post('/api/products', async (req: Request, res: Response) => {
 });
 
 
-
 app.post('/api/messages', async (req: Request, res: Response) => {
   console.log('Request body:', req.body);
   try {
-    const { product_id, buyer_id, seller_id, content } = req.body;
+    const { product_id, buyer_id, seller_id, content, sender } = req.body;
 
 
-    if (!product_id || !buyer_id || !seller_id || !content) {
-      console.error('Missing required fields:', { product_id, buyer_id, seller_id, content });
+    if (!product_id || !buyer_id || !seller_id || !content || !sender) {
+      console.error('Missing required fields:', { product_id, buyer_id, seller_id, content, sender });
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    // Validate sender
+    if (sender !== 'buyer' && sender !== 'seller') {
+      console.error('Invalid sender:', sender);
+      return res.status(400).json({ error: 'Invalid sender. Must be "buyer" or "seller".' });
+    }
 
     const query = `
-      INSERT INTO messages (product_id, buyer_id, seller_id, content)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO messages (product_id, buyer_id, seller_id, content, sender)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
     `;
-    const values = [product_id, buyer_id, seller_id, content];
+    const values = [product_id, buyer_id, seller_id, content, sender];
     console.log('Executing query:', query, values);
 
     const result = await pool.query(query, values);
@@ -237,6 +241,7 @@ app.post('/api/messages', async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 app.delete('/api/products/:id', async (req: Request, res: Response) => {
   const { id } = req.params;

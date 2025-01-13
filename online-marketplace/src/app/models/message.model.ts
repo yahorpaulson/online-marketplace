@@ -5,4 +5,5 @@ export interface Message {
     seller_id: number;
     content: string;
     created_at?: Date;
+    sender: 'buyer' | 'seller';
 }

@@ -6,7 +6,6 @@ import { MessageService } from '../services/message.service';
 import { Message } from '../models/message.model';
 import { ProductService } from '../services/product.service';
 
-
 @Component({
   selector: 'app-product-details',
   templateUrl: './product-details.component.html',
@@ -18,11 +17,13 @@ export class ProductDetailsComponent implements OnInit {
   isChatOpen: boolean = true;
   chatMessages: Message[] = [];
 
-  constructor(private route: ActivatedRoute,
+  constructor(
+    private route: ActivatedRoute,
     private router: Router,
     public authService: AuthserviceService,
     private productService: ProductService,
-    private messageService: MessageService) { }
+    private messageService: MessageService
+  ) { }
 
   ngOnInit(): void {
     const productId = +this.route.snapshot.paramMap.get('id')!;
@@ -34,8 +35,9 @@ export class ProductDetailsComponent implements OnInit {
         this.chatMessages.push({
           product_id: this.product.id,
           buyer_id: this.authService.getUserId()!,
-          seller_id: this.product.ownerId,
+          seller_id: this.product.owner_id,
           content: 'Hello! How can I help you?',
+          sender: 'seller',
         });
       }, 1000);
     });
@@ -43,7 +45,7 @@ export class ProductDetailsComponent implements OnInit {
 
   isProductOwner(): boolean {
     const userId = this.authService.getUserId();
-    const ownerId = this.product.ownerId || this.product.owner_id;
+    const ownerId = this.product.owner_id;
 
     const isSeller = this.authService.hasRole('seller');
 
@@ -52,8 +54,6 @@ export class ProductDetailsComponent implements OnInit {
 
     return isSeller && userId === ownerId;
   }
-
-
 
   deleteProduct(): void {
     if (confirm('Are you sure you want to delete this product?')) {
@@ -71,33 +71,46 @@ export class ProductDetailsComponent implements OnInit {
     }
   }
 
-
-  closeChat() {
+  closeChat(): void {
     this.isChatOpen = false;
     this.chatMessages = [];
   }
 
   sendMessage(input: HTMLInputElement): void {
-    if (input.value.trim() !== '') {
+    const trimmedValue = input.value.trim();
+
+    if (!this.product.owner_id) {
+      console.error('Seller ID (owner_id) is undefined');
+      alert('Cannot send message: Product details are not fully loaded.');
+      return;
+    }
+
+    if (trimmedValue !== '') {
       const newMessage: Message = {
         product_id: this.product.id,
         buyer_id: this.authService.getUserId()!,
-        seller_id: this.product.ownerId,
-        content: input.value.trim(),
+        seller_id: this.product.owner_id,
+        content: trimmedValue,
+        sender: this.authService.getUserId() === this.product.owner_id ? 'seller' : 'buyer',
       };
 
-      this.messageService.sendMessage(newMessage).subscribe((savedMessage) => {
-        this.chatMessages.push(savedMessage);
-        input.value = '';
+      this.messageService.sendMessage(newMessage).subscribe({
+        next: (savedMessage) => {
+          this.chatMessages.push(savedMessage);
+          input.value = '';
+          console.log(this.chatMessages);
+        },
+        error: (err) => {
+          console.error('Failed to send message:', err);
+          alert('Failed to send the message. Please try again later.');
+        },
       });
+    } else {
+      console.warn('Message is empty');
     }
   }
 
-
   goBack(): void {
-
     this.router.navigate(['/retail']);
   }
-
-
 }
