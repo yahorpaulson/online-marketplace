@@ -8,6 +8,7 @@ import { AddProductComponent } from './add-product/add-product.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/auth.guard';
+import { MessageListComponent } from './message-list/message-list.component';
 
 export const routes: Routes = [
     {
@@ -18,6 +19,7 @@ export const routes: Routes = [
             { path: '', component: ProductListComponent },
             { path: 'product/:id', component: ProductDetailsComponent },
             { path: 'add-product', component: AddProductComponent },
+            { path: 'messages', component: MessageListComponent }
         ],
     },
     { path: 'register', component: RegisterComponent },

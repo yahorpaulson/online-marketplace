@@ -14,6 +14,15 @@ import cors from 'cors';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 
+
+export interface AuthenticatedRequest extends Request {
+  user?: {
+    userId: number;
+    username: string;
+    role: string;
+  };
+}
+
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
 
@@ -34,6 +43,9 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+
+
 
 // Serve static files from the public folder
 app.use(express.static('public'));
@@ -140,6 +152,47 @@ app.get('/api/products/:id', async (req: Request, res: Response) => {
     return res.status(500).send('SERVER ERROR');
   }
 });
+app.get('/api/messages/:userId', async (req: Request, res: Response) => {
+  const { userId } = req.params;
+
+  if (!userId) {
+    res.status(400).json({ error: 'User ID is required' });
+    return;
+  }
+
+  try {
+    const query = `
+      SELECT 
+        messages.*, 
+        products.name AS product_name,
+        buyer.username AS buyer_username,
+        seller.username AS seller_username
+      FROM 
+        messages
+      JOIN 
+        products ON messages.product_id = products.id
+      JOIN 
+        users AS buyer ON messages.buyer_id = buyer.id
+      JOIN 
+        users AS seller ON messages.seller_id = seller.id
+      WHERE 
+        messages.buyer_id = $1 OR messages.seller_id = $1
+      ORDER BY 
+        messages.created_at DESC;
+    `;
+
+    const result = await pool.query(query, [userId]);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+
+
 
 
 
@@ -169,7 +222,7 @@ app.post('/api/products', async (req: Request, res: Response) => {
   try {
     const { name, categoryId, price, ownerId, description, images } = req.body;
 
-    // Проверка обязательных полей
+
     if (!name || !categoryId || !price || !ownerId) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
@@ -233,6 +286,32 @@ app.post('/api/messages', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error saving message:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+app.get('/api/messages/user/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const query = `
+      SELECT 
+        m.*, 
+        p.name AS product_name,
+        CASE 
+          WHEN m.buyer_id = $1 THEN 'buyer'
+          WHEN m.seller_id = $1 THEN 'seller'
+        END AS role
+      FROM messages m
+      JOIN products p ON m.product_id = p.id
+      WHERE m.buyer_id = $1 OR m.seller_id = $1
+      ORDER BY m.created_at DESC;
+    `;
+    const result = await pool.query(query, [userId]);
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching messages for user:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });
 

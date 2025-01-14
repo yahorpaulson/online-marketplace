@@ -12,12 +12,16 @@ export class MessageService {
     constructor(private http: HttpClient) { }
 
 
-    getMessages(product_id: number): Observable<Message[]> {
-        return this.http.get<Message[]>(`${this.apiUrl}/${product_id}`);
-    }
+
 
 
     sendMessage(message: Message): Observable<Message> {
         return this.http.post<Message>(this.apiUrl, message);
     }
+
+    getUserMessages(userId: string): Observable<Message[]> {
+        return this.http.get<Message[]>(`${this.apiUrl}/${userId}`);
+    }
+
+
 }

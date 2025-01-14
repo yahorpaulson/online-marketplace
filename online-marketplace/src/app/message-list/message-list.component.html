@@ -1,0 +1,14 @@
+<div class="message-list">
+    <h2>Messages</h2>
+    <ul>
+        <li *ngFor="let message of messages" class="message-item">
+            <h3>{{ message.product_name }}</h3>
+            <p><strong>Message:</strong> {{ message.content }}</p>
+            <p>
+                <strong>From:</strong>
+                {{ message.sender === 'buyer' ? message.buyer_username : message.seller_username }}
+            </p>
+            <p><strong>Date:</strong> {{ message.created_at | date: 'medium' }}</p>
+        </li>
+    </ul>
+</div>

@@ -6,4 +6,8 @@ export interface Message {
     content: string;
     created_at?: Date;
     sender: 'buyer' | 'seller';
+    product_name?: string;
+
+    buyer_username?: string;
+    seller_username?: string;
 }

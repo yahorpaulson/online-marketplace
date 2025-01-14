@@ -50,6 +50,11 @@ export class RetailComponent {
   }
 
 
+  goMessages(): void {
+    this.router.navigate(['/retail/messages']);
+  }
+
+
 
 
   logout(): void {
