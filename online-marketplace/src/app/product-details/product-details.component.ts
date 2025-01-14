@@ -16,6 +16,7 @@ export class ProductDetailsComponent implements OnInit {
   product: any = {};
   isChatOpen: boolean = true;
   chatMessages: Message[] = [];
+  currentUser!: number; // Идентификатор текущего пользователя
 
   constructor(
     private route: ActivatedRoute,
@@ -26,33 +27,35 @@ export class ProductDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    // Установка идентификатора текущего пользователя
+    this.currentUser = this.authService.getUserId()!;
+    if (!this.currentUser) {
+      console.error('User ID is not defined');
+      return;
+    }
+
+    // Загрузка данных о продукте
     const productId = +this.route.snapshot.paramMap.get('id')!;
     this.productService.getProductById(productId).subscribe((product) => {
       this.product = product;
       console.log(this.product);
 
+      // Пример приветственного сообщения от продавца
       setTimeout(() => {
-        this.chatMessages.push({
+        const welcomeMessage: Message = {
           product_id: this.product.id,
-          buyer_id: this.authService.getUserId()!,
-          seller_id: this.product.owner_id,
+          sender_id: this.product.owner_id,
+          receiver_id: this.currentUser,
           content: 'Hello! How can I help you?',
-          sender: 'seller',
-        });
+        };
+        this.chatMessages.push(welcomeMessage);
       }, 1000);
     });
   }
 
   isProductOwner(): boolean {
-    const userId = this.authService.getUserId();
     const ownerId = this.product.owner_id;
-
-    const isSeller = this.authService.hasRole('seller');
-
-    console.log('Current User ID:', userId);
-    console.log('Product Owner ID:', ownerId);
-
-    return isSeller && userId === ownerId;
+    return this.authService.hasRole('seller') && this.currentUser === ownerId;
   }
 
   deleteProduct(): void {
@@ -78,7 +81,6 @@ export class ProductDetailsComponent implements OnInit {
 
   sendMessage(input: HTMLInputElement): void {
     const trimmedValue = input.value.trim();
-
     if (!this.product.owner_id) {
       console.error('Seller ID (owner_id) is undefined');
       alert('Cannot send message: Product details are not fully loaded.');
@@ -88,10 +90,9 @@ export class ProductDetailsComponent implements OnInit {
     if (trimmedValue !== '') {
       const newMessage: Message = {
         product_id: this.product.id,
-        buyer_id: this.authService.getUserId()!,
-        seller_id: this.product.owner_id,
+        sender_id: this.currentUser,
+        receiver_id: this.product.owner_id,
         content: trimmedValue,
-        sender: this.authService.getUserId() === this.product.owner_id ? 'seller' : 'buyer',
       };
 
       this.messageService.sendMessage(newMessage).subscribe({

@@ -14,18 +14,16 @@
     </div>
 </div>
 
-
 <div *ngIf="isChatOpen" class="chat-popup">
     <span class="close-btn" (click)="closeChat()">×</span>
-    <h3>Chat with Seller</h3>
+    <h3>Chat</h3>
     <div class="chat-messages">
-        <div *ngFor="let message of chatMessages">
-            <strong *ngIf="message.sender === 'buyer'">You:</strong>
-            <strong *ngIf="message.sender === 'seller'">Seller:</strong>
+        <div *ngFor="let message of chatMessages" [ngClass]="{'own-message': message.sender_id === currentUser}">
+            <strong *ngIf="message.sender_id === currentUser">You:</strong>
+            <strong *ngIf="message.sender_id !== currentUser">{{ message.sender_username }}:</strong>
             {{ message.content }}
         </div>
     </div>
-
 
     <div class="chat-input-container">
         <input #chatInput type="text" placeholder="Type a message..." />

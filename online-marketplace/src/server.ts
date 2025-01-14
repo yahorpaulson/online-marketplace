@@ -152,49 +152,6 @@ app.get('/api/products/:id', async (req: Request, res: Response) => {
     return res.status(500).send('SERVER ERROR');
   }
 });
-app.get('/api/messages/:userId', async (req: Request, res: Response) => {
-  const { userId } = req.params;
-
-  if (!userId) {
-    res.status(400).json({ error: 'User ID is required' });
-    return;
-  }
-
-  try {
-    const query = `
-      SELECT 
-        messages.*, 
-        products.name AS product_name,
-        buyer.username AS buyer_username,
-        seller.username AS seller_username
-      FROM 
-        messages
-      JOIN 
-        products ON messages.product_id = products.id
-      JOIN 
-        users AS buyer ON messages.buyer_id = buyer.id
-      JOIN 
-        users AS seller ON messages.seller_id = seller.id
-      WHERE 
-        messages.buyer_id = $1 OR messages.seller_id = $1
-      ORDER BY 
-        messages.created_at DESC;
-    `;
-
-    const result = await pool.query(query, [userId]);
-    res.status(200).json(result.rows);
-  } catch (error) {
-    console.error('Error fetching messages:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-
-
-
-
-
-
 
 app.get('/api/products', async (req: Request, res: Response) => {
   try {
@@ -253,67 +210,69 @@ app.post('/api/products', async (req: Request, res: Response) => {
 });
 
 
-
-app.post('/api/messages', async (req: Request, res: Response) => {
-  console.log('Request body:', req.body);
-  try {
-    const { product_id, buyer_id, seller_id, content, sender } = req.body;
-
-
-    if (!product_id || !buyer_id || !seller_id || !content || !sender) {
-      console.error('Missing required fields:', { product_id, buyer_id, seller_id, content, sender });
-      return res.status(400).json({ error: 'Missing required fields' });
-    }
-
-
-    if (sender !== 'buyer' && sender !== 'seller') {
-      console.error('Invalid sender:', sender);
-      return res.status(400).json({ error: 'Invalid sender. Must be "buyer" or "seller".' });
-    }
-
-    const query = `
-      INSERT INTO messages (product_id, buyer_id, seller_id, content, sender)
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING *;
-    `;
-    const values = [product_id, buyer_id, seller_id, content, sender];
-    console.log('Executing query:', query, values);
-
-    const result = await pool.query(query, values);
-    console.log('Message saved:', result.rows[0]);
-
-    return res.status(201).json(result.rows[0]);
-  } catch (error) {
-    console.error('Error saving message:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-
-app.get('/api/messages/user/:userId', async (req, res) => {
+app.get('/api/messages/:userId', async (req: Request, res: Response) => {
   const { userId } = req.params;
+
+  if (!userId) {
+    res.status(400).json({ error: 'User ID is required' });
+    return;
+  }
 
   try {
     const query = `
       SELECT 
         m.*, 
         p.name AS product_name,
-        CASE 
-          WHEN m.buyer_id = $1 THEN 'buyer'
-          WHEN m.seller_id = $1 THEN 'seller'
-        END AS role
-      FROM messages m
-      JOIN products p ON m.product_id = p.id
-      WHERE m.buyer_id = $1 OR m.seller_id = $1
-      ORDER BY m.created_at DESC;
+        sender.username AS sender_username,
+        receiver.username AS receiver_username
+      FROM 
+        messages m
+      JOIN 
+        products p ON m.product_id = p.id
+      JOIN 
+        users AS sender ON m.sender_id = sender.id
+      JOIN 
+        users AS receiver ON m.receiver_id = receiver.id
+      WHERE 
+        m.sender_id = $1 OR m.receiver_id = $1
+      ORDER BY 
+        m.created_at DESC;
     `;
+
     const result = await pool.query(query, [userId]);
-    res.json(result.rows);
+    res.status(200).json(result.rows);
   } catch (error) {
-    console.error('Error fetching messages for user:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error('Error fetching messages:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
+
+
+app.post('/api/messages', async (req: Request, res: Response) => {
+  try {
+    const { product_id, sender_id, receiver_id, content } = req.body;
+
+    if (!product_id || !sender_id || !receiver_id || !content) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const query = `
+      INSERT INTO messages (product_id, sender_id, receiver_id, content)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *;
+    `;
+    const values = [product_id, sender_id, receiver_id, content];
+
+    const result = await pool.query(query, values);
+    return res.status(201).json(result.rows[0]); // Always return after sending response
+  } catch (error) {
+    console.error('Error saving message:', error);
+    return res.status(500).json({ error: 'Internal Server Error' }); // Consistent response
+  }
+});
+
 
 
 app.delete('/api/products/:id', async (req: Request, res: Response) => {

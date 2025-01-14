@@ -1,27 +1,113 @@
 .message-list {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 10px;
-    font-family: Arial, sans-serif;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .message-item {
-    border: 1px solid #ddd;
+    background-color: #ffffff;
+    /* White background */
+    border: 1px solid #d0d4de;
+    /* Light grey-blue border */
     border-radius: 8px;
+    margin: 10px 0;
     padding: 15px;
-    margin-bottom: 15px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    /* Dark grey text */
+}
+
+.message-item.own-message {
+    background-color: #eaf3ff;
+    /* Light blue for own messages */
+    border-color: #bcd9ff;
+    /* Subtle blue border */
 }
 
 .message-item p {
     margin: 5px 0;
 }
 
-.message-item p strong {
-    color: #333;
+.reply-window {
+    position: fixed;
+    /* Keep it fixed on the screen */
+    bottom: 20px;
+    /* Adjust from the bottom of the screen */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    /* Adjust width */
+    max-width: 500px;
+    /* Limit the maximum width */
+    padding: 20px;
+    border: 1px solid #d0d4de;
+    /* Light grey-blue border */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fc;
+    /* Subtle light blue-grey background */
+    z-index: 1000;
+    /* Ensure it's above other elements */
 }
 
-.message-item:nth-child(even) {
-    background-color: #eef5ff;
+.reply-window h3 {
+    margin: 0 0 10px;
+    font-family: 'Arial', sans-serif;
+    color: #2a3a4f;
+    /* Dark blue-grey text */
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #d0d4de;
+    font-size: 14px;
+    resize: none;
+    background-color: #ffffff;
+    /* White background */
+    color: #333;
+    /* Dark grey text */
+    font-family: 'Arial', sans-serif;
+}
+
+textarea:focus {
+    border-color: #3a8dde;
+    /* Vibrant blue */
+    outline: none;
+    box-shadow: 0 0 5px rgba(58, 141, 222, 0.5);
+}
+
+button {
+    margin: 5px;
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+button:active {
+    opacity: 0.8;
+}
+
+button:first-of-type {
+    background-color: #3a8dde;
+    /* Vibrant blue */
+    color: #fff;
+    /* White text */
+}
+
+button:last-of-type {
+    background-color: #333;
+    /* Dark grey (almost black) */
+    color: #fff;
+    /* White text */
 }

@@ -1,14 +1,26 @@
-<div class="message-list">
+<div *ngIf="messages.length > 0; else noMessages">
     <h2>Messages</h2>
     <ul>
-        <li *ngFor="let message of messages" class="message-item">
-            <h3>{{ message.product_name }}</h3>
-            <p><strong>Message:</strong> {{ message.content }}</p>
-            <p>
-                <strong>From:</strong>
-                {{ message.sender === 'buyer' ? message.buyer_username : message.seller_username }}
-            </p>
-            <p><strong>Date:</strong> {{ message.created_at | date: 'medium' }}</p>
+        <li *ngFor="let message of messages" (click)="selectMessage(message)">
+            <div class="message-item" [ngClass]="{'own-message': message.sender_id === currentUser}">
+                <p><strong>{{ message.product_name }}</strong></p>
+                <p><strong>Message:</strong> {{ message.content }}</p>
+                <p><strong>From:</strong> {{ message.sender_username }}</p>
+                <p><strong>To:</strong> {{ message.receiver_username }}</p>
+                <p><strong>Date:</strong> {{ message.created_at | date: 'medium' }}</p>
+            </div>
         </li>
     </ul>
 </div>
+
+<div *ngIf="selectedMessage" class="reply-window">
+    <h3>Reply to: {{ replyToUsername }}</h3>
+    <p>Message: {{ selectedMessage.content }}</p>
+    <textarea [(ngModel)]="replyMessage" placeholder="Write your reply..." rows="3"></textarea>
+    <button (click)="sendReply()">Send</button>
+    <button (click)="closeReplyWindow()">Cancel</button>
+</div>
+
+<ng-template #noMessages>
+    <p>No messages found.</p>
+</ng-template>
