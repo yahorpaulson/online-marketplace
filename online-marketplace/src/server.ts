@@ -34,7 +34,7 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
-const SECRET_KEY = process.env['SECRET_KEY'];
+const SECRET_KEY = process.env['SECRET_KEY']!;
 
 const pool = new Pool({
   user: (process.env['DB_USER']),
