@@ -1,19 +1,30 @@
 .page-container {
     display: flex;
     flex-direction: row;
+    height: 100vh;
+    background-color: #1a1a1a;
+
+    color: #eaeaea;
+
 }
+
 
 .sidebar {
     width: 20%;
     padding: 1rem;
-    background-color: #f8f8f8;
-    border-right: 1px solid #ddd;
+    background-color: #252525;
+
+    border-right: 1px solid #333;
+
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    min-height: fit-content;
 }
 
 .sidebar h3 {
     margin-top: 0;
     font-size: 1.2rem;
     font-weight: bold;
+    color: #ffffff;
 }
 
 .sidebar ul {
@@ -28,60 +39,95 @@
 
 .sidebar li span {
     cursor: pointer;
-    color: #007bff;
+    color: #379095;
+
     text-decoration: none;
+    transition: color 0.3s ease;
 }
 
 .sidebar li span:hover {
     text-decoration: underline;
+    color: #5f64b6;
+
 }
 
 .sidebar ul ul {
     margin-left: 1.5rem;
 }
 
+
 .main-content {
     flex: 1;
     padding: 1rem;
+    background-color: #1e1e2f;
+    min-height: 100vh;
+
 }
 
 .main-content h2 {
     margin-top: 0;
+    color: #ffffff;
 }
+
 
 .product-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1rem;
     margin-top: 1rem;
+    min-height: fit-content;
 }
 
+
 .product-card {
-    border: 1px solid #ddd;
+    border: 1px solid #333;
+    /* Темная рамка */
     border-radius: 8px;
     padding: 1rem;
-    background-color: #fff;
+    background-color: #252525;
+    /* Темный фон карточки */
     text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .product-card:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
 }
 
 .product-card h3 {
     margin: 0.5rem 0;
     cursor: pointer;
-    color: #007bff;
+    color: #5f64b6;
+
+    transition: color 0.3s ease;
 }
 
 .product-card h3:hover {
     text-decoration: underline;
+    color: #379095;
+
 }
 
 .product-card p {
     margin: 0.5rem 0;
     font-size: 1rem;
     font-weight: bold;
+    color: #eaeaea;
+
+}
+
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+
+    }
+
+    .product-grid {
+        grid-template-columns: 1fr;
+
+    }
 }

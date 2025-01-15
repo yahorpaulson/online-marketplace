@@ -18,3 +18,7 @@ jspm_packages/
 # Build directories
 dist/
 .angular/
+
+
+
+data.env

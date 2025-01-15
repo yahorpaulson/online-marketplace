@@ -13,6 +13,12 @@ import { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import express from 'express';
 import jwt from 'jsonwebtoken';
+import * as dotenv from 'dotenv';
+
+dotenv.config({ path: 'data.env' });
+
+
+
 
 
 export interface AuthenticatedRequest extends Request {
@@ -31,12 +37,13 @@ const angularApp = new AngularNodeAppEngine();
 const SECRET_KEY = 'ITSASECRETKEY';
 
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'retail',
-  password: 'postgres',
-  port: 5433,
+  user: (process.env['DB_USER']),
+  host: process.env['DB_HOST'],
+  database: process.env['DB_NAME'],
+  password: String(process.env['DB_PASSWORD']),
+  port: Number(process.env['DB_PORT'])
 });
+
 
 // Middleware for request parsing and CORS
 app.use(cors());
@@ -307,6 +314,10 @@ app.use('/**', (req: Request, res: Response, next: NextFunction) => {
     )
     .catch(next);
 });
+
+
+
+
 
 
 
