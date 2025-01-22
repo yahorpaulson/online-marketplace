@@ -1,0 +1,43 @@
+<div class="vehicle-category">
+  <h2>Trucks</h2>
+  <div *ngIf="filteredTrucks.length; else noTrucks">
+    <div *ngFor="let truck of filteredTrucks" class="vehicle-card">
+      <img [src]="truck.image" alt="{{ truck.model }}" />
+      <h3>{{ truck.brand }} {{ truck.model }}</h3>
+      <p>{{ truck.description }}</p>
+      <p>Price: €{{ truck.price }}</p>
+      <p>Mileage: {{ truck.mileage }} km</p>
+      <p>First Registration: {{ truck.firstRegistration | date: 'longDate' }}</p>
+      <p>Fuel Type: {{ truck.fuelType }}</p>
+      <p>Power: {{ truck.power }} HP</p>
+      <p>Condition: {{ truck.condition }}</p>
+      <p>Transmission: {{ truck.transmission }}</p>
+      <p>Drive: {{ truck.drive }}</p>
+      <p>Color: {{ truck.color }}</p>
+    </div>
+  </div>
+  <ng-template #noTrucks>
+    <p>No trucks found.</p>
+  </ng-template>
+</div>
+
+<div class="vehicle-category">
+  <h2>Motorcycles</h2>
+  <div *ngIf="filteredMotorcycles.length; else noMotorcycles">
+    <div *ngFor="let motorcycle of filteredMotorcycles" class="vehicle-card">
+      <img [src]="motorcycle.image" alt="{{ motorcycle.model }}" />
+      <h3>{{ motorcycle.brand }} {{ motorcycle.model }}</h3>
+      <p>{{ motorcycle.description }}</p>
+      <p>Price: €{{ motorcycle.price }}</p>
+      <p>Mileage: {{ motorcycle.mileage }} km</p>
+      <p>First Registration: {{ motorcycle.firstRegistration | date: 'longDate' }}</p>
+      <p>Fuel Type: {{ motorcycle.fuelType }}</p>
+      <p>Power: {{ motorcycle.power }} HP</p>
+      <p>Displacement: {{ motorcycle.displacement }} cc</p>
+      <p>Cylinders: {{ motorcycle.cylinders }}</p>
+    </div>
+  </div>
+  <ng-template #noMotorcycles>
+    <p>No motorcycles found.</p>
+  </ng-template>
+</div>
