@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 // Import der Modellklassen
+import { Vehicle } from '../models/Vehicle';
 import { Car } from '../models/Car';
 import { Truck } from '../models/Truck';
 import { Motorcycle } from '../models/Motorcycle';
@@ -17,6 +18,14 @@ import { Caravan } from '../models/Caravan';
 })
 export class VehicleComponent {
   searchTerm: string = ''; // Variable für Two-Way-Datenbindung
+
+  filters = {
+    brand: '',
+    model: '',
+    maxPrice: null as number | null,
+    maxMileage: null as number | null,
+    minYear: null as number | null
+  };
 
   // Fahrzeuge als Objekte der Modellklassen
   cars: Car[] = [
@@ -47,30 +56,27 @@ export class VehicleComponent {
   ];
 
   // Filtered Arrays
-  filteredCars = [...this.cars];
-  filteredTrucks = [...this.trucks];
-  filteredMotorcycles = [...this.motorcycles];
-  filteredCaravans = [...this.caravans];
+  filteredVehicles: { title: string; vehicles: Vehicle[] }[] = [
+    { title: 'Cars', vehicles: [...this.cars] },
+    { title: 'Trucks', vehicles: [...this.trucks] },
+    { title: 'Motorcycles', vehicles: [...this.motorcycles] },
+    { title: 'Caravans', vehicles: [...this.caravans] }
+  ];
 
-  filterVehicles() {
-    this.filteredCars = this.cars.filter(vehicle =>
-      vehicle.brand.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      vehicle.model.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+  applyFilters() {
+    this.filteredVehicles.forEach(group => {
+      group.vehicles = this.applyFilter(group.vehicles);
+    });
+  }
 
-    this.filteredTrucks = this.trucks.filter(vehicle =>
-      vehicle.brand.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      vehicle.model.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-
-    this.filteredMotorcycles = this.motorcycles.filter(vehicle =>
-      vehicle.brand.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      vehicle.model.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-
-    this.filteredCaravans = this.caravans.filter(vehicle =>
-      vehicle.brand.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      vehicle.model.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+  private applyFilter<T extends Vehicle>(vehicles: T[]): T[] {
+    return vehicles.filter(vehicle => {
+      const matchesBrand = this.filters.brand ? vehicle.brand.toLowerCase().includes(this.filters.brand.toLowerCase()) : true;
+      const matchesModel = this.filters.model ? vehicle.model.toLowerCase().includes(this.filters.model.toLowerCase()) : true;
+      const matchesPrice = this.filters.maxPrice ? vehicle.price <= this.filters.maxPrice : true;
+      const matchesMileage = this.filters.maxMileage ? vehicle.mileage <= this.filters.maxMileage : true;
+      const matchesYear = this.filters.minYear ? vehicle.firstRegistration.getFullYear() >= this.filters.minYear : true;
+      return matchesBrand && matchesModel && matchesPrice && matchesMileage && matchesYear;
+    });
   }
 }
