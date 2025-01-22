@@ -1,19 +1,38 @@
-<div class="vehicle-category">
+<div class="search-bar">
+  <input
+    type="text"
+    [(ngModel)]="searchTerm"
+    (input)="filterVehicles()"
+    placeholder="Search for vehicles..."
+    class="search-input"
+  />
+</div>
+
+<div class="vehicle-container">
+  <h2>Cars</h2>
+  <div class="vehicle-row" *ngIf="filteredCars.length; else noCars">
+    <div *ngFor="let car of filteredCars" class="vehicle-card">
+      <img [src]="car.image" alt="{{ car.model }}" class="vehicle-image" />
+      <div class="vehicle-info">
+        <h3>{{ car.model }}</h3>
+        <p>Price: €{{ car.price }}</p>
+      </div>
+    </div>
+  </div>
+  <ng-template #noCars>
+    <p>No cars found.</p>
+  </ng-template>
+</div>
+
+<div class="vehicle-container">
   <h2>Trucks</h2>
-  <div *ngIf="filteredTrucks.length; else noTrucks">
+  <div class="vehicle-row" *ngIf="filteredTrucks.length; else noTrucks">
     <div *ngFor="let truck of filteredTrucks" class="vehicle-card">
-      <img [src]="truck.image" alt="{{ truck.model }}" />
-      <h3>{{ truck.brand }} {{ truck.model }}</h3>
-      <p>{{ truck.description }}</p>
-      <p>Price: €{{ truck.price }}</p>
-      <p>Mileage: {{ truck.mileage }} km</p>
-      <p>First Registration: {{ truck.firstRegistration | date: 'longDate' }}</p>
-      <p>Fuel Type: {{ truck.fuelType }}</p>
-      <p>Power: {{ truck.power }} HP</p>
-      <p>Condition: {{ truck.condition }}</p>
-      <p>Transmission: {{ truck.transmission }}</p>
-      <p>Drive: {{ truck.drive }}</p>
-      <p>Color: {{ truck.color }}</p>
+      <img [src]="truck.image" alt="{{ truck.model }}" class="vehicle-image" />
+      <div class="vehicle-info">
+        <h3>{{ truck.model }}</h3>
+        <p>Price: €{{ truck.price }}</p>
+      </div>
     </div>
   </div>
   <ng-template #noTrucks>
@@ -21,23 +40,34 @@
   </ng-template>
 </div>
 
-<div class="vehicle-category">
+<div class="vehicle-container">
   <h2>Motorcycles</h2>
-  <div *ngIf="filteredMotorcycles.length; else noMotorcycles">
+  <div class="vehicle-row" *ngIf="filteredMotorcycles.length; else noMotorcycles">
     <div *ngFor="let motorcycle of filteredMotorcycles" class="vehicle-card">
-      <img [src]="motorcycle.image" alt="{{ motorcycle.model }}" />
-      <h3>{{ motorcycle.brand }} {{ motorcycle.model }}</h3>
-      <p>{{ motorcycle.description }}</p>
-      <p>Price: €{{ motorcycle.price }}</p>
-      <p>Mileage: {{ motorcycle.mileage }} km</p>
-      <p>First Registration: {{ motorcycle.firstRegistration | date: 'longDate' }}</p>
-      <p>Fuel Type: {{ motorcycle.fuelType }}</p>
-      <p>Power: {{ motorcycle.power }} HP</p>
-      <p>Displacement: {{ motorcycle.displacement }} cc</p>
-      <p>Cylinders: {{ motorcycle.cylinders }}</p>
+      <img [src]="motorcycle.image" alt="{{ motorcycle.model }}" class="vehicle-image" />
+      <div class="vehicle-info">
+        <h3>{{ motorcycle.model }}</h3>
+        <p>Price: €{{ motorcycle.price }}</p>
+      </div>
     </div>
   </div>
   <ng-template #noMotorcycles>
     <p>No motorcycles found.</p>
+  </ng-template>
+</div>
+
+<div class="vehicle-container">
+  <h2>Caravans</h2>
+  <div class="vehicle-row" *ngIf="filteredCaravans.length; else noCaravans">
+    <div *ngFor="let caravan of filteredCaravans" class="vehicle-card">
+      <img [src]="caravan.image" alt="{{ caravan.model }}" class="vehicle-image" />
+      <div class="vehicle-info">
+        <h3>{{ caravan.model }}</h3>
+        <p>Price: €{{ caravan.price }}</p>
+      </div>
+    </div>
+  </div>
+  <ng-template #noCaravans>
+    <p>No caravans found.</p>
   </ng-template>
 </div>
