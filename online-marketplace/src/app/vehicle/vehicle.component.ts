@@ -64,9 +64,12 @@ export class VehicleComponent {
   ];
 
   applyFilters() {
-    this.filteredVehicles.forEach(group => {
-      group.vehicles = this.applyFilter(group.vehicles);
-    });
+    this.filteredVehicles = [
+      { title: 'Cars', vehicles: this.applyFilter(this.cars) },
+      { title: 'Trucks', vehicles: this.applyFilter(this.trucks) },
+      { title: 'Motorcycles', vehicles: this.applyFilter(this.motorcycles) },
+      { title: 'Caravans', vehicles: this.applyFilter(this.caravans) }
+    ];
   }
 
   private applyFilter<T extends Vehicle>(vehicles: T[]): T[] {
