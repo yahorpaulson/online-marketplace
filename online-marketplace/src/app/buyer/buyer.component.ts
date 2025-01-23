@@ -10,13 +10,13 @@ import { Motorcycle } from '../models/Motorcycle';
 import { Caravan } from '../models/Caravan';
 
 @Component({
-  selector: 'app-vehicle',
+  selector: 'app-buyer',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './vehicle.component.html',
-  styleUrls: ['./vehicle.component.css']
+  templateUrl: './buyer.component.html',
+  styleUrls: ['./buyer.component.css']
 })
-export class VehicleComponent { 
+export class BuyerComponent { 
    
 
   filters = {
