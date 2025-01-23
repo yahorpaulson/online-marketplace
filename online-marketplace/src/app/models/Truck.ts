@@ -6,6 +6,7 @@ export class Truck extends Vehicle {
   }
   constructor(
     id: number,
+    name:string,
     brand: string,
     model: string,
     price: number,
@@ -22,7 +23,7 @@ export class Truck extends Vehicle {
     private _drive: string,
     private _color: string
   ) {
-    super(id, brand, model, price, mileage, firstRegistration, fuelType, power, description, image);
+    super(id, name,brand, model, price, mileage, firstRegistration, fuelType, power, description, image);
   }
 
   get condition(): string {

@@ -1,6 +1,7 @@
 export abstract class Vehicle {
   constructor(
     private _id: number,
+    private _name:string,
     private _brand: string,
     private _model: string,
     private _price: number,
@@ -84,5 +85,12 @@ export abstract class Vehicle {
   }
   set image(value:string){
     this._image= value;
+  }
+  get name():string{
+    return this._name;
+  }
+
+  set name(value:string){
+    this._name=value;
   }
 }

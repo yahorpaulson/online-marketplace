@@ -3,6 +3,7 @@ import { Vehicle } from './Vehicle';
 export class Caravan extends Vehicle {
   constructor(
     id: number,
+    name:string,
     brand: string,
     model: string,
     price: number,
@@ -17,7 +18,7 @@ export class Caravan extends Vehicle {
     private _warranty: boolean,
     private _color: string
   ) {
-    super(id, brand, model, price, mileage, firstRegistration, fuelType, power, description, image);
+    super(id, name,brand, model, price, mileage, firstRegistration, fuelType, power, description, image);
   }
 
   getVehicleType(): string {
