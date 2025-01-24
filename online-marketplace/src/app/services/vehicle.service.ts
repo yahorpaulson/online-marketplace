@@ -10,7 +10,7 @@ import { VehicleData } from '../models/VehicleData';
   providedIn: 'root',
 })
 export class VehicleService {
-  private apiUrl = 'http://localhost:4000/api/vehicles'; // API-Endpunkt
+  private apiUrl = 'http://localhost:3000/vehicles'; // API-Endpunkt
 
   constructor(
     private http: HttpClient,
