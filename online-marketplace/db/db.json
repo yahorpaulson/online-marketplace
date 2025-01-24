@@ -1,0 +1,80 @@
+{
+  "vehicles": [
+    {
+      "id": "a37f",
+      "name": "Super VW sehr günstig",
+      "mark": "VW",
+      "model": "Golf",
+      "price": 333,
+      "mileage": 3333,
+      "firstRegistration": "2025-01-05",
+      "fuelType": "Diesel",
+      "power": 66,
+      "description": "dd"
+    },
+    {
+      "id": "7d8c",
+      "name": "Super VW sehr günstig",
+      "mark": "VW",
+      "model": "Golf",
+      "price": 555,
+      "mileage": 444,
+      "firstRegistration": "2025-01-03",
+      "fuelType": "Diesel",
+      "power": 444,
+      "description": "dddfv"
+    },
+    {
+      "id": "5694",
+      "name": "Super VW sehr günstig",
+      "mark": "VW",
+      "model": "Golf",
+      "price": 24,
+      "mileage": 3334,
+      "firstRegistration": "2025-01-16",
+      "fuelType": "Diesel",
+      "power": 22,
+      "description": "dsddedffdfde",
+      "category": "Car"
+    },
+    {
+      "id": "42f3",
+      "name": "Super schön Wohnwagen",
+      "mark": "Man",
+      "model": "Golf",
+      "price": 445,
+      "mileage": 3434,
+      "firstRegistration": "2025-01-08",
+      "fuelType": "Diesel",
+      "power": 200,
+      "description": "Super wagen fährt sehr schnell",
+      "category": "Caravan"
+    },
+    {
+      "id": "62c7",
+      "name": "GuterAuto ",
+      "mark": "VW",
+      "model": "X5",
+      "price": 55555,
+      "mileage": 3444,
+      "firstRegistration": "2024-02-07",
+      "fuelType": "Diesel",
+      "power": 45,
+      "description": "Super Auto",
+      "category": "Car"
+    },
+    {
+      "id": "1a39",
+      "name": "Schwarzer Auto",
+      "mark": "BM",
+      "model": "X5",
+      "price": 4455,
+      "mileage": 60000,
+      "firstRegistration": "2020-01-24",
+      "fuelType": "Benzin",
+      "power": 160,
+      "description": "Alles Funktioniert einwandfrei",
+      "category": "Car"
+    }
+  ]
+}
