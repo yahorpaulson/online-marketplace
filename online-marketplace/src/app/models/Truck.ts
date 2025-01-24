@@ -8,14 +8,14 @@ export class Truck extends Vehicle {
     id: number,
     name:string,
     brand: string,
-    model: string,
+    mark: string,
     price: number,
     mileage: number,
     firstRegistration: Date,
     fuelType: string,
     power: number,
     description: string,
-    image: string,
+    image: string[],
     private _vehicleType: 'Abschleppwagen' | 'Agrarfahrzeug' | 'Anhänger' | 'Auflieger' | 'Bus' | 'LKW über 3,5t' | 'Pickup' | 'Transporter',
     private _condition: 'Gebrauchtwagen' | 'Jahreswagen' | 'Neuwagen' | 'Unfallwagen',
     private _warranty: boolean,
@@ -23,7 +23,7 @@ export class Truck extends Vehicle {
     private _drive: string,
     private _color: string
   ) {
-    super(id, name,brand, model, price, mileage, firstRegistration, fuelType, power, description, image);
+    super(id, name,brand, mark, price, mileage, firstRegistration, fuelType, power, description, image);
   }
 
   get condition(): string {
@@ -52,5 +52,18 @@ export class Truck extends Vehicle {
   }
   set color(value: string) {
     this._color = value;
+  }
+  get warranty(): boolean {
+    return this._warranty;
+  }
+  set warranty(value: boolean) {
+    this._warranty = value;
+  }
+
+  get vehicleType(): string {
+    return this._vehicleType;
+  }
+  set vehicleType(value: string) {
+    this._vehicleType = value as any;
   }
 }

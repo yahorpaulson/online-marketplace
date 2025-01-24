@@ -2,7 +2,7 @@ export abstract class Vehicle {
   constructor(
     private _id: number,
     private _name:string,
-    private _brand: string,
+    private _mark: string,
     private _model: string,
     private _price: number,
     private _mileage: number,
@@ -10,7 +10,7 @@ export abstract class Vehicle {
     private _fuelType: string,
     private _power: number,
     private _description:string,
-    private _image:string
+    private _image:string []
 
   ) {}
 
@@ -25,11 +25,11 @@ export abstract class Vehicle {
     this._id = value;
   }
 
-  get brand(): string {
-    return this._brand;
+  get mark(): string {
+    return this._mark;
   }
-  set brand(value: string) {
-    this._brand = value;
+  set mark(value: string) {
+    this._mark = value;
   }
 
   get model(): string {
@@ -80,10 +80,10 @@ export abstract class Vehicle {
   set description(value:string){
     this.description=value;
   }
-  get image():string{
+  get image():string[]{
     return this._image;
   }
-  set image(value:string){
+  set image(value:string[]){
     this._image= value;
   }
   get name():string{
