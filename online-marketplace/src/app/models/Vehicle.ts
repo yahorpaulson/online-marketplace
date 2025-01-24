@@ -10,7 +10,10 @@ export abstract class Vehicle {
     private _fuelType: string,
     private _power: number,
     private _description:string,
-    private _image:string []
+    private _image:string [],
+    private _isSold: boolean,
+    private _sellerId: string,
+    private _location: string
 
   ) {}
 
@@ -92,5 +95,23 @@ export abstract class Vehicle {
 
   set name(value:string){
     this._name=value;
+  }
+  public get location(): string {
+    return this._location;
+  }
+  public set location(value: string) {
+    this._location = value;
+  }
+  public get sellerId(): string {
+    return this._sellerId;
+  }
+  public set sellerId(value: string) {
+    this._sellerId = value;
+  }
+  public get isSold(): boolean {
+    return this._isSold;
+  }
+  public set isSold(value: boolean) {
+    this._isSold = value;
   }
 }

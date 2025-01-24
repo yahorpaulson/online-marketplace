@@ -13,12 +13,15 @@ export class Caravan extends Vehicle {
     power: number,
     description:string,
     image:string[],
+    isSold:boolean,
+    sellerId:string,
+    location:string,
     private _vehicleType: 'Alkoven' | 'Kastenwagen' | 'Teilintegriertes Wohnmobil' | 'Wohnkabine' | 'Wohnwagen',
     private _condition: 'Gebrauchtwagen' | 'Jahreswagen' | 'Neuwagen' | 'Unfallwagen',
     private _warranty: boolean,
     private _color: string
   ) {
-    super(id, name,mark, model, price, mileage, firstRegistration, fuelType, power, description, image);
+    super(id, name,mark, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location);
   }
 
   getVehicleType(): string {

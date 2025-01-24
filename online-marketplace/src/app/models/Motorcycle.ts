@@ -13,24 +13,28 @@ export class Motorcycle extends Vehicle {
     power: number,
     description:string,
     image:string[],
-    private _displacement: number,
+    isSold:boolean,
+    sellerId:string,
+    location:string,
+    private _engineCapacity: number,
     private _cylinders: number,
     private _vehicleType: 'Cafe Racer' | 'Enduro' | 'JetSki' | 'Moped' | 'Naked Bike' | 'Roller',
+    private _condition: 'Gebrauchtwagen' | 'Jahreswagen' | 'Neuwagen' | 'Unfallwagen',
     private _batteryCapacity?: number,
     private _range?: number
   ) {
-    super(id,name, mark, model, price, mileage, firstRegistration, fuelType, power, description, image);
+    super(id,name, mark, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location);
   }
 
   getVehicleType(): string {
     return `Motorcycle (${this._vehicleType})`;
   }
 
-  get displacement(): number {
-    return this._displacement;
+  get engineCapacity(): number {
+    return this._engineCapacity;
   }
-  set displacement(value: number) {
-    this._displacement = value;
+  set engineCapacity(value: number) {
+    this._engineCapacity = value;
   }
 
   get cylinders(): number {

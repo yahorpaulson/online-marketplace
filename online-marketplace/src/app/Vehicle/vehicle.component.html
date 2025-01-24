@@ -79,7 +79,7 @@
 
 <div *ngIf="filteredVehicles.length > 0" class="vehicle-row">
   <div *ngFor="let vehicle of filteredVehicles" class="vehicle-card">
-    <img [src]="vehicle.image" alt="{{ vehicle.model }}" class="vehicle-image" />
+    <img [src]="vehicle.image[0]" alt="{{ vehicle.model }}" class="vehicle-image" />
     <div class="vehicle-info">
       <h3>{{ vehicle.name }}</h3>
       <p><span>{{vehicle.firstRegistration | date:'yyyy'}}, {{vehicle.mileage}} km, {{vehicle.power}} ps</span></p>

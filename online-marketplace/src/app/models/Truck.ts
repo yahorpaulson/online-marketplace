@@ -7,8 +7,8 @@ export class Truck extends Vehicle {
   constructor(
     id: number,
     name:string,
-    brand: string,
     mark: string,
+    model: string,
     price: number,
     mileage: number,
     firstRegistration: Date,
@@ -16,6 +16,9 @@ export class Truck extends Vehicle {
     power: number,
     description: string,
     image: string[],
+    isSold:boolean,
+    sellerId:string,
+    location:string,
     private _vehicleType: 'Abschleppwagen' | 'Agrarfahrzeug' | 'Anhänger' | 'Auflieger' | 'Bus' | 'LKW über 3,5t' | 'Pickup' | 'Transporter',
     private _condition: 'Gebrauchtwagen' | 'Jahreswagen' | 'Neuwagen' | 'Unfallwagen',
     private _warranty: boolean,
@@ -23,7 +26,7 @@ export class Truck extends Vehicle {
     private _drive: string,
     private _color: string
   ) {
-    super(id, name,brand, mark, price, mileage, firstRegistration, fuelType, power, description, image);
+    super(id, name,mark, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location);
   }
 
   get condition(): string {

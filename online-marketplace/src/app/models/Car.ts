@@ -13,6 +13,9 @@ export class Car extends Vehicle {
     power: number,
     description:string,
     image:string [],
+    isSold:boolean,
+    sellerId:string,
+    location:string,
     private _doors: number,
     private _seats: number,
     private _vehicleType: 'Cabrio' | 'Klein/Kompaktwagen' | 'Kleinbus' | 'Kombi/Family Van' | 'Limousine' | 'Sportwagen' | 'SUV',
@@ -24,7 +27,7 @@ export class Car extends Vehicle {
     private _batteryCapacity?: number,
     private _range?: number
   ) {
-    super(id,name, mark, model, price, mileage, firstRegistration, fuelType, power, description, image);
+    super(id,name, mark, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location);
   }
 
   getVehicleType(): string {
