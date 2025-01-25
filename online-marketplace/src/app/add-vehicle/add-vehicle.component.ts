@@ -26,7 +26,8 @@ export class AddVehicleComponent {
       power: [0, [Validators.required, Validators.min(0)]],
       description: ['', Validators.required],
       category: ['Car', Validators.required],
-    /*  image: [''],
+     image: [''],
+     /* 
       isSold: [false],
       sellerId: ['', Validators.required],
       location: ['', Validators.required],

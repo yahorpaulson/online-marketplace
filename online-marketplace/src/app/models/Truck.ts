@@ -26,7 +26,7 @@ export class Truck extends Vehicle {
     private _drive: string,
     private _color: string
   ) {
-    super(id, name,mark, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location);
+    super(id, name,mark, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location,'Truck');
   }
 
   get condition(): string {

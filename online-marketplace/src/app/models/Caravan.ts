@@ -21,7 +21,7 @@ export class Caravan extends Vehicle {
     private _warranty: boolean,
     private _color: string
   ) {
-    super(id, name,mark, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location);
+    super(id, name,mark, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location,'Caravan');
   }
 
   getVehicleType(): string {

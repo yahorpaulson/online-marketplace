@@ -23,7 +23,7 @@ export class Motorcycle extends Vehicle {
     private _batteryCapacity?: number,
     private _range?: number
   ) {
-    super(id,name, mark, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location);
+    super(id,name, mark, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location,'Motorcycle');
   }
 
   getVehicleType(): string {

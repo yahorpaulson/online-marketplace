@@ -1,7 +1,7 @@
 <div class="vehicle-type-selector">
   <h2>Select a Vehicle Type</h2>
   <div class="type-buttons">
-    <button *ngFor="let type of vehicleTypes"
+    <button *ngFor="let type of ['Car', 'Truck', 'Motorcycle', 'Caravan']"
             (click)="selectVehicleType(type)" 
             [class.active]="currentVehicleType === type">
       {{ type }}
@@ -21,7 +21,6 @@
         placeholder="Enter keywords (name, description)"
       />
     </label>
-
     <label>
       Brand:
       <input 
@@ -31,7 +30,6 @@
         placeholder="Enter brand" 
       />
     </label>
-
     <label>
       Model:
       <input 
@@ -41,7 +39,6 @@
         placeholder="Enter model" 
       />
     </label>
-
     <label>
       Max Price (€):
       <input 
@@ -51,7 +48,6 @@
         placeholder="Enter max price" 
       />
     </label>
-
     <label>
       Max Mileage (km):
       <input 
@@ -61,7 +57,6 @@
         placeholder="Enter max mileage" 
       />
     </label>
-
     <label>
       Min Year:
       <input 
@@ -71,19 +66,17 @@
         placeholder="Enter min year" 
       />
     </label>
-
     <button type="submit" class="filter-button">Apply Filters</button>
   </form>
 </div>
-
 
 <div *ngIf="filteredVehicles.length > 0" class="vehicle-row">
   <div *ngFor="let vehicle of filteredVehicles" class="vehicle-card">
     <img [src]="vehicle.image[0]" alt="{{ vehicle.model }}" class="vehicle-image" />
     <div class="vehicle-info">
       <h3>{{ vehicle.name }}</h3>
-      <p><span>{{vehicle.firstRegistration | date:'yyyy'}}, {{vehicle.mileage}} km, {{vehicle.power}} ps</span></p>
-      <p class="price"> €{{ vehicle.price }}</p>
+      <p><span>{{ vehicle.firstRegistration | date:'yyyy'}}, {{ vehicle.mileage }} km, {{ vehicle.power }} PS</span></p>
+      <p class="price">€{{ vehicle.price }}</p>
     </div>
   </div>
 </div>

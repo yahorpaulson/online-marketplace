@@ -13,7 +13,8 @@ export abstract class Vehicle {
     private _image:string [],
     private _isSold: boolean,
     private _sellerId: string,
-    private _location: string
+    private _location: string,
+    public category: 'Car' | 'Truck' | 'Motorcycle' | 'Caravan'
 
   ) {}
 
