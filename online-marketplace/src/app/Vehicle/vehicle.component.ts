@@ -3,6 +3,7 @@ import { VehicleService } from '../services/vehicle.service';
 import { Vehicle } from '../models/Vehicle';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vehicle',
@@ -23,7 +24,7 @@ export class VehicleComponent implements OnInit {
     minYear: null as number | null,
   };
 
-  constructor(private vehicleService: VehicleService) {}
+  constructor(private vehicleService: VehicleService, private router:Router) {}
 
   ngOnInit() {
     // Fahrzeuge beim Laden der Komponente abrufen
@@ -57,36 +58,37 @@ export class VehicleComponent implements OnInit {
    */
   applyFilters() {
     if (!this.currentVehicleType) {
-      return;
+      return; // Wenn kein Typ ausgewählt wurde, nichts tun
     }
+  
     this.filteredVehicles = this.vehicles
       .filter((v) => v.category === this.currentVehicleType) // Nach Typ filtern
       .filter((v) => {
         const matchesSearchTerm = this.filters.searchTerm
-          ? v.name.toLowerCase().includes(this.filters.searchTerm.toLowerCase()) ||
-            v.description.toLowerCase().includes(this.filters.searchTerm.toLowerCase())
+          ? v.name?.toLowerCase().includes(this.filters.searchTerm.toLowerCase()) ||
+            v.description?.toLowerCase().includes(this.filters.searchTerm.toLowerCase())
           : true;
-
+  
         const matchesBrand = this.filters.brand
-          ? v.mark.toLowerCase().includes(this.filters.brand.toLowerCase())
+          ? v.mark?.toLowerCase().includes(this.filters.brand.toLowerCase())
           : true;
-
+  
         const matchesModel = this.filters.model
-          ? v.model.toLowerCase().includes(this.filters.model.toLowerCase())
+          ? v.model?.toLowerCase().includes(this.filters.model.toLowerCase())
           : true;
-
+  
         const matchesPrice = this.filters.maxPrice
           ? v.price <= this.filters.maxPrice
           : true;
-
+  
         const matchesMileage = this.filters.maxMileage
           ? v.mileage <= this.filters.maxMileage
           : true;
-
+  
         const matchesYear = this.filters.minYear
           ? new Date(v.firstRegistration).getFullYear() >= this.filters.minYear
           : true;
-
+  
         return (
           matchesSearchTerm &&
           matchesBrand &&
@@ -96,5 +98,14 @@ export class VehicleComponent implements OnInit {
           matchesYear
         );
       });
+  }
+  
+  
+
+  goToDetail(vehicleId: number): void {
+    this.router.navigate(['/vehicles', vehicleId]); // Adjust the route if needed
+  }
+  goBack(): void {
+    this.router.navigate(['/vehicleMarket']); // Adjust the route as needed
   }
 }

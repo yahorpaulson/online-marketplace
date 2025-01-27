@@ -71,15 +71,20 @@
 </div>
 
 <div *ngIf="filteredVehicles.length > 0" class="vehicle-row">
-  <div *ngFor="let vehicle of filteredVehicles" class="vehicle-card">
+  <div 
+    *ngFor="let vehicle of filteredVehicles" 
+    class="vehicle-card"
+    (click)="goToDetail(vehicle.id)">
     <img [src]="vehicle.image[0]" alt="{{ vehicle.model }}" class="vehicle-image" />
     <div class="vehicle-info">
       <h3>{{ vehicle.name }}</h3>
-      <p><span>{{ vehicle.firstRegistration | date:'yyyy'}}, {{ vehicle.mileage }} km, {{ vehicle.power }} PS</span></p>
+      <p><span>{{ vehicle.firstRegistration | date:'yyyy' }}, {{ vehicle.mileage }} km, {{ vehicle.power }} ps</span></p>
       <p class="price">€{{ vehicle.price }}</p>
     </div>
   </div>
 </div>
+<button class="back-button" (click)="goBack()">Back</button>
+
 
 <div *ngIf="filteredVehicles.length === 0 && currentVehicleType" class="no-results">
   <p>No vehicles found for {{ currentVehicleType }} with the selected filters.</p>

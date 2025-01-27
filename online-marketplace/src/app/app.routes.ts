@@ -7,6 +7,7 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
 import {  VehicleComponent } from './Vehicle/vehicle.component';
 import { AddVehicleComponent } from './add-vehicle/add-vehicle.component';
 import { VehicleMarketComponent } from './vehicle-market/vehicle-market.component';
+import { VehicleDetailComponent } from './vehicle-detail/vehicle-detail.component';
 
 
 export const routes: Routes = [
@@ -16,6 +17,8 @@ export const routes: Routes = [
     { path: 'vehicles', component: VehicleComponent },
     {path: 'add-vehicle',component: AddVehicleComponent},
     {path: 'vehicleMarket', component:VehicleMarketComponent},
-
+    { path: 'vehicles/:id', component: VehicleDetailComponent }, // Detail page route
 ];
+
+
 

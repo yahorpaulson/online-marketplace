@@ -26,21 +26,21 @@ export class AddVehicleComponent {
       power: [0, [Validators.required, Validators.min(0)]],
       description: ['', Validators.required],
       category: ['Car', Validators.required],
-     image: [''],
-     /* 
+     image: [[] ],
+     
       isSold: [false],
-      sellerId: ['', Validators.required],
-      location: ['', Validators.required],
-      doors: [4, Validators.required],
-      seats: [5, Validators.required],
-      vehicleType: ['', Validators.required],
-      condition: ['', Validators.required],
+      sellerId: [''],
+      location: [''],
+      doors: [4 ],
+      seats: [5],
+      vehicleType: [''],
+      condition: [''],
       warranty: [false],
-      transmission: ['', Validators.required],
-      drive: ['', Validators.required],
-      color: ['', Validators.required],
+      transmission: [''],
+      drive: [''],
+      color: [''],
       batteryCapacity: [null],
-      range: [null], */
+      range: [null], 
     });
   }
 
