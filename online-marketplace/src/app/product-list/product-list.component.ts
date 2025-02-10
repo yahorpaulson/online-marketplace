@@ -88,21 +88,27 @@ export class ProductListComponent {
     const userId = this.authService.getUserId();
     console.log('User ID:', userId);
 
-
-
     if (userId !== null) {
-      this.filteredProducts = this.products.filter((product) => {
+      this.productService.getProducts().subscribe({
+        next: (products: any[]) => {
+          this.filteredProducts = products.filter((product) => {
+            console.log(`Comparing: product.ownerId=${product.ownerId}, userId=${userId}`);
+            return product.owner_id === userId;
+          });
 
-        console.log(`Comparing: product.ownerId=${product.ownerId}, userId=${userId}`);
-        return product.ownerId === userId;
+          console.log('Filtered Products:', this.filteredProducts);
+        },
+        error: (error) => {
+          console.error('Error fetching products:', error);
+          this.filteredProducts = [];
+        }
       });
-
-      console.log('Filtered Products:', this.filteredProducts);
     } else {
       console.error('User ID is null. Cannot filter products.');
       this.filteredProducts = [];
     }
   }
+
 
 
 
