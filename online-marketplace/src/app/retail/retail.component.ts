@@ -20,7 +20,7 @@ import { ProductfilterService } from '../productfilter.service';
 export class RetailComponent {
 
   searchTerm: string = '';
-  showAddProductButton: boolean = false;
+
 
   constructor(private authService: AuthserviceService, private router: Router, private productFilterService: ProductfilterService) { }
 
@@ -41,7 +41,9 @@ export class RetailComponent {
   }
 
   backToMainPage(): void {
+    this.filterProducts();
     this.router.navigate(['/retail']);
+
   }
 
 

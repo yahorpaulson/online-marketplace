@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ProductService } from '../services/product.service';
 import { Category, Product } from '../models/product.model';
 import { ProductfilterService } from '../productfilter.service';
+import { AuthserviceService } from '../authservice.service';
 
 
 @Component({
@@ -21,7 +22,11 @@ export class ProductListComponent {
   filteredProducts: Product[] = [];
   categoryTree: any[] = [];
 
-  constructor(private productService: ProductService, private router: Router, private productFilterService: ProductfilterService) {
+
+  constructor(private productService: ProductService,
+    private router: Router,
+    private productFilterService: ProductfilterService,
+    private authService: AuthserviceService) {
 
 
   }
@@ -42,6 +47,7 @@ export class ProductListComponent {
           .map((product) => ({
             ...product,
             categoryId: product.category_id,
+            ownerId: product.owner_id
           }))
           .filter((product) => product.status !== 'sold');  //hide sold products 
 
@@ -76,6 +82,28 @@ export class ProductListComponent {
       },
     });
   }
+
+
+  updateUserProducts(): void {
+    const userId = this.authService.getUserId();
+    console.log('User ID:', userId);
+
+
+
+    if (userId !== null) {
+      this.filteredProducts = this.products.filter((product) => {
+
+        console.log(`Comparing: product.ownerId=${product.ownerId}, userId=${userId}`);
+        return product.ownerId === userId;
+      });
+
+      console.log('Filtered Products:', this.filteredProducts);
+    } else {
+      console.error('User ID is null. Cannot filter products.');
+      this.filteredProducts = [];
+    }
+  }
+
 
 
 
