@@ -26,7 +26,6 @@ export class RetailComponent {
 
 
   ngOnInit(): void {
-    ;
 
   }
 

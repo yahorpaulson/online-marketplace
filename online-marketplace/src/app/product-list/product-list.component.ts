@@ -38,18 +38,22 @@ export class ProductListComponent {
         console.log('Raw products loaded:', products);
 
 
-        this.products = products.map((product) => ({
-          ...product,
-          categoryId: product.category_id,
-        }));
+        this.products = products
+          .map((product) => ({
+            ...product,
+            categoryId: product.category_id,
+          }))
+          .filter((product) => product.status !== 'sold');  //hide sold products 
+
         this.filteredProducts = [...this.products];
-        console.log('Products after mapping:', this.products);
+        console.log('Products after filtering and mapping:', this.products);
       },
       error: (error) => {
         console.error('Error loading products:', error);
       },
     });
   }
+
 
   loadCategories(): void {
     this.productService.getCategories().subscribe({
