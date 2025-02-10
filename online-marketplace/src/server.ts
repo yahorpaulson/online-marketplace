@@ -75,18 +75,18 @@ app.use((req, res, next) => {
 
 app.post('/api/register', async (req: Request, res: Response) => {
   try {
-    const { username, password, role } = req.body;
+    const { username, password } = req.body;
 
-    if (!username || !password || !role) {
+    if (!username || !password) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
     const query = `
-      INSERT INTO users (username, password, role)
-      VALUES ($1, $2, $3)
+      INSERT INTO users (username, password)
+      VALUES ($1, $2)
       RETURNING *;
     `;
-    const values = [username, password, role];
+    const values = [username, password];
 
     const result = await pool.query(query, values);
     return res.status(201).json(result.rows[0]);
@@ -126,8 +126,7 @@ app.post('/api/login', async (req: Request, res: Response) => {
     const token = jwt.sign(
       {
         userId: user.id,
-        username: user.username,
-        role: user.role,
+        username: user.username
       },
       SECRET_KEY,
       { expiresIn: '1h' }

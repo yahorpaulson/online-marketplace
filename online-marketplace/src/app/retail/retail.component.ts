@@ -26,19 +26,15 @@ export class RetailComponent {
 
 
   ngOnInit(): void {
-    this.showAddProductButton = this.authService.hasRole('seller');
-    console.log("CAN I ADD A PRODUCT? :" + this.showAddProductButton);
+    ;
+
   }
 
   navigateToAddProduct(): void {
     this.router.navigate(['/retail/add-product']);
   }
 
-
-
   @ViewChild(ProductListComponent) productListComponent!: ProductListComponent;
-
-
 
 
   filterProducts(): void {
@@ -53,8 +49,6 @@ export class RetailComponent {
   goMessages(): void {
     this.router.navigate(['/retail/messages']);
   }
-
-
 
 
   logout(): void {

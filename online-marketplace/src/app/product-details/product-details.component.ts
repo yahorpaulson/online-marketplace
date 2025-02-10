@@ -55,7 +55,7 @@ export class ProductDetailsComponent implements OnInit {
 
   isProductOwner(): boolean {
     const ownerId = this.product.owner_id;
-    return this.authService.hasRole('seller') && this.currentUser === ownerId;
+    return this.currentUser === ownerId;
   }
 
   deleteProduct(): void {
