@@ -10,6 +10,12 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { MessageListComponent } from './message-list/message-list.component';
 
+import {  VehicleComponent } from './Vehicle/vehicle.component';
+import { AddVehicleComponent } from './add-vehicle/add-vehicle.component';
+import { VehicleMarketComponent } from './vehicle-market/vehicle-market.component';
+import { VehicleDetailComponent } from './vehicle-detail/vehicle-detail.component';
+
+
 export const routes: Routes = [
     {
         path: 'retail',
@@ -26,4 +32,12 @@ export const routes: Routes = [
     { path: 'register', component: RegisterComponent },
     { path: 'login', component: LoginComponent },
     { path: '', component: HomeComponent },
+    { path: 'retail/product/:id', component: ProductDetailsComponent },
+    { path: 'vehicles', component: VehicleComponent },
+    {path: 'add-vehicle',component: AddVehicleComponent},
+    {path: 'vehicleMarket', component:VehicleMarketComponent},
+    { path: 'vehicles/:id', component: VehicleDetailComponent }, // Detail page route
 ];
+
+
+

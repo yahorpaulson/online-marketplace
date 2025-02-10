@@ -1,0 +1,14 @@
+<div *ngIf="vehicle">
+    <h2>{{ vehicle.name }}</h2>
+    <img [src]="vehicle.image?.[0]" alt="{{ vehicle.name }}" />
+    <p><strong>Brand:</strong> {{ vehicle.mark }}</p>
+    <p><strong>Model:</strong> {{ vehicle.model }}</p>
+    <p><strong>Price:</strong> €{{ vehicle.price }}</p>
+    <p><strong>Mileage:</strong> {{ vehicle.mileage }} km</p>
+    <p><strong>First Registration:</strong> {{ vehicle.firstRegistration | date:'yyyy' }}</p>
+    <p><strong>Fuel Type:</strong> {{ vehicle.fuelType }}</p>
+    <p><strong>Power:</strong> {{ vehicle.power }} ps</p>
+    <p><strong>Description:</strong> {{ vehicle.description }}</p>
+    <button class="back-button" (click)="goBack()">Back</button>
+  </div>
+  
