@@ -22,6 +22,7 @@ export class AddProductComponent implements OnInit {
     id: 0,
     ownerId: null,
     description: '',
+    status: ''
   };
 
   categories: Category[] = [];

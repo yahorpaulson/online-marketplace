@@ -51,5 +51,13 @@ export class ProductService {
     return this.http.delete<void>(`${this.apiUrl}/products/${productId}`);
   }
 
+  updateProductStatus(productId: number, status: string): Observable<Product> {
+    console.log("Update the status here");
+    return this.http.patch<Product>(`${this.apiUrl}/products/${productId}/status`, { status });
+
+  }
+
+
+
 
 }

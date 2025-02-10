@@ -7,10 +7,23 @@
         <h1>{{ product.name }}</h1>
         <p>{{ product.description }}</p>
         <p><strong>Price:</strong> {{ product.price }} €</p>
+
+        <p *ngIf="product.status !== 'available'">
+            <strong>Status:</strong> {{ product.status | titlecase }}
+        </p>
+
+
         <button (click)="goBack()">Back to products</button>
         <button *ngIf="isProductOwner()" (click)="deleteProduct()" class="btn btn-danger">
             Delete Product
         </button>
+        <select id="changeStatus" name="status" class="form-control" *ngIf="isProductOwner()"
+            [(ngModel)]="product.status" (change)="onStatusChange($event)" required>
+            <option [value]="'available'">Available</option>
+            <option [value]="'reserved'">Reserved</option>
+            <option [value]="'sold'">Sold</option>
+        </select>
+
     </div>
 </div>
 

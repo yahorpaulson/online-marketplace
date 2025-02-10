@@ -6,6 +6,7 @@ export interface Product {
     images: string[];
     categoryId: number | null;
     ownerId: number | null;
+    status: string;
 }
 export interface Category {
     id: number;

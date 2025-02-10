@@ -5,18 +5,19 @@ import { AuthserviceService } from '../authservice.service';
 import { MessageService } from '../services/message.service';
 import { Message } from '../models/message.model';
 import { ProductService } from '../services/product.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-product-details',
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css'],
-  imports: [CommonModule]
+  imports: [CommonModule, FormsModule]
 })
 export class ProductDetailsComponent implements OnInit {
   product: any = {};
   isChatOpen: boolean = true;
   chatMessages: Message[] = [];
-  currentUser!: number; // Идентификатор текущего пользователя
+  currentUser!: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,20 +28,20 @@ export class ProductDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Установка идентификатора текущего пользователя
+
     this.currentUser = this.authService.getUserId()!;
     if (!this.currentUser) {
       console.error('User ID is not defined');
       return;
     }
 
-    // Загрузка данных о продукте
+
     const productId = +this.route.snapshot.paramMap.get('id')!;
     this.productService.getProductById(productId).subscribe((product) => {
       this.product = product;
       console.log(this.product);
 
-      // Пример приветственного сообщения от продавца
+
       setTimeout(() => {
         const welcomeMessage: Message = {
           product_id: this.product.id,
@@ -53,10 +54,29 @@ export class ProductDetailsComponent implements OnInit {
     });
   }
 
+
+
   isProductOwner(): boolean {
     const ownerId = this.product.owner_id;
     return this.currentUser === ownerId;
   }
+
+
+  onStatusChange(event: Event): void {
+    const newStatus = (event.target as HTMLSelectElement).value;
+
+    this.productService.updateProductStatus(this.product.id, newStatus).subscribe({
+      next: (response) => {
+        console.log('Status updated:', response);
+        alert(`Product status changed to ${newStatus}`);
+      },
+      error: (error) => {
+        console.error('Error updating status:', error);
+        alert('Failed to change product status. Try again.');
+      },
+    });
+  }
+
 
   deleteProduct(): void {
     if (confirm('Are you sure you want to delete this product?')) {
