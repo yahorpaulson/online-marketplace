@@ -22,7 +22,8 @@ html {
     padding: 10px 20px;
     text-align: center;
     font-size: 2rem;
-    color: #8d8ab9;
+    color: #379095;
+    /* same as categories side bar color*/
 }
 
 
@@ -46,7 +47,7 @@ html {
 
 .header h1 {
     font-size: 24px;
-    color: #ffffff;
+    color: #d8d8d8;
     margin: 0;
     cursor: pointer;
 }
@@ -69,7 +70,7 @@ button {
     font-size: 14px;
     cursor: pointer;
     color: #ffffff;
-    background-color: #5f64b6;
+    background-color: #418371;
 
     transition: background-color 0.3s ease;
 }
@@ -79,9 +80,9 @@ button:hover {
 
 }
 
-.messages {
-    background-color: #379095;
-}
+
+
+
 
 .logout-button {
     background-color: #cc0000;
@@ -123,12 +124,4 @@ button:hover {
     outline: none;
     box-shadow: 0 0 5px rgba(0, 140, 186, 0.8);
 
-}
-
-.add-product-button {
-    background-color: #5f64b6;
-}
-
-.add-product-button:hover {
-    background-color: #379095;
 }
