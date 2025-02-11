@@ -14,12 +14,9 @@ import cors from 'cors';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
+import bcrypt from 'bcryptjs';
 
 dotenv.config({ path: 'data.env' });
-
-
-
-
 
 export interface AuthenticatedRequest extends Request {
   user?: {
@@ -81,12 +78,15 @@ app.post('/api/register', async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
+    const saltRounds = 10; //setting up rounds of hashing (there more rounds there higher hashing but slower)
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
     const query = `
       INSERT INTO users (username, password)
       VALUES ($1, $2)
       RETURNING *;
     `;
-    const values = [username, password];
+    const values = [username, hashedPassword];
 
     const result = await pool.query(query, values);
     return res.status(201).json(result.rows[0]);
@@ -118,9 +118,17 @@ app.post('/api/login', async (req: Request, res: Response) => {
     const user = result.rows[0];
 
 
-    if (user.password !== password) {
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
       return res.status(401).json({ message: 'Invalid username or password' });
     }
+
+
+    /*if (user.password !== password) {
+      return res.status(401).json({ message: 'Invalid username or password' });
+    }
+    */
 
     // Create JWT
     const token = jwt.sign(
