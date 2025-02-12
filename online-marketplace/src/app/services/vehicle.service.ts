@@ -11,6 +11,10 @@ import { VehicleData } from '../models/VehicleData';
 })
 export class VehicleService {
   private apiUrl = 'http://localhost:4000/api/vehicles'; // API-Endpunkt
+  private apiUrl1 = 'http://localhost:4000/api'; // API-Endpunkt
+  private brandsUrl = 'http://localhost:4000/api/brands'; // API-Endpunkt für Marken
+  private modelsUrl = 'http://localhost:4000/api/models'; // API-Endpunkt für Modelle
+
 
   constructor(
     private http: HttpClient,
@@ -56,6 +60,7 @@ export class VehicleService {
     );
   }
   
+
   
   
 
@@ -78,5 +83,13 @@ export class VehicleService {
    */
   deleteVehicle(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  getBrands(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl1}/brands`);
+  }
+
+  getModels(brandId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl1}/models?brandId=${brandId}`);
   }
 }

@@ -1,22 +1,27 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms'
 import { VehicleService } from '../services/vehicle.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-vehicle',
   templateUrl: './add-vehicle.component.html',
   styleUrls: ['./add-vehicle.component.css'],
-  standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [CommonModule,ReactiveFormsModule]
 })
-export class AddVehicleComponent {
+export class AddVehicleComponent implements OnInit {
   vehicleForm: FormGroup;
+  categories = ['Car', 'Truck', 'Motorcycle', 'Caravan']; // Fahrzeugkategorien
+  brands: any[] = []; // Gefilterte Marken
+  models: any[] = []; // Gefilterte Modelle
+  allBrands: any[] = []; // Alle Marken
+  allModels: any[] = []; // Alle Modelle
 
   constructor(private fb: FormBuilder, private vehicleService: VehicleService) {
     this.vehicleForm = this.fb.group({
       name: ['', Validators.required],
-      mark: ['', Validators.required],
+      category: ['', Validators.required], // Neue Kategorieauswahl
+      brand: ['', Validators.required],
       model: ['', Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],
       mileage: [0, [Validators.required, Validators.min(0)]],
@@ -24,10 +29,9 @@ export class AddVehicleComponent {
       fuelType: ['', Validators.required],
       power: [0, [Validators.required, Validators.min(0)]],
       description: ['', Validators.required],
-      category: ['Car', Validators.required],
-      image: [''],  //soll ein string sein
+      image: [''],
       isSold: [false],
-      sellerId: [0],
+      sellerId: [0, Validators.required],
       location: [''],
       doors: [4],
       seats: [5],
@@ -42,17 +46,62 @@ export class AddVehicleComponent {
     });
   }
 
+  ngOnInit() {
+    this.loadBrands();
+  }
+
+  // Lade alle Marken aus der DB
+  loadBrands() {
+    this.vehicleService.getBrands().subscribe({
+      next: (data) => {
+        console.log('✅ Alle Marken geladen:', data);
+        this.allBrands = data;
+      },
+      error: (err) => console.error('❌ Fehler beim Laden der Marken:', err),
+    });
+  }
+
+  // Lade Modelle für eine bestimmte Marke aus der DB
+loadModels(brandId: number) {
+  if (!brandId) {
+    this.models = []; // Falls keine Marke ausgewählt ist, setze die Modelle zurück
+    return;
+  }
+
+  this.vehicleService.getModels(brandId).subscribe({
+    next: (data) => {
+      console.log(`Modelle für Marke ${brandId} geladen:`, data);
+      this.models = data;
+    },
+    error: (err) => console.error('Fehler beim Laden der Modelle:', err),
+  });
+}
+
+
+  // Filtere Marken basierend auf der gewählten Kategorie
+  onCategoryChange() {
+    const selectedCategory = this.vehicleForm.get('category')?.value;
+    this.brands = this.allBrands.filter((brand) => brand.category === selectedCategory);
+    this.models = []; // Modelle zurücksetzen
+    this.vehicleForm.get('brand')?.setValue('');
+    this.vehicleForm.get('model')?.setValue('');
+  }
+
+  // Filtere Modelle basierend auf der gewählten Marke
+  onBrandChange() {
+    const selectedBrandId = this.vehicleForm.get('brand')?.value;
+    console.log('📌 Gewählte Marke ID:', selectedBrandId);
+  
+    this.loadModels(selectedBrandId); // Lade Modelle für diese Marke
+  }
+  
+
   onSubmit() {
     if (this.vehicleForm.valid) {
       let formData = this.vehicleForm.value;
-  
-      // Falls das Bild ein Array ist, wandle es in einen String um (falls nötig)
-      if (Array.isArray(formData.image)) {
-        formData.image = formData.image.length > 0 ? formData.image[0] : ''; // Nur das erste Bild speichern
-      }
-  
-      console.log('📤 Sende Formulardaten:', formData); // Debugging
-  
+
+      console.log('📤 Sende Formulardaten:', formData);
+
       this.vehicleService.addVehicle(formData).subscribe({
         next: (response) => {
           console.log('✅ Fahrzeug hinzugefügt:', response);
@@ -62,11 +111,10 @@ export class AddVehicleComponent {
         error: (err) => {
           console.error('❌ Fehler beim Hinzufügen:', err);
           alert(`Fehler beim Hinzufügen: ${err.message}`);
-        }
+        },
       });
     } else {
       alert('Bitte füllen Sie alle erforderlichen Felder aus.');
     }
   }
-  
 }

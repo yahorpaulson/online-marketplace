@@ -1,128 +1,62 @@
 <div class="add-vehicle-container">
-    <h1>Fahrzeug hinzufügen</h1>
-    <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
-      <label for="category">Fahrzeugkategorie</label>
-      <select formControlName="category" id="category">
-        <option value="Car">Auto</option>
-        <option value="Truck">LKW</option>
-        <option value="Motorcycle">Motorrad</option>
-        <option value="Caravan">Wohnwagen</option>
-      </select>
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input id="name" type="text" formControlName="name" placeholder="Fahrzeugname" />
-      </div>
-  
-      <div class="form-group">
-        <label for="mark">Marke</label>
-        <input id="mark" type="text" formControlName="mark" placeholder="Marke" />
-      </div>
-  
-      <div class="form-group">
-        <label for="model">Modell</label>
-        <input id="model" type="text" formControlName="model" placeholder="Modell" />
-      </div>
-  
-      <div class="form-group">
-        <label for="price">Preis (€)</label>
-        <input id="price" type="number" formControlName="price" placeholder="Preis" />
-      </div>
-  
-      <div class="form-group">
-        <label for="mileage">Kilometerstand</label>
-        <input id="mileage" type="number" formControlName="mileage" placeholder="Kilometerstand" />
-      </div>
-  
-      <div class="form-group">
-        <label for="firstRegistration">Erstzulassung</label>
-        <input id="firstRegistration" type="date" formControlName="firstRegistration" />
-      </div>
-  
-      <div class="form-group">
-        <label for="fuelType">Treibstoffart</label>
-        <input id="fuelType" type="text" formControlName="fuelType" placeholder="Treibstoffart" />
-      </div>
-  
-      <div class="form-group">
-        <label for="power">Leistung (PS)</label>
-        <input id="power" type="number" formControlName="power" placeholder="Leistung in PS" />
-      </div>
-      <div class="form-group">
-        <label for="description">Beschreibung</label>
-        <textarea
-          id="description"
-          formControlName="description"
-          rows="4"
-          placeholder="Fahrzeugbeschreibung"
-        ></textarea>
-      </div>
-  
-    <div class="form-group">
-        <label for="image">Bilder</label>
-        <input id="image" type="text" formControlName="image" placeholder="Bild-URLs" />
-    </div>
-  
-    <div class="form-group">
-        <label for="sellerId">Verkäufer-ID</label>
-        <input id="sellerId" type="number" formControlName="sellerId" placeholder="Verkäufer-ID" />
-    </div>
-      <!--
-    <div class="form-group">
-        <label for="location">Standort</label>
-        <input id="location" type="text" formControlName="location" placeholder="Standort" />
-    </div>
-    
-    <div class="form-group">
-        <label for="doors">Türen</label>
-        <input id="doors" type="number" formControlName="doors" placeholder="Anzahl der Türen" />
-    </div>
-    
-    <div class="form-group">
-        <label for="seats">Sitzplätze</label>
-        <input id="seats" type="number" formControlName="seats" placeholder="Anzahl der Sitzplätze" />
-    </div>
-    
-    <div class="form-group">
-        <label for="vehicleType">Fahrzeugtyp</label>
-        <input id="vehicleType" type="text" formControlName="vehicleType" placeholder="Fahrzeugtyp" />
-    </div>
-    
-    <div class="form-group">
-        <label for="condition">Zustand</label>
-        <input id="condition" type="text" formControlName="condition" placeholder="Zustand" />
-    </div>
-    
-    <div class="form-group">
-        <label for="warranty">Garantie</label>
-        <input id="warranty" type="checkbox" formControlName="warranty" />
-    </div>
-    
-    <div class="form-group">
-        <label for="transmission">Getriebe</label>
-        <input id="transmission" type="text" formControlName="transmission" placeholder="Getriebeart" />
-    </div>
-    
-    <div class="form-group">
-        <label for="drive">Antrieb</label>
-        <input id="drive" type="text" formControlName="drive" placeholder="Antriebsart" />
-    </div>
-    
-    <div class="form-group">
-        <label for="color">Farbe</label>
-        <input id="color" type="text" formControlName="color" placeholder="Farbe" />
-    </div>
-    
-    <div class="form-group">
-        <label for="batteryCapacity">Batteriekapazität (optional)</label>
-        <input id="batteryCapacity" type="number" formControlName="batteryCapacity" placeholder="Batteriekapazität" />
-    </div>
-    
-    <div class="form-group">
-        <label for="range">Reichweite (optional)</label>
-        <input id="range" type="number" formControlName="range" placeholder="Reichweite" />
-    </div> -->
-  
-      <button type="submit" [disabled]="vehicleForm.invalid">Fahrzeug hinzufügen</button>
-    </form>
-  </div>
-  
+  <h1>Fahrzeug hinzufügen</h1>
+  <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+
+    <!-- Kategorie auswählen -->
+    <label for="category">Kategorie</label>
+    <select id="category" formControlName="category" (change)="onCategoryChange()">
+      <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+    </select>
+
+    <!-- Marke auswählen -->
+    <label for="brand">Marke</label>
+    <select id="brand" formControlName="brand" (change)="onBrandChange()" [disabled]="brands.length === 0">
+      <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
+    </select>
+
+    <!-- Modell auswählen -->
+    <label for="model">Modell</label>
+    <select id="model" formControlName="model" [disabled]="models.length === 0">
+      <option *ngFor="let model of models" [value]="model.id">{{ model.name }}</option>
+    </select>
+
+    <!-- Name -->
+    <label for="name">Fahrzeugname</label>
+    <input id="name" type="text" formControlName="name" placeholder="Fahrzeugname" />
+
+    <!-- Preis -->
+    <label for="price">Preis (€)</label>
+    <input id="price" type="number" formControlName="price" placeholder="Preis" />
+
+    <!-- Kilometerstand -->
+    <label for="mileage">Kilometerstand</label>
+    <input id="mileage" type="number" formControlName="mileage" placeholder="Kilometerstand" />
+
+    <!-- Erstzulassung -->
+    <label for="firstRegistration">Erstzulassung</label>
+    <input id="firstRegistration" type="date" formControlName="firstRegistration" />
+
+    <!-- Kraftstoffart -->
+    <label for="fuelType">Treibstoffart</label>
+    <input id="fuelType" type="text" formControlName="fuelType" placeholder="Treibstoffart" />
+
+    <!-- Leistung -->
+    <label for="power">Leistung (PS)</label>
+    <input id="power" type="number" formControlName="power" placeholder="Leistung in PS" />
+
+    <!-- Beschreibung -->
+    <label for="description">Beschreibung</label>
+    <textarea id="description" formControlName="description" rows="4" placeholder="Fahrzeugbeschreibung"></textarea>
+
+    <!-- Bild-URL -->
+    <label for="image">Bild</label>
+    <input id="image" type="text" formControlName="image" placeholder="Bild-URL" />
+
+    <!-- Verkäufer-ID -->
+    <label for="sellerId">Verkäufer-ID</label>
+    <input id="sellerId" type="number" formControlName="sellerId" placeholder="Verkäufer-ID" />
+
+    <!-- Fahrzeug hinzufügen Button -->
+    <button type="submit" [disabled]="vehicleForm.invalid">Fahrzeug hinzufügen</button>
+  </form>
+</div>
