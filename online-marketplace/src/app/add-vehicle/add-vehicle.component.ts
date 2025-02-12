@@ -8,11 +8,10 @@ import { VehicleService } from '../services/vehicle.service';
   templateUrl: './add-vehicle.component.html',
   styleUrls: ['./add-vehicle.component.css'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule], 
+  imports: [ReactiveFormsModule, CommonModule],
 })
 export class AddVehicleComponent {
   vehicleForm: FormGroup;
-  
 
   constructor(private fb: FormBuilder, private vehicleService: VehicleService) {
     this.vehicleForm = this.fb.group({
@@ -26,12 +25,11 @@ export class AddVehicleComponent {
       power: [0, [Validators.required, Validators.min(0)]],
       description: ['', Validators.required],
       category: ['Car', Validators.required],
-     image: [[] ],
-     
+      image: [''],  //soll ein string sein
       isSold: [false],
-      sellerId: [''],
+      sellerId: [0],
       location: [''],
-      doors: [4 ],
+      doors: [4],
       seats: [5],
       vehicleType: [''],
       condition: [''],
@@ -40,30 +38,35 @@ export class AddVehicleComponent {
       drive: [''],
       color: [''],
       batteryCapacity: [null],
-      range: [null], 
+      range: [null],
     });
   }
 
   onSubmit() {
     if (this.vehicleForm.valid) {
-      const formData = this.vehicleForm.value;
-      console.log('Formulardaten:', formData);
+      let formData = this.vehicleForm.value;
+  
+      // Falls das Bild ein Array ist, wandle es in einen String um (falls nötig)
+      if (Array.isArray(formData.image)) {
+        formData.image = formData.image.length > 0 ? formData.image[0] : ''; // Nur das erste Bild speichern
+      }
+  
+      console.log('📤 Sende Formulardaten:', formData); // Debugging
   
       this.vehicleService.addVehicle(formData).subscribe({
         next: (response) => {
-          console.log('Serverantwort:', response);
+          console.log('✅ Fahrzeug hinzugefügt:', response);
           alert('Fahrzeug erfolgreich hinzugefügt!');
           this.vehicleForm.reset();
         },
         error: (err) => {
-          console.error('Fehler beim Hinzufügen des Fahrzeugs:', err);
-          alert(`Fehler beim Hinzufügen des Fahrzeugs: ${err.message}`);
-        },
+          console.error('❌ Fehler beim Hinzufügen:', err);
+          alert(`Fehler beim Hinzufügen: ${err.message}`);
+        }
       });
     } else {
       alert('Bitte füllen Sie alle erforderlichen Felder aus.');
     }
   }
-  
   
 }

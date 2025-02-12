@@ -11,14 +11,12 @@ import { RouterModule } from '@angular/router';
 export class VehicleMarketComponent {
   constructor(private router: Router) {}
 
-  // Methode zur Ansicht aller Fahrzeuge
   viewVehicles() {
-    this.router.navigate(['/vehicles']);
+    this.router.navigate(['/vehicleMarket']);  
   }
 
-  // Methode zum Navigieren zur Fahrzeug-Hinzufügenseite
   navigateToAddVehicles() {
-    this.router.navigate(['/add-vehicle']);
+    this.router.navigate(['/vehicleMarket/add-vehicle']);  
   }
 
   /*logout() {

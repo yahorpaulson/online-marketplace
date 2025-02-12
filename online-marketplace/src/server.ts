@@ -34,17 +34,15 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
-const SECRET_KEY =  process.env['SECRET_KEY']! ;
+const SECRET_KEY ='WEBTECHPROJ' //process.env['SECRET_KEY']! ;
 
 const pool = new Pool({
- user: (process.env['DB_USER']),
-  host: process.env['DB_HOST'],
-  database: process.env['DB_NAME'],
-  password: String(process.env['DB_PASSWORD']),
-  port: Number(process.env['DB_PORT'])
+ user: 'postgres',
+  host: 'localhost', 
+  database: 'retail', 
+  password: 'postgres',
+  port: 5432
 });
-
-// Middleware for request parsing and CORS
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
@@ -91,13 +89,6 @@ app.post('/api/register', async (req: Request, res: Response) => {
     return res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error('Error during registration:', error);
-    console.log('DB Config:', {
-      user: process.env['DB_USER'],
-      host: process.env['DB_HOST'],
-      database: process.env['DB_NAME'],
-      password: process.env['DB_PASSWORD'],
-      port: process.env['DB_PORT']
-    });
     return res.status(500).json({ message: 'Internal Server Error' });
   }
 });
@@ -364,7 +355,119 @@ app.use('/**', (req: Request, res: Response, next: NextFunction) => {
 
 
 
+app.get('/api/vehicles', async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query('SELECT * FROM vehicles');
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching vehicles:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
 
+
+app.get('/api/vehicles/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query('SELECT * FROM vehicles WHERE id = $1', [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Vehicle not found' });  
+    }
+
+    return res.json(result.rows[0]); 
+  } catch (error) {
+    console.error('GET VEHICLE ERROR:', error);
+    return res.status(500).send('SERVER ERROR'); 
+  }
+});
+
+
+app.patch('/api/vehicles/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { isSold } = req.body;
+
+    const result = await pool.query(
+      'UPDATE vehicles SET isSold = $1 WHERE id = $2 RETURNING *',
+      [isSold, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Vehicle not found' });
+    }
+
+    return res.json(result.rows[0]);
+  } catch (error) {
+    console.error('UPDATE VEHICLE ERROR:', error);
+    return res.status(500).send('SERVER ERROR');
+  }
+});
+
+
+
+app.delete('/api/vehicles/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query(
+      'DELETE FROM vehicles WHERE id = $1 RETURNING *',
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: 'Vehicle not found' });
+    }
+
+    return res.status(200).json({ message: 'Vehicle deleted successfully' });
+  } catch (error) {
+    console.error('DELETE VEHICLE ERROR:', error);
+    return res.status(500).send('SERVER ERROR');
+  }
+});
+
+app.post('/api/vehicles', async (req: Request, res: Response) => {
+  console.log('Request body:', req.body);
+  try {
+    
+    const { name, mark, model, price, mileage, firstRegistration, fuelType, power, description, category, image, isSold, sellerId, location, doors, seats, vehicleType, condition, warranty, transmission, drive, color, batteryCapacity, range } = req.body;
+
+    // Pflichtfelder prüfen
+    if (!name || !mark || !model || !price || !category || !sellerId) {
+      console.error('❌ ERROR: Fehlende Pflichtfelder!', req.body);
+      return res.status(400).json({ error: 'Missing required fields', received: req.body });
+    }
+
+    // SQL-Query 
+    const query = `
+      INSERT INTO vehicles (
+        name, mark, model, price, mileage, first_registration, fuel_type, power,
+        description, category, image, is_sold, seller_id, location, doors, seats,
+        vehicle_type, condition, warranty, transmission, drive, color, battery_capacity, range
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, 
+        $17, $18, $19, $20, $21, $22, $23, $24
+      ) RETURNING *;
+    `;
+
+    const values = [
+      name, mark, model, price, mileage, firstRegistration, fuelType, power,
+      description, category, image|| '', isSold || false, sellerId, location || null, doors || null, seats || null,
+      vehicleType || null, condition || null, warranty || false, transmission || null, drive || null, color || null,
+      batteryCapacity || null, range || null
+    ];
+
+    console.log('🛠 SQL Query:', query);
+    console.log('🛠 SQL Values:', values);
+
+    // Daten in die Datenbank einfügen
+    const result = await pool.query(query, values);
+    return res.status(201).json(result.rows[0]);
+
+  } catch (error) {
+    console.error('Error saving vehicles:', error);
+    return res.status(500).json({ error: 'Internal Server Error' }); 
+  }
+});
 
 
 

@@ -75,7 +75,7 @@
     *ngFor="let vehicle of filteredVehicles" 
     class="vehicle-card"
     (click)="goToDetail(vehicle.id)">
-    <img [src]="vehicle.image[0]" alt="{{ vehicle.model }}" class="vehicle-image" />
+    <img [src]="vehicle.image[0] || 'assets/default-vehicle.jpg'" alt="{{ vehicle.name }}" class="vehicle-image" />
     <div class="vehicle-info">
       <h3>{{ vehicle.name }}</h3>
       <p><span>{{ vehicle.firstRegistration | date:'yyyy' }}, {{ vehicle.mileage }} km, {{ vehicle.power }} ps</span></p>

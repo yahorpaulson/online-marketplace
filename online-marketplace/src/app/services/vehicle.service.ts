@@ -10,7 +10,7 @@ import { VehicleData } from '../models/VehicleData';
   providedIn: 'root',
 })
 export class VehicleService {
-  private apiUrl = 'http://localhost:3000/vehicles'; // API-Endpunkt
+  private apiUrl = 'http://localhost:4000/api/vehicles'; // API-Endpunkt
 
   constructor(
     private http: HttpClient,
@@ -46,10 +46,18 @@ export class VehicleService {
    * @returns Observable of the created vehicle
    */
   addVehicle(vehicleData: VehicleData): Observable<Vehicle> {
-    return this.http.post<VehicleData>(this.apiUrl, vehicleData).pipe(
-      map((data) => this.vehicleFactory.createVehicleInstance(data))
+    console.log('Sende Fahrzeugdaten an Backend:', vehicleData); // Debugging
+  
+    return this.http.post<VehicleData>('http://localhost:4000/api/vehicles', vehicleData).pipe(
+      map((data) => {
+        console.log('Server Response:', data); // Antwort des Servers loggen
+        return this.vehicleFactory.createVehicleInstance(data);
+      })
     );
   }
+  
+  
+  
 
   /**
    * Update an existing vehicle.
