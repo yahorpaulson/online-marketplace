@@ -1,7 +1,7 @@
 <div class="vehicle-type-selector">
   <h2>Select a Vehicle Type</h2>
   <div class="type-buttons">
-    <button *ngFor="let type of ['Car', 'Truck', 'Motorcycle', 'Caravan']"
+    <button *ngFor="let type of categories"
             (click)="selectVehicleType(type)" 
             [class.active]="currentVehicleType === type">
       {{ type }}
@@ -12,69 +12,47 @@
 <div class="filter-container">
   <h2>Filter Vehicles</h2>
   <form (ngSubmit)="applyFilters()" class="filter-form">
+
+    <!-- 🔹 Brand (Dropdown) -->
+    <label for="brand">Brand:</label>
+    <select id="brand" [(ngModel)]="filters.brand" name="brand" (change)="onBrandChange()">
+      <option value="">All Brands</option>
+      <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
+    </select>
+
+    <!-- 🔹 Model (Dropdown) -->
+    <label for="model">Model:</label>
+    <select id="model" [(ngModel)]="filters.model" name="model">
+      <option value="">All Models</option>
+      <option *ngFor="let model of models" [value]="model.name">{{ model.name }}</option>
+    </select>
+
     <label>
       Search:
-      <input 
-        type="text" 
-        [(ngModel)]="filters.searchTerm" 
-        name="searchTerm" 
-        placeholder="Enter keywords (name, description)"
-      />
+      <input type="text" [(ngModel)]="filters.searchTerm" name="searchTerm" placeholder="Enter keywords">
     </label>
-    <label>
-      Brand:
-      <input 
-        type="text" 
-        [(ngModel)]="filters.brand" 
-        name="brand" 
-        placeholder="Enter brand" 
-      />
-    </label>
-    <label>
-      Model:
-      <input 
-        type="text" 
-        [(ngModel)]="filters.model" 
-        name="model" 
-        placeholder="Enter model" 
-      />
-    </label>
+
     <label>
       Max Price (€):
-      <input 
-        type="number" 
-        [(ngModel)]="filters.maxPrice" 
-        name="maxPrice" 
-        placeholder="Enter max price" 
-      />
+      <input type="number" [(ngModel)]="filters.maxPrice" name="maxPrice" placeholder="Enter max price">
     </label>
+
     <label>
       Max Mileage (km):
-      <input 
-        type="number" 
-        [(ngModel)]="filters.maxMileage" 
-        name="maxMileage" 
-        placeholder="Enter max mileage" 
-      />
+      <input type="number" [(ngModel)]="filters.maxMileage" name="maxMileage" placeholder="Enter max mileage">
     </label>
+
     <label>
       Min Year:
-      <input 
-        type="number" 
-        [(ngModel)]="filters.minYear" 
-        name="minYear" 
-        placeholder="Enter min year" 
-      />
+      <input type="number" [(ngModel)]="filters.minYear" name="minYear" placeholder="Enter min year">
     </label>
+
     <button type="submit" class="filter-button">Apply Filters</button>
   </form>
 </div>
 
 <div *ngIf="filteredVehicles.length > 0" class="vehicle-row">
-  <div 
-    *ngFor="let vehicle of filteredVehicles" 
-    class="vehicle-card"
-    (click)="goToDetail(vehicle.id)">
+  <div *ngFor="let vehicle of filteredVehicles" class="vehicle-card" (click)="goToDetail(vehicle.id)">
     <img [src]="vehicle.image[0] || 'assets/default-vehicle.jpg'" alt="{{ vehicle.name }}" class="vehicle-image" />
     <div class="vehicle-info">
       <h3>{{ vehicle.name }}</h3>
@@ -83,8 +61,8 @@
     </div>
   </div>
 </div>
-<button class="back-button" (click)="goBack()">Back</button>
 
+<button class="back-button" (click)="goBack()">Back</button>
 
 <div *ngIf="filteredVehicles.length === 0 && currentVehicleType" class="no-results">
   <p>No vehicles found for {{ currentVehicleType }} with the selected filters.</p>

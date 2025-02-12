@@ -4,17 +4,21 @@ import { Vehicle } from '../models/Vehicle';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-vehicle',
   templateUrl: './vehicle.component.html',
   styleUrls: ['./vehicle.component.css'],
-  imports:[CommonModule,FormsModule]
+  imports:[CommonModule, FormsModule]
 })
 export class VehicleComponent implements OnInit {
-  vehicles: Vehicle[] = []; // Alle Fahrzeuge
-  filteredVehicles: Vehicle[] = []; // Gefilterte Fahrzeuge
-  currentVehicleType: string | null = null; // Aktueller Fahrzeugtyp
+  vehicles: Vehicle[] = [];
+  filteredVehicles: Vehicle[] = [];
+  currentVehicleType: string | null = null;
+  brands: any[] = []; // List of brands
+  models: any[] = []; // List of models for selected brand
+
   filters = {
     searchTerm: '',
     brand: '',
@@ -24,37 +28,68 @@ export class VehicleComponent implements OnInit {
     minYear: null as number | null,
   };
 
-  constructor(private vehicleService: VehicleService, private router:Router) {}
+  constructor(private vehicleService: VehicleService, private router: Router,private cdRef: ChangeDetectorRef) {}
+  categories: string[] = ['Car', 'Truck', 'Motorcycle', 'Caravan'];
 
   ngOnInit() {
-    // Fahrzeuge beim Laden der Komponente abrufen
     this.loadVehicles();
+    this.loadBrands(); // Load available brands
   }
 
   /**
-   * Lädt alle Fahrzeuge von der API
+   * Load all vehicles from the API.
    */
   loadVehicles() {
     this.vehicleService.getVehicles().subscribe({
       next: (data) => {
         this.vehicles = data;
-        this.filteredVehicles = data; // Initial keine Filter
+        this.filteredVehicles = [...data]; 
+        this.cdRef.detectChanges(); // Manuell Angular zur Aktualisierung zwingen
+        console.log('🚗 Fahrzeuge geladen:', this.filteredVehicles);
       },
-      error: (err) => console.error('Fehler beim Laden der Fahrzeuge:', err),
+      error: (err) => console.error('❌ Fehler beim Laden der Fahrzeuge:', err),
     });
   }
 
   /**
-   * Setzt den aktuellen Fahrzeugtyp und filtert die Daten entsprechend.
-   * @param type Fahrzeugtyp (z.B. "Car", "Truck", etc.)
+   * Load all brands from the API.
    */
-  selectVehicleType(type: string) {
-    this.currentVehicleType = type;
-    this.filteredVehicles = this.vehicles.filter(v => v.category === type);
+  loadBrands() {
+    this.vehicleService.getBrands().subscribe({
+      next: (data) => {
+        this.brands = data;
+      },
+      error: (err) => console.error('Error loading brands:', err),
+    });
   }
 
   /**
-   * Wendet die Filter auf die Fahrzeuge an.
+   * Load models based on selected brand.
+   */
+  onBrandChange() {
+    const selectedBrand = Number(this.filters.brand); // Konvertiere in Zahl
+  
+    if (!isNaN(selectedBrand)) { // Überprüfe, ob die Konvertierung erfolgreich war
+      this.vehicleService.getModels(selectedBrand).subscribe({
+        next: (data) => {
+          this.models = data;
+        },
+        error: (err) => console.error('Error loading models:', err),
+      });
+    } else {
+      this.models = [];
+    }
+  }
+
+  selectVehicleType(type: string) {
+    console.log("Selected vehicle type:", type); // Debugging
+    this.currentVehicleType = type;
+    this.filteredVehicles = this.vehicles.filter(v => v.category === type);
+  }
+  
+
+  /**
+   * Apply selected filters to the vehicle list.
    */
   applyFilters() {
     if (!this.currentVehicleType) {
@@ -98,14 +133,27 @@ export class VehicleComponent implements OnInit {
           matchesYear
         );
       });
+  
+    // 🔥 UI-Update erzwingen, damit das letzte Fahrzeug sofort geladen wird
+    this.filteredVehicles = [...this.filteredVehicles];
+  
+    console.log('🔍 Filter applied, updated list:', this.filteredVehicles);
   }
   
   
 
+  /**
+   * Navigate to vehicle details page.
+   */
   goToDetail(vehicleId: number): void {
-    this.router.navigate(['/vehicles', vehicleId]); // Adjust the route if needed
+    this.router.navigate(['/vehicleMarket/vehicles', vehicleId]);
   }
+
+  /**
+   * Navigate back to the main vehicle marketplace.
+   */
   goBack(): void {
-    this.router.navigate(['/vehicleMarket']); // Adjust the route as needed
+    this.router.navigate(['/retail']);
   }
+  
 }
