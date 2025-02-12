@@ -39,9 +39,9 @@ const SECRET_KEY ='WEBTECHPROJ' //process.env['SECRET_KEY']! ;
 const pool = new Pool({
  user: 'postgres',
   host: 'localhost', 
-  database: 'retail', 
+  database: 'retail',
   password: 'postgres',
-  port: 5432
+  port: 5432,
 });
 app.use(cors());
 app.use(bodyParser.json());
@@ -433,7 +433,7 @@ app.post('/api/vehicles', async (req: Request, res: Response) => {
 
     // Pflichtfelder prüfen
     if (!name || !mark || !model || !price || !category || !sellerId) {
-      console.error('❌ ERROR: Fehlende Pflichtfelder!', req.body);
+      console.error('ERROR: Fehlende Pflichtfelder!', req.body);
       return res.status(400).json({ error: 'Missing required fields', received: req.body });
     }
 
@@ -456,8 +456,8 @@ app.post('/api/vehicles', async (req: Request, res: Response) => {
       batteryCapacity || null, range || null
     ];
 
-    console.log('🛠 SQL Query:', query);
-    console.log('🛠 SQL Values:', values);
+    console.log('SQL Query:', query);
+    console.log('SQL Values:', values);
 
     // Daten in die Datenbank einfügen
     const result = await pool.query(query, values);
@@ -469,6 +469,47 @@ app.post('/api/vehicles', async (req: Request, res: Response) => {
   }
 });
 
+app.get('/api/brands', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM brands ORDER BY name');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Fehler beim Abrufen der Marken:', err);
+    res.status(500).json({ error: 'Serverfehler' });
+  }
+});
+
+app.get('/api/models', async (req, res) => {
+  const { brandId } = req.query; // Query-Parameter holen
+  try {
+    let query = 'SELECT * FROM models ORDER BY name';
+    let values: any[] = [];
+
+    if (brandId) { // Falls eine Marke gefiltert wird
+      query = 'SELECT * FROM models WHERE brand_id = $1 ORDER BY name';
+      values = [brandId];
+    }
+
+    const result = await pool.query(query, values);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Fehler beim Abrufen der Modelle:', err);
+    res.status(500).json({ error: 'Serverfehler' });
+  }
+});
+;
+
+
+app.get('/api/models/:brand_id', async (req, res) => {
+  const { brand_id } = req.params;
+  try {
+    const result = await pool.query('SELECT * FROM models WHERE brand_id = $1 ORDER BY name', [brand_id]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Fehler beim Abrufen der Modelle:', err);
+    res.status(500).json({ error: 'Serverfehler' });
+  }
+});
 
 
 // Start the server
