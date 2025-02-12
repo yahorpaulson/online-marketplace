@@ -12,7 +12,7 @@ export abstract class Vehicle {
     private _description:string,
     private _image:string [],
     private _isSold: boolean,
-    private _sellerId: string,
+    private _sellerId: number,
     private _location: string,
     public category: 'Car' | 'Truck' | 'Motorcycle' | 'Caravan'
 
@@ -103,10 +103,10 @@ export abstract class Vehicle {
   public set location(value: string) {
     this._location = value;
   }
-  public get sellerId(): string {
+  public get sellerId(): number{
     return this._sellerId;
   }
-  public set sellerId(value: string) {
+  public set sellerId(value: number) {
     this._sellerId = value;
   }
   public get isSold(): boolean {

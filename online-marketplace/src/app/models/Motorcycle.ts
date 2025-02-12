@@ -14,7 +14,7 @@ export class Motorcycle extends Vehicle {
     description:string,
     image:string[],
     isSold:boolean,
-    sellerId:string,
+    sellerId:number,
     location:string,
     private _engineCapacity: number,
     private _cylinders: number,

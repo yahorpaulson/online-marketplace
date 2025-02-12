@@ -17,7 +17,7 @@ export class Truck extends Vehicle {
     description: string,
     image: string[],
     isSold:boolean,
-    sellerId:string,
+    sellerId:number,
     location:string,
     private _vehicleType: 'Abschleppwagen' | 'Agrarfahrzeug' | 'Anhänger' | 'Auflieger' | 'Bus' | 'LKW über 3,5t' | 'Pickup' | 'Transporter',
     private _condition: 'Gebrauchtwagen' | 'Jahreswagen' | 'Neuwagen' | 'Unfallwagen',

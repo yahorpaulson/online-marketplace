@@ -11,7 +11,7 @@ export interface VehicleData {
     description: string;
     image: string[];
     isSold: boolean;
-    sellerId: string;
+    sellerId: number;
     location: string;
     category: 'Car' | 'Truck' | 'Motorcycle' | 'Caravan';
     doors?: number; // Nur für Autos

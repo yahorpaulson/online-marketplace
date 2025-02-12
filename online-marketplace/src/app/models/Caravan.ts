@@ -14,7 +14,7 @@ export class Caravan extends Vehicle {
     description:string,
     image:string[],
     isSold:boolean,
-    sellerId:string,
+    sellerId:number,
     location:string,
     private _vehicleType: 'Alkoven' | 'Kastenwagen' | 'Teilintegriertes Wohnmobil' | 'Wohnkabine' | 'Wohnwagen',
     private _condition: 'Gebrauchtwagen' | 'Jahreswagen' | 'Neuwagen' | 'Unfallwagen',

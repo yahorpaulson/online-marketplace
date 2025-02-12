@@ -14,7 +14,7 @@ export class Car extends Vehicle {
     description:string,
     image:string [],
     isSold:boolean,
-    sellerId:string,
+    sellerId:number,
     location:string,
     private _doors: number,
     private _seats: number,
