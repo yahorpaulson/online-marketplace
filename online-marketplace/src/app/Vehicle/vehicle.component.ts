@@ -18,11 +18,12 @@ export class VehicleComponent implements OnInit {
   currentVehicleType: string | null = null;
   brands: any[] = []; // List of brands
   models: any[] = []; // List of models for selected brand
+  firstRegistrationYears: number[] = []; 
 
   filters = {
     searchTerm: '',
-    brand: '',
-    model: '',
+    brand: 0,
+    model: 0,
     maxPrice: null as number | null,
     maxMileage: null as number | null,
     minYear: null as number | null,
@@ -33,7 +34,8 @@ export class VehicleComponent implements OnInit {
 
   ngOnInit() {
     this.loadVehicles();
-    this.loadBrands(); // Load available brands
+    this.loadBrands(); 
+    this.generateFirstRegistrationYears();
   }
 
   /**
@@ -42,14 +44,15 @@ export class VehicleComponent implements OnInit {
   loadVehicles() {
     this.vehicleService.getVehicles().subscribe({
       next: (data) => {
+        console.log('🚗 RAW VEHICLE DATA FROM API:', data);
         this.vehicles = data;
         this.filteredVehicles = [...data]; 
-        this.cdRef.detectChanges(); // Manuell Angular zur Aktualisierung zwingen
-        console.log('🚗 Fahrzeuge geladen:', this.filteredVehicles);
+        console.log('🚗 Vehicles stored in component:', this.vehicles);
       },
       error: (err) => console.error('❌ Fehler beim Laden der Fahrzeuge:', err),
     });
   }
+  
 
   /**
    * Load all brands from the API.
@@ -86,59 +89,54 @@ export class VehicleComponent implements OnInit {
     this.currentVehicleType = type;
     this.filteredVehicles = this.vehicles.filter(v => v.category === type);
   }
+
+  generateFirstRegistrationYears() {
+    const startYear = 1990;
+    const endYear = new Date().getFullYear(); // Aktuelles Jahr
+    this.firstRegistrationYears = Array.from({ length: endYear - startYear + 1 }, (_, i) => startYear + i);
+  }
   
 
   /**
    * Apply selected filters to the vehicle list.
    */
   applyFilters() {
-    if (!this.currentVehicleType) {
-      return; // Wenn kein Typ ausgewählt wurde, nichts tun
-    }
-  
-    this.filteredVehicles = this.vehicles
-      .filter((v) => v.category === this.currentVehicleType) // Nach Typ filtern
-      .filter((v) => {
-        const matchesSearchTerm = this.filters.searchTerm
-          ? v.name?.toLowerCase().includes(this.filters.searchTerm.toLowerCase()) ||
-            v.description?.toLowerCase().includes(this.filters.searchTerm.toLowerCase())
-          : true;
-  
-        const matchesBrand = this.filters.brand
-          ? v.mark?.toLowerCase().includes(this.filters.brand.toLowerCase())
-          : true;
-  
-        const matchesModel = this.filters.model
-          ? v.model?.toLowerCase().includes(this.filters.model.toLowerCase())
-          : true;
-  
-        const matchesPrice = this.filters.maxPrice
-          ? v.price <= this.filters.maxPrice
-          : true;
-  
-        const matchesMileage = this.filters.maxMileage
-          ? v.mileage <= this.filters.maxMileage
-          : true;
-  
-        const matchesYear = this.filters.minYear
-          ? new Date(v.firstRegistration).getFullYear() >= this.filters.minYear
-          : true;
-  
-        return (
-          matchesSearchTerm &&
-          matchesBrand &&
-          matchesModel &&
-          matchesPrice &&
-          matchesMileage &&
-          matchesYear
-        );
-      });
-  
-    // 🔥 UI-Update erzwingen, damit das letzte Fahrzeug sofort geladen wird
-    this.filteredVehicles = [...this.filteredVehicles];
-  
+    if (!this.currentVehicleType) return;
+
+    console.log('🔍 Applying Filters...');
+    console.log('Selected Vehicle Type:', this.currentVehicleType);
+    console.log('Filters:', this.filters);
+
+    this.filteredVehicles = this.vehicles.filter(v => {
+      console.log('Checking vehicle:', v); // Debugging
+      
+      const matchesCategory = v.category === this.currentVehicleType;
+      const matchesSearchTerm = this.filters.searchTerm
+        ? v.name.toLowerCase().includes(this.filters.searchTerm.toLowerCase()) ||
+          v.description.toLowerCase().includes(this.filters.searchTerm.toLowerCase())
+        : true;
+
+      const matchesBrand = this.filters.brand
+        ? Number(v.brandId) === Number(this.filters.brand)
+        : true;
+
+      const matchesModel = this.filters.model
+        ? Number(v.modelId) === Number(this.filters.model)
+        : true;
+
+      const matchesPrice = this.filters.maxPrice ? v.price <= this.filters.maxPrice : true;
+      const matchesMileage = this.filters.maxMileage ? v.mileage <= this.filters.maxMileage : true;
+      const matchesYear = this.filters.minYear ? Number(v.firstRegistration) >= Number(this.filters.minYear) : true;
+
+      return matchesCategory && matchesSearchTerm && matchesBrand && matchesModel && matchesPrice && matchesMileage && matchesYear;
+    });
+
     console.log('🔍 Filter applied, updated list:', this.filteredVehicles);
+
+    this.cdRef.detectChanges(); // 🔥 Manuelle Aktualisierung erzwingen!
   }
+  
+  
   
   
 
