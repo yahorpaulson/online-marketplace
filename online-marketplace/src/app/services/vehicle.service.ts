@@ -92,4 +92,10 @@ export class VehicleService {
   getModels(brandId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl1}/models?brandId=${brandId}`);
   }
+
+  getFirstRegistrationYears(): Observable<number[]> {
+    return this.http.get<{ year: number }[]>('http://localhost:4000/api/first-registrations')
+      .pipe(map(data => data.map(entry => entry.year))); // Nur die Jahre extrahieren
+  }
+  
 }

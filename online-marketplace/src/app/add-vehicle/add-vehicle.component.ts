@@ -16,6 +16,9 @@ export class AddVehicleComponent implements OnInit {
   models: any[] = []; // Gefilterte Modelle
   allBrands: any[] = []; // Alle Marken
   allModels: any[] = []; // Alle Modelle
+  firstRegistrationYears: number[] = [];
+  fuelTypes: string[] = ['Diesel', 'Benzin', 'Gas']; // Treibstoffarten
+  powerOptions: number[] = [];
 
   constructor(private fb: FormBuilder, private vehicleService: VehicleService) {
     this.vehicleForm = this.fb.group({
@@ -48,8 +51,15 @@ export class AddVehicleComponent implements OnInit {
 
   ngOnInit() {
     this.loadBrands();
+    this.loadFirstRegistrationYears();
+    this.generatePowerOptions();
   }
 
+  generatePowerOptions() {
+    for (let i = 50; i <= 150; i += 10) {
+      this.powerOptions.push(i);
+    }
+  }
   // Lade alle Marken aus der DB
   loadBrands() {
     this.vehicleService.getBrands().subscribe({
@@ -74,6 +84,13 @@ loadModels(brandId: number) {
       this.models = data;
     },
     error: (err) => console.error('Fehler beim Laden der Modelle:', err),
+  });
+}
+
+loadFirstRegistrationYears() {
+  this.vehicleService.getFirstRegistrationYears().subscribe({
+    next: (data) => this.firstRegistrationYears = data,
+    error: (err) => console.error('Error loading first registration years:', err)
   });
 }
 

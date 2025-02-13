@@ -32,17 +32,26 @@
     <label for="mileage">Kilometerstand</label>
     <input id="mileage" type="number" formControlName="mileage" placeholder="Kilometerstand" />
 
-    <!-- Erstzulassung -->
     <label for="firstRegistration">Erstzulassung</label>
-    <input id="firstRegistration" type="date" formControlName="firstRegistration" />
+    <select id="firstRegistration" formControlName="firstRegistration">
+      <option *ngFor="let year of firstRegistrationYears" [value]="year">
+        {{ year }}
+      </option>
+    </select>
+    
 
-    <!-- Kraftstoffart -->
-    <label for="fuelType">Treibstoffart</label>
-    <input id="fuelType" type="text" formControlName="fuelType" placeholder="Treibstoffart" />
+  <!-- Kraftstoffart -->
+<label for="fuelType">Treibstoffart</label>
+<select id="fuelType" formControlName="fuelType">
+  <option *ngFor="let fuel of fuelTypes" [value]="fuel">{{ fuel }}</option>
+</select>
 
-    <!-- Leistung -->
-    <label for="power">Leistung (PS)</label>
-    <input id="power" type="number" formControlName="power" placeholder="Leistung in PS" />
+<!-- Leistung -->
+<label for="power">Leistung (PS)</label>
+<select id="power" formControlName="power">
+  <option *ngFor="let ps of powerOptions" [value]="ps">{{ ps }} PS</option>
+</select>
+>
 
     <!-- Beschreibung -->
     <label for="description">Beschreibung</label>
