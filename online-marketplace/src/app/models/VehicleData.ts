@@ -5,7 +5,7 @@ export interface VehicleData {
     model: string;
     price: number;
     mileage: number;
-    firstRegistration: string;
+    firstRegistration: number;
     fuelType: string;
     power: number;
     description: string;

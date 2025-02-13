@@ -8,7 +8,7 @@ export class Car extends Vehicle {
     model: string,
     price: number,
     mileage: number,
-    firstRegistration: Date,
+    firstRegistration: number,
     fuelType: string,
     power: number,
     description:string,

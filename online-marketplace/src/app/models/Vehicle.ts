@@ -6,7 +6,7 @@ export abstract class Vehicle {
     private _model: string,
     private _price: number,
     private _mileage: number,
-    private _firstRegistration: Date,
+    private _firstRegistration: number,
     private _fuelType: string,
     private _power: number,
     private _description:string,
@@ -57,10 +57,10 @@ export abstract class Vehicle {
     this._mileage = value;
   }
 
-  get firstRegistration(): Date {
+  get firstRegistration():number {
     return this._firstRegistration;
   }
-  set firstRegistration(value: Date) {
+  set firstRegistration(value: number) {
     this._firstRegistration = value;
   }
 
