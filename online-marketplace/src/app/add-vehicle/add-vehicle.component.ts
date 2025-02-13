@@ -60,7 +60,7 @@ export class AddVehicleComponent implements OnInit {
       this.powerOptions.push(i);
     }
   }
-  // Lade alle Marken aus der DB
+
   loadBrands() {
     this.vehicleService.getBrands().subscribe({
       next: (data) => {
@@ -71,10 +71,10 @@ export class AddVehicleComponent implements OnInit {
     });
   }
 
-  // Lade Modelle für eine bestimmte Marke aus der DB
+ 
 loadModels(brandId: number) {
   if (!brandId) {
-    this.models = []; // Falls keine Marke ausgewählt ist, setze die Modelle zurück
+    this.models = []; 
     return;
   }
 
@@ -95,7 +95,7 @@ loadFirstRegistrationYears() {
 }
 
 
-  // Filtere Marken basierend auf der gewählten Kategorie
+  
   onCategoryChange() {
     const selectedCategory = this.vehicleForm.get('category')?.value;
     this.brands = this.allBrands.filter((brand) => brand.category === selectedCategory);
@@ -104,29 +104,49 @@ loadFirstRegistrationYears() {
     this.vehicleForm.get('model')?.setValue('');
   }
 
-  // Filtere Modelle basierend auf der gewählten Marke
+  
   onBrandChange() {
     const selectedBrandId = this.vehicleForm.get('brand')?.value;
-    console.log('📌 Gewählte Marke ID:', selectedBrandId);
+    console.log('Gewählte Marke ID:', selectedBrandId);
   
-    this.loadModels(selectedBrandId); // Lade Modelle für diese Marke
+    this.loadModels(selectedBrandId); 
   }
   
 
   onSubmit() {
     if (this.vehicleForm.valid) {
       let formData = this.vehicleForm.value;
-
-      console.log('📤 Sende Formulardaten:', formData);
-
-      this.vehicleService.addVehicle(formData).subscribe({
+  
+      // Finde die ausgewählte Marke
+      const selectedBrand = this.allBrands.find(b => b.id === Number(formData.brand));
+      const selectedModel = this.models.find(m => m.id === Number(formData.model));
+  
+      if (!selectedBrand || !selectedModel) {
+        alert("Ungültige Marke oder Modell ausgewählt.");
+        return;
+      }
+  
+      // Erstelle ein neues Objekt für die API-Anfrage
+      const vehicleData = {
+        ...formData,
+        brandId: selectedBrand.id,   
+        brand: selectedBrand.name,   
+        modelId: selectedModel.id,   
+        model: selectedModel.name,   
+        firstRegistration: parseInt(formData.firstRegistration, 10), 
+        power: parseInt(formData.power, 10) 
+      };
+  
+      console.log('Sende Fahrzeugdaten:', vehicleData);
+  
+      this.vehicleService.addVehicle(vehicleData).subscribe({
         next: (response) => {
-          console.log('✅ Fahrzeug hinzugefügt:', response);
+          console.log('Fahrzeug hinzugefügt:', response);
           alert('Fahrzeug erfolgreich hinzugefügt!');
           this.vehicleForm.reset();
         },
         error: (err) => {
-          console.error('❌ Fehler beim Hinzufügen:', err);
+          console.error('Fehler beim Hinzufügen:', err);
           alert(`Fehler beim Hinzufügen: ${err.message}`);
         },
       });
@@ -134,4 +154,5 @@ loadFirstRegistrationYears() {
       alert('Bitte füllen Sie alle erforderlichen Felder aus.');
     }
   }
+  
 }

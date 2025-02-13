@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { AuthserviceService } from '../authservice.service';
 
 @Component({
   selector: 'app-vehicle-market',
@@ -9,7 +10,7 @@ import { RouterModule } from '@angular/router';
   imports:[RouterModule]
 })
 export class VehicleMarketComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router,private authService: AuthserviceService) {}
 
   viewVehicles() {
     this.router.navigate(['/vehicleMarket']);  
@@ -19,9 +20,16 @@ export class VehicleMarketComponent {
     this.router.navigate(['/vehicleMarket/add-vehicle']);  
   }
 
-  /*logout() {
-    // Beispiel für Logout-Logik
-    console.log('User logged out');
+  logout(): void {
+    this.authService.logout();
     this.router.navigate(['/login']);
-  } */
+  }
+
+    goMessages(): void {
+      this.router.navigate(['/retail/messages']);
+    }
+
+    backToMainPage(): void {
+      this.router.navigate(['/retail']);
+    }
 }

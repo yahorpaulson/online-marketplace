@@ -19,7 +19,9 @@ export class VehicleFactoryService {
         return new Car(
           data.id,
           data.name,
+          data.brandId,
           data.brand,
+          data.modelId,
           data.model,
           data.price,
           data.mileage,
@@ -57,7 +59,9 @@ export class VehicleFactoryService {
         return new Truck(
           data.id,
           data.name,
+          data.brandId,
           data.brand,
+          data.modelId,
           data.model,
           data.price,
           data.mileage,
@@ -92,7 +96,9 @@ export class VehicleFactoryService {
         return new Motorcycle(
           data.id,
           data.name,
+          data.brandId,
           data.brand,
+          data.modelId,
           data.model,
           data.price,
           data.mileage,
@@ -123,7 +129,9 @@ export class VehicleFactoryService {
         return new Caravan(
           data.id,
           data.name,
+          data.brandId,
           data.brand,
+          data.modelId,
           data.model,
           data.price,
           data.mileage,
