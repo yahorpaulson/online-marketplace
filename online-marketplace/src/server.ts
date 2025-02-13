@@ -428,20 +428,23 @@ app.delete('/api/vehicles/:id', async (req: Request, res: Response) => {
 app.post('/api/vehicles', async (req: Request, res: Response) => {
   console.log('Request body:', req.body);
   try {
-    
-    const { name, mark, model, price, mileage, firstRegistration, fuelType, power, description, category, image, isSold, sellerId, location, doors, seats, vehicleType, condition, warranty, transmission, drive, color, batteryCapacity, range } = req.body;
+    const {
+      name, category, brand, model, price, mileage, firstRegistration, fuelType,
+      power, description, image, isSold, sellerId, location, doors, seats,
+      vehicleType, condition, warranty, transmission, drive, color, batteryCapacity, range
+    } = req.body;
 
     // Pflichtfelder prüfen
-    if (!name || !mark || !model || !price || !category || !sellerId) {
-      console.error('ERROR: Fehlende Pflichtfelder!', req.body);
+    if (!name || !brand || !model || !price || !category || !sellerId) {
+      console.error('ERROR: Missing required fields!', req.body);
       return res.status(400).json({ error: 'Missing required fields', received: req.body });
     }
 
-    // SQL-Query 
+    // SQL Query, um das Fahrzeug in die DB einzufügen (mit IDs)
     const query = `
       INSERT INTO vehicles (
-        name, mark, model, price, mileage, first_registration, fuel_type, power,
-        description, category, image, is_sold, seller_id, location, doors, seats,
+        name, category, brand_id, model_id, price, mileage, first_registration, fuel_type,
+        power, description, image, is_sold, seller_id, location, doors, seats,
         vehicle_type, condition, warranty, transmission, drive, color, battery_capacity, range
       ) VALUES (
         $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, 
@@ -450,24 +453,26 @@ app.post('/api/vehicles', async (req: Request, res: Response) => {
     `;
 
     const values = [
-      name, mark, model, price, mileage, firstRegistration, fuelType, power,
-      description, category, image|| '', isSold || false, sellerId, location || null, doors || null, seats || null,
+      name, category, brand, model, price, mileage, parseInt(firstRegistration, 10), fuelType,
+      power, description, image || '', isSold || false, sellerId, location || null, doors || null, seats || null,
       vehicleType || null, condition || null, warranty || false, transmission || null, drive || null, color || null,
       batteryCapacity || null, range || null
     ];
 
-    console.log('SQL Query:', query);
-    console.log('SQL Values:', values);
+    console.log('🚀 SQL Query:', query);
+    console.log('💾 SQL Values:', values);
 
-    // Daten in die Datenbank einfügen
     const result = await pool.query(query, values);
     return res.status(201).json(result.rows[0]);
 
   } catch (error) {
-    console.error('Error saving vehicles:', error);
-    return res.status(500).json({ error: 'Internal Server Error' }); 
+    console.error('❌ Error saving vehicle:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
+
 
 app.get('/api/brands', async (req, res) => {
   try {
@@ -510,6 +515,17 @@ app.get('/api/models/:brand_id', async (req, res) => {
     res.status(500).json({ error: 'Serverfehler' });
   }
 });
+
+app.get('/api/first-registrations', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM first_registration ORDER BY year ASC');
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Error fetching first registration years:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 
 // Start the server
