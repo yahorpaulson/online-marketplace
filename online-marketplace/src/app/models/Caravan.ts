@@ -4,7 +4,9 @@ export class Caravan extends Vehicle {
   constructor(
     id: number,
     name:string,
-    brand: string,
+    brandId: number,  
+    brand: string,    
+    modelId: number,  
     model: string,
     price: number,
     mileage: number,
@@ -21,7 +23,7 @@ export class Caravan extends Vehicle {
     private _warranty: boolean,
     private _color: string
   ) {
-    super(id, name,brand, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location,'Caravan');
+    super(id, name, brandId, brand, modelId, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location,'Caravan');
   }
 
   getVehicleType(): string {

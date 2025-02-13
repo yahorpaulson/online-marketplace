@@ -1,14 +1,13 @@
 import { Vehicle } from './Vehicle';
 
 export class Truck extends Vehicle {
-  override getVehicleType(): string {
-    throw new Error('Method not implemented.');
-  }
   constructor(
     id: number,
-    name:string,
-    brand: string,
-    model: string,
+    name: string,
+    brandId: number,  
+    brand: string,    
+    modelId: number,  
+    model: string,   
     price: number,
     mileage: number,
     firstRegistration: number,
@@ -16,9 +15,9 @@ export class Truck extends Vehicle {
     power: number,
     description: string,
     image: string[],
-    isSold:boolean,
-    sellerId:number,
-    location:string,
+    isSold: boolean,
+    sellerId: number,
+    location: string,
     private _vehicleType: 'Abschleppwagen' | 'Agrarfahrzeug' | 'Anhänger' | 'Auflieger' | 'Bus' | 'LKW über 3,5t' | 'Pickup' | 'Transporter',
     private _condition: 'Gebrauchtwagen' | 'Jahreswagen' | 'Neuwagen' | 'Unfallwagen',
     private _warranty: boolean,
@@ -26,14 +25,19 @@ export class Truck extends Vehicle {
     private _drive: string,
     private _color: string
   ) {
-    super(id, name,brand, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location,'Truck');
+    super(id, name, brandId, brand, modelId, model, price, mileage, firstRegistration, fuelType, power, description, image, isSold, sellerId, location, 'Truck');
   }
 
-  get condition(): string {
+  
+  override getVehicleType(): string {
+    return 'Truck';
+  }
+
+  get condition(): 'Gebrauchtwagen' | 'Jahreswagen' | 'Neuwagen' | 'Unfallwagen' {
     return this._condition;
   }
-  set condition(value: string) {
-    this._condition = value as any;
+  set condition(value: 'Gebrauchtwagen' | 'Jahreswagen' | 'Neuwagen' | 'Unfallwagen') {
+    this._condition = value;
   }
 
   get transmission(): string {
@@ -56,6 +60,7 @@ export class Truck extends Vehicle {
   set color(value: string) {
     this._color = value;
   }
+
   get warranty(): boolean {
     return this._warranty;
   }
@@ -63,10 +68,10 @@ export class Truck extends Vehicle {
     this._warranty = value;
   }
 
-  get vehicleType(): string {
+  get vehicleType(): 'Abschleppwagen' | 'Agrarfahrzeug' | 'Anhänger' | 'Auflieger' | 'Bus' | 'LKW über 3,5t' | 'Pickup' | 'Transporter' {
     return this._vehicleType;
   }
-  set vehicleType(value: string) {
-    this._vehicleType = value as any;
+  set vehicleType(value: 'Abschleppwagen' | 'Agrarfahrzeug' | 'Anhänger' | 'Auflieger' | 'Bus' | 'LKW über 3,5t' | 'Pickup' | 'Transporter') {
+    this._vehicleType = value;
   }
 }

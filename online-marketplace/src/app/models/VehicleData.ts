@@ -1,8 +1,10 @@
 export interface VehicleData {
     id: number;
     name: string;
-    brand: string;
-    model: string;
+    brandId: number,  
+    brand: string,    
+    modelId: number,  
+    model: string,
     price: number;
     mileage: number;
     firstRegistration: number;

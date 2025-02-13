@@ -1,7 +1,7 @@
 <div *ngIf="vehicle">
     <h2>{{ vehicle.name }}</h2>
     <img [src]="vehicle.image[0] || 'assets/default-vehicle.jpg'" alt="{{ vehicle.name }}"  />
-    <p><strong>Brand:</strong> {{ vehicle.mark }}</p>
+    <p><strong>Brand:</strong> {{ vehicle.brand }}</p>
     <p><strong>Model:</strong> {{ vehicle.model }}</p>
     <p><strong>Price:</strong> €{{ vehicle.price }}</p>
     <p><strong>Mileage:</strong> {{ vehicle.mileage }} km</p>

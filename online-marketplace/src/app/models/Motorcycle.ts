@@ -4,7 +4,9 @@ export class Motorcycle extends Vehicle {
   constructor(
     id: number,
     name:string,
-    brand: string,
+    brandId: number,  
+    brand: string,    
+    modelId: number,  
     model: string,
     price: number,
     mileage: number,
@@ -23,7 +25,7 @@ export class Motorcycle extends Vehicle {
     private _batteryCapacity?: number,
     private _range?: number
   ) {
-    super(id,name, brand, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location,'Motorcycle');
+    super(id,name,  brandId, brand, modelId, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location,'Motorcycle');
   }
 
   getVehicleType(): string {

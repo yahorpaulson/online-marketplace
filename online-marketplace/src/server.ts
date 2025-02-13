@@ -354,16 +354,46 @@ app.use('/**', (req: Request, res: Response, next: NextFunction) => {
 });
 
 
-
-app.get('/api/vehicles', async (req: Request, res: Response) => {
+app.get('/api/vehicles', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM vehicles');
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error fetching vehicles:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+      const result = await pool.query('SELECT * FROM vehicles ORDER BY brand_id ASC');
+      
+      // 🚀 Umwandlung von snake_case → camelCase für das Frontend
+      const vehicles = result.rows.map(vehicle => ({
+          id: vehicle.id,
+          name: vehicle.name,
+          brandId: vehicle.brand_id,  
+          modelId: vehicle.model_id,  
+          brand: vehicle.brand,
+          model: vehicle.model,
+          price: vehicle.price,
+          mileage: vehicle.mileage,
+          firstRegistration: vehicle.first_registration,  
+          fuelType: vehicle.fuel_type,  
+          power: vehicle.power,
+          description: vehicle.description,
+          image: vehicle.image,
+          isSold: vehicle.is_sold,  
+          sellerId: vehicle.seller_id,
+          location: vehicle.location,
+          category: vehicle.category,
+          doors: vehicle.doors,
+          seats: vehicle.seats,
+          vehicleType: vehicle.vehicle_type,
+          condition: vehicle.condition,
+          warranty: vehicle.warranty,
+          transmission: vehicle.transmission,
+          drive: vehicle.drive,
+          color: vehicle.color
+      }));
+
+      res.json(vehicles);
+  } catch (err) {
+      console.error('Fehler beim Abrufen der Fahrzeuge:', err);
+      res.status(500).json({ error: 'Serverfehler' });
   }
 });
+
 
 
 app.get('/api/vehicles/:id', async (req: Request, res: Response) => {
@@ -429,31 +459,32 @@ app.post('/api/vehicles', async (req: Request, res: Response) => {
   console.log('Request body:', req.body);
   try {
     const {
-      name, category, brand, model, price, mileage, firstRegistration, fuelType,
+      name, category, brandId, brand, modelId, model, price, mileage, firstRegistration, fuelType,
       power, description, image, isSold, sellerId, location, doors, seats,
       vehicleType, condition, warranty, transmission, drive, color, batteryCapacity, range
     } = req.body;
 
     // Pflichtfelder prüfen
-    if (!name || !brand || !model || !price || !category || !sellerId) {
-      console.error('ERROR: Missing required fields!', req.body);
+    if (!name || !brandId || !brand || !modelId || !model || !price || !category || !sellerId) {
+      console.error('❌ ERROR: Missing required fields!', req.body);
       return res.status(400).json({ error: 'Missing required fields', received: req.body });
     }
 
-    // SQL Query, um das Fahrzeug in die DB einzufügen (mit IDs)
+    // SQL Query (fügt `brand` & `model` zusätzlich zu `brandId` & `modelId` hinzu)
     const query = `
       INSERT INTO vehicles (
-        name, category, brand_id, model_id, price, mileage, first_registration, fuel_type,
+        name, category, brand_id, brand, model_id, model, price, mileage, first_registration, fuel_type,
         power, description, image, is_sold, seller_id, location, doors, seats,
         vehicle_type, condition, warranty, transmission, drive, color, battery_capacity, range
       ) VALUES (
         $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, 
-        $17, $18, $19, $20, $21, $22, $23, $24
+        $17, $18, $19, $20, $21, $22, $23, $24, $25, $26
       ) RETURNING *;
     `;
 
+    // Werte mit `camelCase → snake_case` Umwandlung für SQL
     const values = [
-      name, category, brand, model, price, mileage, parseInt(firstRegistration, 10), fuelType,
+      name, category, brandId, brand, modelId, model, price, mileage, parseInt(firstRegistration, 10), fuelType,
       power, description, image || '', isSold || false, sellerId, location || null, doors || null, seats || null,
       vehicleType || null, condition || null, warranty || false, transmission || null, drive || null, color || null,
       batteryCapacity || null, range || null
@@ -462,6 +493,7 @@ app.post('/api/vehicles', async (req: Request, res: Response) => {
     console.log('🚀 SQL Query:', query);
     console.log('💾 SQL Values:', values);
 
+    // Daten in DB speichern
     const result = await pool.query(query, values);
     return res.status(201).json(result.rows[0]);
 
@@ -470,6 +502,7 @@ app.post('/api/vehicles', async (req: Request, res: Response) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 
 
