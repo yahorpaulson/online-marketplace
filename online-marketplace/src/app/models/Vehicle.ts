@@ -2,7 +2,7 @@ export abstract class Vehicle {
   constructor(
     private _id: number,
     private _name:string,
-    private _mark: string,
+    private _brand: string,
     private _model: string,
     private _price: number,
     private _mileage: number,
@@ -29,11 +29,11 @@ export abstract class Vehicle {
     this._id = value;
   }
 
-  get mark(): string {
-    return this._mark;
+  get brand(): string {
+    return this._brand;
   }
-  set mark(value: string) {
-    this._mark = value;
+  set brand(value: string) {
+    this._brand = value;
   }
 
   get model(): string {

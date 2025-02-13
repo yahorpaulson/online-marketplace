@@ -4,7 +4,7 @@ export class Car extends Vehicle {
   constructor(
     id: number,
     name:string,
-    mark: string,
+    brand: string,
     model: string,
     price: number,
     mileage: number,
@@ -27,7 +27,7 @@ export class Car extends Vehicle {
     private _batteryCapacity?: number,
     private _range?: number
   ) {
-    super(id,name, mark, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location,'Car');
+    super(id,name, brand, model, price, mileage, firstRegistration, fuelType, power, description, image,isSold, sellerId, location,'Car');
   }
 
   getVehicleType(): string {
