@@ -5,17 +5,13 @@ import { map } from 'rxjs/operators';
 import { VehicleFactoryService } from './vehicle-factory.service';
 import { Vehicle } from '../models/Vehicle';
 import { VehicleData } from '../models/VehicleData';
-import { snakeToCamel } from './snakeToCamel';
+import { camelToSnake, snakeToCamel } from './snakeToCamel';
 
 @Injectable({
   providedIn: 'root',
 })
 export class VehicleService {
-  private apiUrl = 'http://localhost:4000/api/vehicles'; // API-Endpunkt
-  private apiUrl1 = 'http://localhost:4000/api'; // API-Endpunkt
-  private brandsUrl = 'http://localhost:4000/api/brands'; // API-Endpunkt für Marken
-  private modelsUrl = 'http://localhost:4000/api/models'; // API-Endpunkt für Modelle
-
+  private apiUrl = 'http://localhost:4000/api'; // API-Endpunkt
 
   constructor(
     private http: HttpClient,
@@ -27,20 +23,15 @@ export class VehicleService {
    * @returns Observable of Vehicle array
    */
   getVehicles(): Observable<Vehicle[]> {
-    return this.http.get<VehicleData[]>(this.apiUrl).pipe(
+    return this.http.get<VehicleData[]>(`${this.apiUrl}/vehicles`).pipe(
       map((vehicleDataArray) =>
         vehicleDataArray.map((data) => this.vehicleFactory.createVehicleInstance(data))
       )
     );
   }
 
-  /**
-   * Get a single vehicle by ID from the API.
-   * @param id - The ID of the vehicle
-   * @returns Observable of a specific Vehicle instance
-   */
   getVehicleById(id: number): Observable<Vehicle> {
-    return this.http.get<VehicleData>(`${this.apiUrl}/${id}`).pipe(
+    return this.http.get<VehicleData>(`${this.apiUrl}/vehicles/${id}`).pipe(
       map((data) => {
         console.log("🚗 API Response before mapping:", data);
   
@@ -52,55 +43,39 @@ export class VehicleService {
     );
   }
   
-  
-
-  /**
-   * Add a new vehicle to the system.
-   * @param vehicleData - Data for the new vehicle
-   * @returns Observable of the created vehicle
-   */
   addVehicle(vehicleData: VehicleData): Observable<Vehicle> {
-    console.log('Sende Fahrzeugdaten an Backend:', vehicleData); // Debugging
+    console.log('Sende Fahrzeugdaten an Backend (Camel Case):', vehicleData); 
+    
+    const snakeCaseData = camelToSnake(vehicleData); 
+    console.log('Konvertierte Fahrzeugdaten (Snake Case):', snakeCaseData);
   
-    return this.http.post<VehicleData>('http://localhost:4000/api/vehicles', vehicleData).pipe(
+    return this.http.post<VehicleData>('http://localhost:4000/api/vehicles', snakeCaseData).pipe(
       map((data) => {
-        console.log('Server Response:', data); // Antwort des Servers loggen
-        return this.vehicleFactory.createVehicleInstance(data);
+        console.log('Server Response (Before Conversion):', data);
+        const camelCaseData = snakeToCamel(data); 
+        console.log('Converted to Camel Case:', camelCaseData);
+        return this.vehicleFactory.createVehicleInstance(camelCaseData);
       })
     );
   }
   
 
-  
-  
-
-  /**
-   * Update an existing vehicle.
-   * @param id - The ID of the vehicle to update
-   * @param vehicleData - Updated data for the vehicle
-   * @returns Observable of the updated vehicle
-   */
   updateVehicle(id: number, vehicleData: VehicleData): Observable<Vehicle> {
     return this.http.put<VehicleData>(`${this.apiUrl}/${id}`, vehicleData).pipe(
       map((data) => this.vehicleFactory.createVehicleInstance(data))
     );
   }
 
-  /**
-   * Delete a vehicle by ID.
-   * @param id - The ID of the vehicle to delete
-   * @returns Observable of void
-   */
   deleteVehicle(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
   getBrands(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl1}/brands`);
+    return this.http.get<any[]>(`${this.apiUrl}/brands`);
   }
 
   getModels(brandId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl1}/models?brandId=${brandId}`);
+    return this.http.get<any[]>(`${this.apiUrl}/models?brandId=${brandId}`);
   }
 
   getFirstRegistrationYears(): Observable<number[]> {
