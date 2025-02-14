@@ -109,11 +109,6 @@ export class ProductListComponent {
     }
   }
 
-
-
-
-
-
   filterProducts(searchTerm: string) {
     console.log('Search term:', searchTerm);
     this.filteredProducts = this.products.filter((product) =>
@@ -133,14 +128,7 @@ export class ProductListComponent {
     });
   }
 
-  getTopLevelCategories() {
-    return this.categories.filter((c) => !c.parentId);
-  }
 
-
-  hasChildCategories(categoryId: number): boolean {
-    return this.categories.some((c) => c.parentId === categoryId);
-  }
   buildCategoryTree(categories: Category[]): any[] {
     const categoryMap: { [key: number]: any } = {};
 
@@ -165,12 +153,6 @@ export class ProductListComponent {
     });
 
     return tree;
-  }
-
-
-
-  getSubcategories(parentId: number) {
-    return this.categories.filter((c) => c.parentId === parentId);
   }
 
   filterProductsByCategory(categoryId: number): void {

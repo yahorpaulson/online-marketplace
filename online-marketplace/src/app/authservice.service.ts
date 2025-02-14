@@ -33,7 +33,7 @@ export class AuthserviceService {
     return null;
   }
 
-  register(payload: { username: string; password: string; role: string }): Observable<any> {
+  register(payload: { username: string; password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, payload);
   }
 
@@ -48,14 +48,7 @@ export class AuthserviceService {
     }
   }
 
-  getUserRole(): string | null {
-    const token = this.getToken();
-    if (token) {
-      const payload = this.decodeToken(token);
-      return payload?.role || null;
-    }
-    return null;
-  }
+
 
   checkTokenExpiration(token: string): boolean {
     const payload = this.decodeToken(token);
@@ -70,13 +63,8 @@ export class AuthserviceService {
     return !!this.getToken();
   }
 
-  hasRole(role: string): boolean {
-    return this.getUserRole() === role;
-  }
 
-  isSeller(): boolean {
-    return this.hasRole('seller');
-  }
+
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);

@@ -84,9 +84,7 @@ export class AddProductComponent implements OnInit {
     });
   }
 
-  getTopLevelCategories(): Category[] {
-    return this.categories.filter((c) => !c.parentId);
-  }
+
 
 
   isLeafCategory(categoryId: number | null): boolean {
@@ -123,11 +121,6 @@ export class AddProductComponent implements OnInit {
     }
 
     return prefix;
-  }
-
-
-  getSubcategories(parentId: number): Category[] {
-    return this.categories.filter((c) => c.parentId === parentId);
   }
 
 
