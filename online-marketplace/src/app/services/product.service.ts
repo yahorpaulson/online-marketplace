@@ -56,8 +56,4 @@ export class ProductService {
     return this.http.patch<Product>(`${this.apiUrl}/products/${productId}/status`, { status });
 
   }
-
-
-
-
 }

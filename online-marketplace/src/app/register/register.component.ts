@@ -11,8 +11,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class RegisterComponent {
   username: string = '';
-  password: string = '';
-  role: string = 'buyer'; // Default 
+  password: string = ''
 
   constructor(private authService: AuthserviceService, private router: Router) { }
 
@@ -22,7 +21,7 @@ export class RegisterComponent {
       return;
     }
 
-    const payload = { username: this.username, password: this.password, role: this.role };
+    const payload = { username: this.username, password: this.password };
 
     this.authService.register(payload).subscribe({
       next: () => {

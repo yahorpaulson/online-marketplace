@@ -27,12 +27,15 @@
     <div class="main-content">
         <h2>Product List</h2>
 
-        <button (click)="updateUserProducts()">My Products</button>
+        <button class="userProductsButton" (click)="updateUserProducts()">My Products</button>
 
         <div class="product-grid">
             <div *ngFor="let product of filteredProducts" class="product-card">
                 <h3 (click)="navigateToDetails(product)">{{ product.name }}</h3>
+                <img *ngIf="product.images && product.images.length > 0" [src]="product.images[0]"
+                    alt="{{ product.name }}" />
                 <p>{{ product.price }} €</p>
+                <div *ngIf="product.status === 'reserved'">{{product.status}}</div>
             </div>
         </div>
     </div>

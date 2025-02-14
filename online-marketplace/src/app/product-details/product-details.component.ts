@@ -40,17 +40,6 @@ export class ProductDetailsComponent implements OnInit {
     this.productService.getProductById(productId).subscribe((product) => {
       this.product = product;
       console.log(this.product);
-
-
-      setTimeout(() => {
-        const welcomeMessage: Message = {
-          product_id: this.product.id,
-          sender_id: this.product.owner_id,
-          receiver_id: this.currentUser,
-          content: 'Hello! How can I help you?',
-        };
-        this.chatMessages.push(welcomeMessage);
-      }, 1000);
     });
   }
 
@@ -120,6 +109,9 @@ export class ProductDetailsComponent implements OnInit {
           this.chatMessages.push(savedMessage);
           input.value = '';
           console.log(this.chatMessages);
+          alert("Message sent. Check your income messages");
+          this.closeChat();
+
         },
         error: (err) => {
           console.error('Failed to send message:', err);
