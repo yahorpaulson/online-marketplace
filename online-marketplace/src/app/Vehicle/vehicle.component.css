@@ -7,19 +7,33 @@
   color: #eaeaea;
 }
 
-/* Sidebar für Filter */
+/* Sidebar: Minimum-Breite setzen */
 .sidebar {
   width: 300px;
+  min-width: 250px; /* Mindestbreite, um die Sidebar lesbar zu halten */
+  max-width: 100%; /* Stellt sicher, dass die Sidebar nicht zu klein wird */
   background: #252525;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-  min-height: 100vh;  /* Sidebar bleibt auf voller Höhe */
+  min-height: 100vh; /* Sidebar bleibt auf voller Höhe */
   position: sticky;
   top: 0;
   left: 0;
   overflow-y: auto;
 }
+
+/* Mobile-Optimierung */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    min-width: 280px; /* Verhindert, dass die Sidebar zu klein wird */
+    max-width: 100%;
+    position: relative;
+    min-height: auto;
+  }
+}
+
 
 .sidebar h3 {
   margin-top: 0;
