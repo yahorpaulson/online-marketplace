@@ -219,7 +219,6 @@ app.post('/api/products', async (req: Request, res: Response) => {
   }
 });
 
-
 app.get('/api/messages/:userId', async (req: Request, res: Response) => {
   const { userId } = req.params;
 
@@ -232,13 +231,17 @@ app.get('/api/messages/:userId', async (req: Request, res: Response) => {
     const query = `
       SELECT 
         m.*, 
+        COALESCE(p.name, v.name) AS item_name, -- Falls keine product_name existiert, nehme vehicle_name
         p.name AS product_name,
+        v.name AS vehicle_name,
         sender.username AS sender_username,
         receiver.username AS receiver_username
       FROM 
         messages m
-      JOIN 
+      LEFT JOIN 
         products p ON m.product_id = p.id
+      LEFT JOIN 
+        vehicles v ON m.vehicle_id = v.id
       JOIN 
         users AS sender ON m.sender_id = sender.id
       JOIN 
@@ -253,35 +256,45 @@ app.get('/api/messages/:userId', async (req: Request, res: Response) => {
     res.status(200).json(result.rows);
   } catch (error) {
     console.error('Error fetching messages:', error);
-    res.status(500).json({ error: 'Internal Server Error' })
-        }
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
+
 
 
 
 
 app.post('/api/messages', async (req: Request, res: Response) => {
   try {
-    const { product_id, sender_id, receiver_id, content } = req.body;
+    const { product_id, vehicle_id, sender_id, receiver_id, content, message_type } = req.body;
 
-    if (!product_id || !sender_id || !receiver_id || !content) {
+    if (!sender_id || !receiver_id || !content) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    // Sicherstellen, dass entweder `product_id` oder `vehicle_id` gesetzt ist
+    if (!product_id && !vehicle_id) {
+      return res.status(400).json({ error: 'Either product_id or vehicle_id must be provided' });
+    }
+
     const query = `
-      INSERT INTO messages (product_id, sender_id, receiver_id, content)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO messages (product_id, vehicle_id, sender_id, receiver_id, content, message_type)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *;
     `;
-    const values = [product_id, sender_id, receiver_id, content];
+
+    const values = [product_id || null, vehicle_id || null, sender_id, receiver_id, content, message_type];
 
     const result = await pool.query(query, values);
-    return res.status(201).json(result.rows[0]); // Always return after sending response
+    return res.status(201).json(result.rows[0]);
+
   } catch (error) {
     console.error('Error saving message:', error);
-    return res.status(500).json({ error: 'Internal Server Error' }); // Consistent response
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
 
 
 
