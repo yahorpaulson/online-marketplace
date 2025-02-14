@@ -1,52 +1,52 @@
 <div class="vehicle-container">
-  <!-- Sidebar mit Filteroptionen -->
+  
   <div class="sidebar">
-    <h3>Fahrzeugfilter</h3>
+    <h3>Vehicle Filter</h3>
 
-    <label>Kategorie:</label>
+    <label>Category:</label>
     <select [(ngModel)]="currentVehicleType" (change)="applyFilters()">
       <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
     </select>
 
-    <label>Marke:</label>
+    <label>Brand:</label>
     <select [(ngModel)]="filters.brand" name="brand" (change)="onBrandChange()">
-      <option value="0">Alle Marken</option>
+      <option value="0">All Brands</option>
       <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
     </select>
 
-    <label>Modell:</label>
+    <label>Model:</label>
     <select [(ngModel)]="filters.model" name="model">
-      <option value="0">Alle Modelle</option>
+      <option value="0">All Models</option>
       <option *ngFor="let model of models" [value]="model.id">{{ model.name }}</option>
     </select>
 
-    <label>Preis bis (€):</label>
+    <label>Max Price (€):</label>
     <input type="number" [(ngModel)]="filters.maxPrice" name="maxPrice" />
 
-    <label>Kilometerstand bis:</label>
+    <label>Max Mileage:</label>
     <input type="number" [(ngModel)]="filters.maxMileage" name="maxMileage" />
 
-    <label>Baujahr ab:</label>
+    <label>Year from:</label>
     <select [(ngModel)]="filters.minYear" name="minYear">
-      <option value="0">Alle Jahre</option>
+      <option value="0">All Years</option>
       <option *ngFor="let year of firstRegistrationYears" [value]="year">{{ year }}</option>
     </select>
 
-    <button (click)="applyFilters()" class="filter-button">Filter anwenden</button>
+    <button (click)="applyFilters()" class="filter-button">Apply Filters</button>
   </div>
 
-  <!-- Fahrzeugliste -->
+  <!-- Vehicle list -->
   <div class="vehicle-list">
-    <!-- Suchleiste -->
+    <!-- Search bar -->
     <input
       class="search-bar"
       type="text"
       [(ngModel)]="filters.searchTerm"
-      placeholder="Fahrzeuge suchen..."
+      placeholder="Search vehicles..."
       (input)="applyFilters()"
     />
 
-    <h2>Fahrzeuge</h2>
+    <h2>Vehicles</h2>
 
     <div class="vehicle-grid">
       <div *ngFor="let vehicle of filteredVehicles" class="vehicle-card" (click)="goToDetail(vehicle.id)">
@@ -54,12 +54,12 @@
         <div class="vehicle-info">
           <h3>{{ vehicle.name }}</h3>
           <p>{{ vehicle.brand }} - {{ vehicle.model }}</p>
-          <p>{{ vehicle.firstRegistration }}, {{ vehicle.mileage }} km, {{ vehicle.power }} PS</p>
+          <p>{{ vehicle.firstRegistration }}, {{ vehicle.mileage }} km, {{ vehicle.power }} HP</p>
           <p class="price">€{{ vehicle.price }}</p>
         </div>
       </div>
     </div>
 
-    <p *ngIf="filteredVehicles.length === 0" class="no-results">Keine Fahrzeuge gefunden.</p>
+    <p *ngIf="filteredVehicles.length === 0" class="no-results">No vehicles found.</p>
   </div>
 </div>

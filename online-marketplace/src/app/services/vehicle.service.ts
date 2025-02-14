@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { VehicleFactoryService } from './vehicle-factory.service';
 import { Vehicle } from '../models/Vehicle';
 import { VehicleData } from '../models/VehicleData';
+import { snakeToCamel } from './snakeToCamel';
 
 @Injectable({
   providedIn: 'root',
@@ -40,9 +41,18 @@ export class VehicleService {
    */
   getVehicleById(id: number): Observable<Vehicle> {
     return this.http.get<VehicleData>(`${this.apiUrl}/${id}`).pipe(
-      map((data) => this.vehicleFactory.createVehicleInstance(data))
+      map((data) => {
+        console.log("🚗 API Response before mapping:", data);
+  
+        const mappedData = snakeToCamel(data); 
+        console.log("Mapped Vehicle in getVehicleById:", mappedData);
+  
+        return this.vehicleFactory.createVehicleInstance(mappedData);
+      })
     );
   }
+  
+  
 
   /**
    * Add a new vehicle to the system.
