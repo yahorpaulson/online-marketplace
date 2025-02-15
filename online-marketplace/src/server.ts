@@ -31,7 +31,7 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
-const SECRET_KEY ='WEBTECHPROJ' //process.env['SECRET_KEY']! ;
+const SECRET_KEY = 'WEBTECHPROJ' //process.env['SECRET_KEY']! ;
 
 /*const pool = new Pool({
  user: 'postgres',
@@ -42,11 +42,11 @@ const SECRET_KEY ='WEBTECHPROJ' //process.env['SECRET_KEY']! ;
 });*/
 const pool = new Pool({
   user: 'postgres',
-   host: 'localhost', 
-   database: 'retail',
-   password: 'postgres',
-   port: 5432,
- });
+  host: 'localhost',
+  database: 'retail',
+  password: 'postgres',
+  port: 5433,
+});
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
@@ -246,17 +246,13 @@ app.get('/api/messages/:userId', async (req: Request, res: Response) => {
     const query = `
       SELECT 
         m.*, 
-        COALESCE(p.name, v.name) AS item_name, -- Falls keine product_name existiert, nehme vehicle_name
         p.name AS product_name,
-        v.name AS vehicle_name,
         sender.username AS sender_username,
         receiver.username AS receiver_username
       FROM 
         messages m
       LEFT JOIN 
         products p ON m.product_id = p.id
-      LEFT JOIN 
-        vehicles v ON m.vehicle_id = v.id
       JOIN 
         users AS sender ON m.sender_id = sender.id
       JOIN 
@@ -265,7 +261,7 @@ app.get('/api/messages/:userId', async (req: Request, res: Response) => {
         m.sender_id = $1 OR m.receiver_id = $1
       ORDER BY 
         m.created_at DESC;
-    `;
+  `;
 
     const result = await pool.query(query, [userId]);
     res.status(200).json(result.rows);
@@ -385,8 +381,8 @@ app.use('/**', (req: Request, res: Response, next: NextFunction) => {
 app.get('/api/vehicles', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM vehicles ORDER BY brand_id ASC');
-    
-    
+
+
     res.json(result.rows);
   } catch (err) {
     console.error('Fehler beim Abrufen der Fahrzeuge:', err);
@@ -403,13 +399,13 @@ app.get('/api/vehicles/:id', async (req: Request, res: Response) => {
     const result = await pool.query('SELECT * FROM vehicles WHERE id = $1', [id]);
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ message: 'Vehicle not found' });  
+      return res.status(404).json({ message: 'Vehicle not found' });
     }
 
-    return res.json(result.rows[0]); 
+    return res.json(result.rows[0]);
   } catch (error) {
     console.error('GET VEHICLE ERROR:', error);
-    return res.status(500).send('SERVER ERROR'); 
+    return res.status(500).send('SERVER ERROR');
   }
 });
 
@@ -507,7 +503,7 @@ app.post('/api/vehicles', async (req: Request, res: Response) => {
 // Fetch all vehicles for a specific user
 app.get("/api/vehicles/user/:userId", async (req, res) => {
   const { userId } = req.params;
-  
+
   try {
     const query = "SELECT * FROM vehicles WHERE seller_id = $1";
     const result = await pool.query(query, [userId]);
