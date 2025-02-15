@@ -20,6 +20,9 @@ export class AddVehicleComponent implements OnInit {
   firstRegistrationYears: number[] = [];
   fuelTypes: string[] = ['Diesel', 'Benzin', 'Gas']; // Treibstoffarten
   powerOptions: number[] = [];
+  activeVehicles:any[]=[];
+  soldVehicles:any[]=[];
+
 
   constructor(private fb: FormBuilder, private vehicleService: VehicleService, private authService:AuthserviceService) {
     this.vehicleForm = this.fb.group({
@@ -35,7 +38,7 @@ export class AddVehicleComponent implements OnInit {
       description: ['', Validators.required],
       image: [''],
       isSold: [false],
-      sellerId: [0, Validators.required],
+      sellerId: [this.authService.getUserId(), Validators.required],
       location: [''],
       doors: [4],
       seats: [5],
@@ -54,6 +57,7 @@ export class AddVehicleComponent implements OnInit {
     this.loadBrands();
     this.loadFirstRegistrationYears();
     this.generatePowerOptions();
+    this.loadUserVehicles();
   }
 
   generatePowerOptions() {
@@ -94,9 +98,7 @@ loadFirstRegistrationYears() {
     error: (err) => console.error('Error loading first registration years:', err)
   });
 }
-
-
-  
+ 
   onCategoryChange() {
     const selectedCategory = this.vehicleForm.get('category')?.value;
     this.brands = this.allBrands.filter((brand) => brand.category === selectedCategory);
@@ -136,7 +138,10 @@ loadFirstRegistrationYears() {
         modelId: selectedModel.id,   
         model: selectedModel.name,   
         firstRegistration: parseInt(formData.firstRegistration, 10), 
-        power: parseInt(formData.power, 10) 
+        power: parseInt(formData.power, 10) ,
+        isSold: false, // Stelle sicher, dass isSold immer gesetzt ist
+        sellerId: this.authService.getUserId(), // Hier die richtige ID setzen
+        
       };
       vehicleData.sellerId = this.authService.getUserId(); 
       console.log('Sende Fahrzeugdaten:', vehicleData);
@@ -156,5 +161,37 @@ loadFirstRegistrationYears() {
       alert('Bitte füllen Sie alle erforderlichen Felder aus.');
     }
   }
+
+  loadUserVehicles(): void {
+    const userId = this.authService.getUserId();
+
+    if (userId === null) {
+        console.error("User ID is null. Cannot fetch user vehicles.");
+        return;
+    }
+
+    this.vehicleService.getUserVehicles(userId).subscribe({
+        next: (vehicles) => {
+            this.activeVehicles = vehicles.filter(v => !v.isSold);
+            this.soldVehicles = vehicles.filter(v => v.isSold);
+            console.log("🔹 Active Vehicles:", this.activeVehicles);
+            console.log("🔹 Sold Vehicles:", this.soldVehicles);
+        },
+        error: (err) => console.error("Error fetching user vehicles:", err),
+    });
+}
+
+
+  deleteVehicle(vehicleId: number): void {
+    if (confirm("Are you sure you want to delete this vehicle?")) {
+      this.vehicleService.deleteVehicle(vehicleId).subscribe({
+        next: () => {
+          console.log(`Vehicle ${vehicleId} deleted.`);
+          this.loadUserVehicles(); // Refresh list
+        },
+        error: (err) => console.error("Error deleting vehicle:", err),
+      });
+    }
   
+}
 }

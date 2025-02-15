@@ -1,8 +1,9 @@
 <div class="add-vehicle-container">
   <h1>Add Vehicle</h1>
+  
+  <!-- Add Vehicle Form -->
   <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
 
-    <!-- Vehicle Name & Price at the Top -->
     <div class="form-row">
       <div class="form-group">
         <label for="name">Vehicle Name</label>
@@ -15,67 +16,70 @@
       </div>
     </div>
 
-    <!-- Category & Brand Selection -->
     <div class="form-row">
       <div class="form-group">
         <label for="category">Category</label>
-        <select id="category" formControlName="category" (change)="onCategoryChange()">
+        <select id="category" formControlName="category">
           <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
         </select>
       </div>
 
       <div class="form-group">
         <label for="brand">Brand</label>
-        <select id="brand" formControlName="brand" (change)="onBrandChange()" [disabled]="brands.length === 0">
+        <select id="brand" formControlName="brand" (change)="onBrandChange()">
           <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
         </select>
       </div>
     </div>
 
-    <!-- Model & Mileage -->
-    <div class="form-row">
-      <div class="form-group">
-        <label for="model">Model</label>
-        <select id="model" formControlName="model" [disabled]="models.length === 0">
-          <option *ngFor="let model of models" [value]="model.id">{{ model.name }}</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="mileage">Mileage (km)</label>
-        <input id="mileage" type="number" formControlName="mileage" placeholder="Enter mileage" />
-      </div>
-    </div>
-
-    <!-- First Registration & Fuel Type -->
-    <div class="form-row">
-      <div class="form-group">
-        <label for="firstRegistration">First Registration</label>
-        <select id="firstRegistration" formControlName="firstRegistration">
-          <option *ngFor="let year of firstRegistrationYears" [value]="year">
-            {{ year }}
-          </option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="fuelType">Fuel Type</label>
-        <select id="fuelType" formControlName="fuelType">
-          <option value="Diesel">Diesel</option>
-          <option value="Petrol">Petrol</option>
-          <option value="Hybrid">Hybrid</option>
-          <option value="Electric">Electric</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Description -->
     <div class="form-group">
       <label for="description">Description</label>
       <textarea id="description" formControlName="description" placeholder="Enter vehicle description"></textarea>
     </div>
 
-    <!-- Submit Button -->
     <button type="submit">Add Vehicle</button>
   </form>
+
+  <div class="user-vehicles-container">
+    <!-- Active Vehicles (Not Sold) -->
+    <div class="vehicle-list">
+        <h2>Active Vehicles</h2>
+        <div *ngIf="activeVehicles.length > 0; else noActiveVehicles">
+            <ul>
+                <li *ngFor="let vehicle of activeVehicles">
+                    <div class="vehicle-card">
+                        <img [src]="vehicle.image || 'https://i.i-sgcm.com/used_cars/no_img_300x225.jpg'" alt="{{ vehicle.name }}" />
+                        <div class="vehicle-info">
+                            <h3>{{ vehicle.name }}</h3>
+                            <p class="price">€{{ vehicle.price }}</p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <ng-template #noActiveVehicles>
+            <p>No active vehicles available.</p>
+        </ng-template>
+    </div>
+
+    <!-- Sold Vehicles -->
+    <div class="vehicle-list">
+        <h2>Sold Vehicles</h2>
+        <div *ngIf="soldVehicles.length > 0; else noSoldVehicles">
+            <ul>
+                <li *ngFor="let vehicle of soldVehicles">
+                    <div class="vehicle-card sold">
+                        <img [src]="vehicle.image[0] || 'assets/default-vehicle.jpg'" alt="{{ vehicle.name }}" />
+                        <div class="vehicle-info">
+                            <h3>{{ vehicle.name }}</h3>
+                            <p class="price">€{{ vehicle.price }}</p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <ng-template #noSoldVehicles>
+            <p>No sold vehicles found.</p>
+        </ng-template>
+    </div>
 </div>
