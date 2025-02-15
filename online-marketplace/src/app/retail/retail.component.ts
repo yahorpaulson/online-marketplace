@@ -56,4 +56,8 @@ export class RetailComponent {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+
+  viewVehicles() {
+    this.router.navigate(['/vehicleMarket']);  
+  }
 }

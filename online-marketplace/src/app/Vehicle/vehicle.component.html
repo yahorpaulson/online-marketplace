@@ -1,0 +1,65 @@
+<div class="vehicle-container">
+  
+  <div class="sidebar">
+    <h3>Vehicle Filter</h3>
+
+    <label>Category:</label>
+    <select [(ngModel)]="currentVehicleType" (change)="applyFilters()">
+      <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+    </select>
+
+    <label>Brand:</label>
+    <select [(ngModel)]="filters.brand" name="brand" (change)="onBrandChange()">
+      <option value="0">All Brands</option>
+      <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
+    </select>
+
+    <label>Model:</label>
+    <select [(ngModel)]="filters.model" name="model">
+      <option value="0">All Models</option>
+      <option *ngFor="let model of models" [value]="model.id">{{ model.name }}</option>
+    </select>
+
+    <label>Max Price (€):</label>
+    <input type="number" [(ngModel)]="filters.maxPrice" name="maxPrice" />
+
+    <label>Max Mileage:</label>
+    <input type="number" [(ngModel)]="filters.maxMileage" name="maxMileage" />
+
+    <label>Year from:</label>
+    <select [(ngModel)]="filters.minYear" name="minYear">
+      <option value="0">All Years</option>
+      <option *ngFor="let year of firstRegistrationYears" [value]="year">{{ year }}</option>
+    </select>
+
+    <button (click)="applyFilters()" class="filter-button">Apply Filters</button>
+  </div>
+
+  <!-- Vehicle list -->
+  <div class="vehicle-list">
+    <!-- Search bar -->
+    <input
+      class="search-bar"
+      type="text"
+      [(ngModel)]="filters.searchTerm"
+      placeholder="Search vehicles..."
+      (input)="applyFilters()"
+    />
+
+    <h2>Vehicles</h2>
+
+    <div class="vehicle-grid">
+      <div *ngFor="let vehicle of filteredVehicles" class="vehicle-card" (click)="goToDetail(vehicle.id)">
+        <img [src]="vehicle.image || 'assets/default-vehicle.jpg'" alt="{{ vehicle.name }}" class="vehicle-image" />
+        <div class="vehicle-info">
+          <h3>{{ vehicle.name }}</h3>
+          <p>{{ vehicle.brand }} - {{ vehicle.model }}</p>
+          <p>{{ vehicle.firstRegistration }}, {{ vehicle.mileage }} km, {{ vehicle.power }} HP</p>
+          <p class="price">€{{ vehicle.price }}</p>
+        </div>
+      </div>
+    </div>
+
+    <p *ngIf="filteredVehicles.length === 0" class="no-results">No vehicles found.</p>
+  </div>
+</div>

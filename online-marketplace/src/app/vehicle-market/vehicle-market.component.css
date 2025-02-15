@@ -1,0 +1,110 @@
+/* Container für die gesamte Vehicle Market Seite */
+.vehicle-market {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #1a1a1a;
+  color: #eaeaea;
+}
+
+/* Header-Container */
+.header-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #252525;
+  border-bottom: 2px solid #333;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  gap: 10px; /* Abstand zwischen Elementen */
+}
+
+/* Online Marketplace (h1) bleibt oben */
+.header-container h1 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #5f64b6;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.header-container h1:hover {
+  color: #379095;
+}
+
+/* Container für die h2-Elemente (Retail & Vehicle Marketplace) */
+.market-links {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* Abstand zwischen h2-Elementen */
+  align-items: center;
+}
+
+/* Retail & Vehicle Marketplace (h2) */
+.market-links h2 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffffff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.market-links h2:hover {
+  color: #379095;
+}
+
+/* Button-Container */
+.header-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Einheitliches Button-Design */
+.header-buttons button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+/* Button-Farben */
+.header-buttons .messages {
+  background-color: #5f64b6;
+  color: white;
+}
+
+.header-buttons .logout-button {
+  background-color: #d9534f;
+  color: white;
+}
+
+.header-buttons button:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* Inhaltsbereich */
+.content-container {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #1e1e2f;
+  overflow-y: auto;
+}
+
+/* Responsives Design */
+@media (max-width: 768px) {
+  .market-links {
+      flex-direction: column;
+      text-align: center;
+  }
+
+  .header-buttons {
+      flex-wrap: wrap;
+      justify-content: center;
+  }
+}

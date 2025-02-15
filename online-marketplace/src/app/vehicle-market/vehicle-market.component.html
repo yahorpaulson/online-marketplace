@@ -1,0 +1,21 @@
+<div class="vehicle-market">
+  <div class="header-container">
+      <h1 (click)="backToMainPage()">Online Marketplace</h1>
+      <div class="market-links">
+          <h2 (click)="viewVehicles()">Vehicle Marketplace</h2>
+          <h2 (click)="backToMainPage()">Retail Marketplace</h2>
+          <div class="header-buttons">
+            <button class="messages" (click)="goMessages()">Messages</button>
+            <button (click)="viewVehicles()">View Vehicles</button>
+            <button (click)="navigateToAddVehicles()">Add Vehicle</button>
+            <button class="logout-button" (click)="logout()">Logout</button>
+        </div>
+      </div>
+
+     
+  </div>
+
+  <div class="content-container">
+      <router-outlet></router-outlet>
+  </div>
+</div>

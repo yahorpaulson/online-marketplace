@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { MessageService } from './app/services/message.service';
 import { ProductService } from './app/services/product.service';
 
+
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),

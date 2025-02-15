@@ -1,0 +1,36 @@
+<div *ngIf="vehicle" class="vehicle-detail-container">
+    <h2 class="vehicle-title">{{ vehicle.name }}</h2>
+    <div class="vehicle-content">
+        <img [src]="vehicle.image[0] || 'assets/default-vehicle.jpg'" alt="{{ vehicle.name }}" class="vehicle-image"/>
+        <div class="vehicle-info">
+            <p><strong>🚗 Brand:</strong> {{ vehicle.brand }}</p>
+            <p><strong>📌 Model:</strong> {{ vehicle.model }}</p>
+            <p><strong>💰 Price:</strong> €{{ vehicle.price }}</p>
+            <p><strong>🛣️ Mileage:</strong> {{ vehicle.mileage }} km</p>
+            <p><strong>📆 First Registration:</strong> {{ vehicle.firstRegistration || 'N/A' }}</p>
+            <p><strong>⛽ Fuel Type:</strong> {{ vehicle.fuelType || 'N/A' }}</p>
+            <p><strong>⚡ Power:</strong> {{ vehicle.power }} PS</p>
+            <p><strong>📄 Description:</strong> {{ vehicle.description }}</p>
+            <button class="back-button" (click)="goBack()">🔙 Back</button>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="!isProductOwner()" class="chat-popup">
+    <span class="close-btn" (click)="closeChat()">×</span> 
+    <h3>Chat</h3>
+    <div class="chat-messages">
+        <div *ngFor="let message of chatMessages" [ngClass]="{'own-message': message.sender_id === currentUser}">
+            <strong *ngIf="message.sender_id === currentUser">You:</strong>
+            <strong *ngIf="message.sender_id !== currentUser">{{ message.sender_username }}:</strong>
+            {{ message.content }}
+        </div>
+    </div>
+
+    <div class="chat-input-container">
+        <input #chatInput type="text" placeholder="Type a message..." />
+        <button (click)="sendMessage(chatInput)">Send</button>
+    </div>
+</div>
+  
