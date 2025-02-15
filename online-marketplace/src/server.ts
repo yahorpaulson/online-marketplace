@@ -40,13 +40,22 @@ const SECRET_KEY = 'WEBTECHPROJ' //process.env['SECRET_KEY']! ;
   password: 'postgres',
   port: 5432,
 });*/
-const pool = new Pool({
+/*const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   database: 'retail',
   password: 'postgres',
   port: 5433,
+}); */
+
+const pool = new Pool({
+  user: (process.env['DB_USER']),
+  host: process.env['DB_HOST'],
+  database: process.env['DB_NAME'],
+  password: String(process.env['DB_PASSWORD']),
+  port: Number(process.env['DB_PORT'])
 });
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());

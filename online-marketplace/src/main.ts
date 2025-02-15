@@ -6,6 +6,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { MessageService } from './app/services/message.service';
 import { ProductService } from './app/services/product.service';
+import { AuthserviceService } from './app/authservice.service';
 
 
 bootstrapApplication(AppComponent, {
@@ -15,5 +16,6 @@ bootstrapApplication(AppComponent, {
     HttpClient,
     MessageService,
     ProductService,
+    AuthserviceService
   ],
 });

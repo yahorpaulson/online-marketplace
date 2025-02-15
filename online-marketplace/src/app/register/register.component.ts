@@ -7,7 +7,8 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
-  imports: [FormsModule]
+  imports: [FormsModule],
+  standalone: true
 })
 export class RegisterComponent {
   username: string = '';

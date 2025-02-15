@@ -10,14 +10,7 @@ html {
 
 }
 
-
-@font-face {
-    font-family: 'MotorheadStyle';
-    src: url('../../../public/motorhead.ttf') format('truetype');
-}
-
 .header h1 {
-    font-family: 'MotorheadStyle', serif;
     margin: 0;
     padding: 10px 20px;
     text-align: center;

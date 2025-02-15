@@ -8,7 +8,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { MessageListComponent } from './message-list/message-list.component';
 import { HomeComponent } from './home/home.component';
-import {  VehicleComponent } from './Vehicle/vehicle.component';
+import { VehicleComponent } from './Vehicle/vehicle.component';
 import { AddVehicleComponent } from './add-vehicle/add-vehicle.component';
 import { VehicleMarketComponent } from './vehicle-market/vehicle-market.component';
 import { VehicleDetailComponent } from './vehicle-detail/vehicle-detail.component';
@@ -27,10 +27,10 @@ export const routes: Routes = [
 
         ],
     },
-    
+
     {
         path: 'vehicleMarket',
-        canActivate: [AuthGuard], 
+        canActivate: [AuthGuard],
         component: VehicleMarketComponent,
         children: [
             { path: '', redirectTo: 'vehicles', pathMatch: 'full' },  // Umleitung zur Fahrzeugliste
@@ -43,8 +43,8 @@ export const routes: Routes = [
     { path: 'register', component: RegisterComponent },
     { path: 'login', component: LoginComponent },
     { path: '', component: HomeComponent },
-    
-    
+
+
 ];
 
 

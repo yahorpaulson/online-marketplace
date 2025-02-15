@@ -1,1 +1,23 @@
-<router-outlet />
+<div class="main-page">
+
+    <div class="auth-section">
+        <h2>Welcome to Online Marketplace</h2>
+
+        <div class="auth-buttons">
+            <button (click)="navigateTo('login')">Login</button>
+            <button (click)="navigateTo('register')">Register</button>
+        </div>
+
+    </div>
+
+
+    <div class="market-selection">
+        <h3>Choose where you want to go:</h3>
+        <button (click)="goToRetail()">Retail Marketplace</button>
+        <button (click)="goToVehicleMarket()">Vehicle Marketplace</button>
+    </div>
+
+</div>
+
+
+<router-outlet></router-outlet>
