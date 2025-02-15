@@ -25,10 +25,14 @@ export class VehicleService {
   getVehicles(): Observable<Vehicle[]> {
     return this.http.get<VehicleData[]>(`${this.apiUrl}/vehicles`).pipe(
       map((vehicleDataArray) =>
-        vehicleDataArray.map((data) => this.vehicleFactory.createVehicleInstance(data))
+        vehicleDataArray.map((data) => snakeToCamel(data)) 
+      ),
+      map((camelCaseVehicles) =>
+        camelCaseVehicles.map((data) => this.vehicleFactory.createVehicleInstance(data)) 
       )
     );
   }
+  
 
   getVehicleById(id: number): Observable<Vehicle> {
     return this.http.get<VehicleData>(`${this.apiUrl}/vehicles/${id}`).pipe(
@@ -69,6 +73,18 @@ export class VehicleService {
   deleteVehicle(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+
+  getUserVehicles(userId: number): Observable<Vehicle[]> {
+    return this.http.get<VehicleData[]>(`${this.apiUrl}/vehicles/user/${userId}`).pipe(
+      map((vehicleDataArray) =>
+        vehicleDataArray.map((data) => this.vehicleFactory.createVehicleInstance(snakeToCamel(data))) 
+      )
+    );
+  }
+  
+
+
 
   getBrands(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/brands`);

@@ -369,43 +369,16 @@ app.use('/**', (req: Request, res: Response, next: NextFunction) => {
 
 app.get('/api/vehicles', async (req, res) => {
   try {
-      const result = await pool.query('SELECT * FROM vehicles ORDER BY brand_id ASC');
-      
-      // 🚀 Umwandlung von snake_case → camelCase für das Frontend
-      const vehicles = result.rows.map(vehicle => ({
-          id: vehicle.id,
-          name: vehicle.name,
-          brandId: vehicle.brand_id,  
-          modelId: vehicle.model_id,  
-          brand: vehicle.brand,
-          model: vehicle.model,
-          price: vehicle.price,
-          mileage: vehicle.mileage,
-          firstRegistration: vehicle.first_registration,  
-          fuelType: vehicle.fuel_type,  
-          power: vehicle.power,
-          description: vehicle.description,
-          image: vehicle.image,
-          isSold: vehicle.is_sold,  
-          sellerId: vehicle.seller_id,
-          location: vehicle.location,
-          category: vehicle.category,
-          doors: vehicle.doors,
-          seats: vehicle.seats,
-          vehicleType: vehicle.vehicle_type,
-          condition: vehicle.condition,
-          warranty: vehicle.warranty,
-          transmission: vehicle.transmission,
-          drive: vehicle.drive,
-          color: vehicle.color
-      }));
-
-      res.json(vehicles);
+    const result = await pool.query('SELECT * FROM vehicles ORDER BY brand_id ASC');
+    
+    
+    res.json(result.rows);
   } catch (err) {
-      console.error('Fehler beim Abrufen der Fahrzeuge:', err);
-      res.status(500).json({ error: 'Serverfehler' });
+    console.error('Fehler beim Abrufen der Fahrzeuge:', err);
+    res.status(500).json({ error: 'Serverfehler' });
   }
 });
+
 
 
 
@@ -513,6 +486,20 @@ app.post('/api/vehicles', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('❌ Error saving vehicle:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Fetch all vehicles for a specific user
+app.get("/api/vehicles/user/:userId", async (req, res) => {
+  const { userId } = req.params;
+  
+  try {
+    const query = "SELECT * FROM vehicles WHERE seller_id = $1";
+    const result = await pool.query(query, [userId]);
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error fetching user vehicles:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
