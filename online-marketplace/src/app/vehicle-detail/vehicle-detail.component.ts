@@ -113,6 +113,6 @@ export class VehicleDetailComponent implements OnInit {
       return this.currentUser === ownerId;
     }
   goBack(): void {
-    this.router.navigate(['/vehicles']); // Adjust the route as needed
+    this.router.navigate(['/vehicleMarket/vehicles']); // Adjust the route as needed
   }
 }
