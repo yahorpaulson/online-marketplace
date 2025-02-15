@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms'
 import { VehicleService } from '../services/vehicle.service';
 import { CommonModule } from '@angular/common';
+import { AuthserviceService } from '../authservice.service';
 
 @Component({
   selector: 'app-add-vehicle',
@@ -20,7 +21,7 @@ export class AddVehicleComponent implements OnInit {
   fuelTypes: string[] = ['Diesel', 'Benzin', 'Gas']; // Treibstoffarten
   powerOptions: number[] = [];
 
-  constructor(private fb: FormBuilder, private vehicleService: VehicleService) {
+  constructor(private fb: FormBuilder, private vehicleService: VehicleService, private authService:AuthserviceService) {
     this.vehicleForm = this.fb.group({
       name: ['', Validators.required],
       category: ['', Validators.required], // Neue Kategorieauswahl
@@ -116,6 +117,7 @@ loadFirstRegistrationYears() {
   onSubmit() {
     if (this.vehicleForm.valid) {
       let formData = this.vehicleForm.value;
+      
   
       // Finde die ausgewählte Marke
       const selectedBrand = this.allBrands.find(b => b.id === Number(formData.brand));
@@ -136,7 +138,7 @@ loadFirstRegistrationYears() {
         firstRegistration: parseInt(formData.firstRegistration, 10), 
         power: parseInt(formData.power, 10) 
       };
-  
+      vehicleData.sellerId = this.authService.getUserId(); 
       console.log('Sende Fahrzeugdaten:', vehicleData);
   
       this.vehicleService.addVehicle(vehicleData).subscribe({
