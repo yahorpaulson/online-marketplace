@@ -69,10 +69,10 @@ export class AddVehicleComponent implements OnInit {
   loadBrands() {
     this.vehicleService.getBrands().subscribe({
       next: (data) => {
-        console.log('✅ Alle Marken geladen:', data);
+        console.log('Alle Marken geladen:', data);
         this.allBrands = data;
       },
-      error: (err) => console.error('❌ Fehler beim Laden der Marken:', err),
+      error: (err) => console.error('Fehler beim Laden der Marken:', err),
     });
   }
 
@@ -174,8 +174,8 @@ loadFirstRegistrationYears() {
         next: (vehicles) => {
             this.activeVehicles = vehicles.filter(v => !v.isSold);
             this.soldVehicles = vehicles.filter(v => v.isSold);
-            console.log("🔹 Active Vehicles:", this.activeVehicles);
-            console.log("🔹 Sold Vehicles:", this.soldVehicles);
+            console.log("Active Vehicles:", this.activeVehicles);
+            console.log("Sold Vehicles:", this.soldVehicles);
         },
         error: (err) => console.error("Error fetching user vehicles:", err),
     });
@@ -194,4 +194,21 @@ loadFirstRegistrationYears() {
     }
   
 }
+onFileSelect(event: Event) {
+  const input = event.target as HTMLInputElement;
+  
+  if (input.files && input.files.length > 0) {
+    const file = input.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e: any) => {
+      // Bildvorschau anzeigen & in das Formular setzen
+      this.vehicleForm.patchValue({ image: e.target.result });
+      console.log('Selected Image:', e.target.result);
+    };
+
+    reader.readAsDataURL(file); // Konvertiert Datei in Base64
+  }
+}
+
 }
