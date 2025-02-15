@@ -31,15 +31,22 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
-const SECRET_KEY = process.env['SECRET_KEY']!;
+const SECRET_KEY = 'WEBTECHPROJ'//process.env['SECRET_KEY']!;
 
-const pool = new Pool({
+/*const pool = new Pool({
   user: (process.env['DB_USER']),
   host: process.env['DB_HOST'],
   database: process.env['DB_NAME'],
   password: String(process.env['DB_PASSWORD']),
   port: Number(process.env['DB_PORT'])
-});
+});*/
+const pool = new Pool({
+  user: 'postgres',
+   host: 'localhost', 
+   database: 'retail',
+   password: 'postgres',
+   port: 5432,
+ });
 
 
 // Middleware for request parsing and CORS
