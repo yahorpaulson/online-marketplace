@@ -1,25 +1,31 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-
+import { Router, NavigationEnd } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, FormsModule, CommonModule],
 })
 export class AppComponent {
+  showMainPage = true;
 
+  constructor(private router: Router) {
 
-  constructor(private router: Router) { }
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
 
-
+        this.showMainPage = event.url === '/' || event.url === '/login' || event.url === '/register';
+      }
+    });
+  }
 
   isAuthenticated(): boolean {
-    const token = localStorage.getItem('authToken');
-    return token !== null;
+    return !!localStorage.getItem('authToken');
   }
 
   navigateTo(path: string) {
@@ -27,12 +33,18 @@ export class AppComponent {
   }
 
   goToRetail() {
-    this.router.navigate(['/retail']);
+    if (this.isAuthenticated()) {
+      this.router.navigate(['/retail']);
+    } else {
+      alert('Please login first!');
+    }
   }
 
   goToVehicleMarket() {
-    this.router.navigate(['/vehicleMarket']);
+    if (this.isAuthenticated()) {
+      this.router.navigate(['/vehicleMarket']);
+    } else {
+      alert('Please login first!');
+    }
   }
-
-
 }

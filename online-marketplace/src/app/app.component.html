@@ -1,5 +1,4 @@
-<div class="main-page">
-
+<div class="main-page" *ngIf="showMainPage">
     <div class="auth-section">
         <h2>Welcome to Online Marketplace</h2>
 
@@ -7,16 +6,13 @@
             <button (click)="navigateTo('login')">Login</button>
             <button (click)="navigateTo('register')">Register</button>
         </div>
-
     </div>
-
 
     <div class="market-selection">
         <h3>Choose where you want to go:</h3>
-        <button (click)="goToRetail()">Retail Marketplace</button>
-        <button (click)="goToVehicleMarket()">Vehicle Marketplace</button>
+        <button *ngIf="isAuthenticated()" (click)="goToRetail()">Retail Marketplace</button>
+        <button *ngIf="isAuthenticated()" (click)="goToVehicleMarket()">Vehicle Marketplace</button>
     </div>
-
 </div>
 
 
