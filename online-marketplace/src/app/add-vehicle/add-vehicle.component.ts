@@ -177,19 +177,6 @@ onBrandChange() {
   }
   
 
-
-  deleteVehicle(vehicleId: number): void {
-    if (confirm("Are you sure you want to delete this vehicle?")) {
-      this.vehicleService.deleteVehicle(vehicleId).subscribe({
-        next: () => {
-          console.log(`Vehicle ${vehicleId} deleted.`);
-          this.loadUserVehicles(); // Refresh list
-        },
-        error: (err) => console.error("Error deleting vehicle:", err),
-      });
-    }
-  
-}
 onFileSelect(event: Event) {
   const input = event.target as HTMLInputElement;
   if (!input.files?.length) return;
@@ -210,6 +197,25 @@ onFileSelect(event: Event) {
 
   reader.readAsDataURL(file);
 }
+
+editVehicle(vehicle: any): void {
+  this.vehicleForm.patchValue(vehicle);
+  window.scrollTo({ top: 0, behavior: 'smooth' }); 
+}
+
+deleteVehicle(vehicleId: number, event: Event): void {
+  event.stopPropagation(); // Verhindert das Öffnen der Bearbeitungsfunktion
+  if (confirm("Are you sure you want to delete this vehicle?")) {
+    this.vehicleService.deleteVehicle(vehicleId).subscribe({
+      next: () => {
+        console.log(`Vehicle ${vehicleId} deleted.`);
+        this.loadUserVehicles(); // Aktualisiert die Liste
+      },
+      error: (err) => console.error("Error deleting vehicle:", err),
+    });
+  }
+}
+
 
 
 }

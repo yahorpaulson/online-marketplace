@@ -1,110 +1,144 @@
-/* Container für die gesamte Vehicle Market Seite */
-.vehicle-market {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background-color: #1a1a1a;
-  color: #eaeaea;
+/* 🔹 Allgemeine Stile */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #1a1a1a;
+    color: #c4b9b9;
 }
 
-/* Header-Container */
-.header-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 15px 20px;
-  background-color: #252525;
-  border-bottom: 2px solid #333;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-  gap: 10px; /* Abstand zwischen Elementen */
+/* 🔹 Container für die gesamte Seite */
+.marketplace-container,
+.retail-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
 }
 
-/* Online Marketplace (h1) bleibt oben */
-.header-container h1 {
-  font-size: 24px;
-  font-weight: bold;
-  color: #5f64b6;
-  cursor: pointer;
-  transition: color 0.3s ease;
-  margin-bottom: 10px;
+/* 🔹 Header-Design */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #252525;
+    padding: 15px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-.header-container h1:hover {
-  color: #379095;
+/* 🔹 Einheitliche Titel-Stile */
+.header h1 {
+    font-size: 24px;
+    color: #d8d8d8;
+    margin: 0;
+    cursor: pointer;
 }
 
-/* Container für die h2-Elemente (Retail & Vehicle Marketplace) */
+.header h1:hover {
+    color: #379095;
+}
+
+/* 🔹 Button-Bereich */
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* 🔹 Einheitliche Buttons */
+button {
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #ffffff;
+    background-color: #418371;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #379095;
+}
+
+/* 🔹 Logout-Button */
+.logout-button {
+    background-color: #cc0000;
+}
+
+.logout-button:hover {
+    background-color: #990000;
+}
+
+/* 🔹 Marketplace- und Retail-Navigation */
 .market-links {
-  display: flex;
-  justify-content: center;
-  gap: 10px; /* Abstand zwischen h2-Elementen */
-  align-items: center;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    align-items: center;
+    padding: 10px;
+    background-color: #252525;
 }
 
-/* Retail & Vehicle Marketplace (h2) */
 .market-links h2 {
-  font-size: 20px;
-  font-weight: bold;
-  color: #ffffff;
-  cursor: pointer;
-  transition: color 0.3s ease;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
 .market-links h2:hover {
-  color: #379095;
+    color: #379095;
 }
 
-/* Button-Container */
-.header-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
+/* 🔹 Suchleiste */
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 20px;
+    background-color: #252525;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* Einheitliches Button-Design */
-.header-buttons button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
+.search-input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #2e2e2e;
+    color: #eaeaea;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* Button-Farben */
-.header-buttons .messages {
-  background-color: #5f64b6;
-  color: white;
+.search-input::placeholder {
+    color: #999;
 }
 
-.header-buttons .logout-button {
-  background-color: #d9534f;
-  color: white;
+.search-input:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 140, 186, 0.8);
 }
 
-.header-buttons button:hover {
-  transform: scale(1.05);
-  opacity: 0.9;
-}
-
-/* Inhaltsbereich */
+/* 🔹 Inhaltsbereich */
 .content-container {
-  flex-grow: 1;
-  padding: 20px;
-  background-color: #1e1e2f;
-  overflow-y: auto;
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #1e1e2f;
+    overflow-y: auto;
 }
 
-/* Responsives Design */
+/* 🔹 Responsives Design */
 @media (max-width: 768px) {
-  .market-links {
-      flex-direction: column;
-      text-align: center;
-  }
+    .market-links {
+        flex-direction: column;
+        text-align: center;
+    }
 
-  .header-buttons {
-      flex-wrap: wrap;
-      justify-content: center;
-  }
+    .header-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }

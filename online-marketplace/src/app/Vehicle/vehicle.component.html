@@ -1,5 +1,6 @@
 <div class="vehicle-container">
   
+  <!-- Sidebar für Filter -->
   <div class="sidebar">
     <h3>Vehicle Filter</h3>
 
@@ -35,9 +36,10 @@
     <button (click)="applyFilters()" class="filter-button">Apply Filters</button>
   </div>
 
-  <!-- Vehicle list -->
+  
   <div class="vehicle-list">
-    <!-- Search bar -->
+    
+   
     <input
       class="search-bar"
       type="text"
@@ -49,7 +51,9 @@
     <h2>Vehicles</h2>
 
     <div class="vehicle-grid">
-      <div *ngFor="let vehicle of filteredVehicles" class="vehicle-card" (click)="goToDetail(vehicle.id)">
+      
+  
+      <div *ngFor="let vehicle of filteredVehicles" [ngClass]="{'vehicle-card': true, 'sold': vehicle.isSold}" (click)="goToDetail(vehicle.id)">
         <img [src]="vehicle.image || 'assets/default-vehicle.jpg'" alt="{{ vehicle.name }}" class="vehicle-image" />
         <div class="vehicle-info">
           <h3>{{ vehicle.name }}</h3>
@@ -58,8 +62,10 @@
           <p class="price">€{{ vehicle.price }}</p>
         </div>
       </div>
+      
     </div>
 
     <p *ngIf="filteredVehicles.length === 0" class="no-results">No vehicles found.</p>
   </div>
+
 </div>

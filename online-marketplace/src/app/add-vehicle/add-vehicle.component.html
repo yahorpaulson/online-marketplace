@@ -88,23 +88,25 @@
     </div>
 
     <!-- Submit Button -->
-    <button class="small-button" type="submit">Add</button>
+    <button class="submit-button" type="submit">Add</button>
   </form>
 
 
-  <div class="user-vehicles-container">
+   <!-- Active & Sold Vehicles -->
+   <div class="user-vehicles-container">
     <!-- Active Vehicles -->
     <div class="vehicle-list">
       <h2>Active Vehicles</h2>
       <div *ngIf="activeVehicles.length > 0; else noActiveVehicles">
         <ul>
           <li *ngFor="let vehicle of activeVehicles">
-            <div class="vehicle-card">
+            <div class="vehicle-card" (click)="editVehicle(vehicle)">
               <img [src]="vehicle.image[0] || 'https://i.i-sgcm.com/used_cars/no_img_300x225.jpg'" alt="{{ vehicle.name }}" />
               <div class="vehicle-info">
                 <h3>{{ vehicle.name }}</h3>
                 <p class="price">€{{ vehicle.price }}</p>
               </div>
+              <button class="delete-btn" (click)="deleteVehicle(vehicle.id, $event)">Delete</button>
             </div>
           </li>
         </ul>
@@ -126,6 +128,7 @@
                 <h3>{{ vehicle.name }}</h3>
                 <p class="price">€{{ vehicle.price }}</p>
               </div>
+              <button class="delete-btn" (click)="deleteVehicle(vehicle.id, $event)">Delete</button>
             </div>
           </li>
         </ul>
