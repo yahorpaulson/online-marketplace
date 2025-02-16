@@ -175,13 +175,78 @@
     flex-direction: column;
   }
 
+  /* Sidebar-Standard (Desktop sichtbar, Mobile versteckt) */
+.sidebar {
+  width: 300px;
+  background: #252525;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  left: 0;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Sidebar für Mobile Geräte standardmäßig versteckt */
+@media (max-width: 768px) {
   .sidebar {
-    width: 100%;
-    min-width: auto;
-    max-width: 100%;
-    position: relative;
-    min-height: auto;
+    position: fixed;
+    left: -320px; /* Versteckt */
+    width: 280px;
+    height: 100vh;
+    background: #252525;
+    padding: 15px;
+    box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.3);
+    transition: left 0.3s ease-in-out;
   }
+
+  /* Wenn Sidebar geöffnet ist */
+  .sidebar.open {
+    left: 0;
+  }
+}
+
+/* Sidebar-Button für Mobile */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  left: 10px;
+  top: 10px;
+  background: #379095;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .sidebar-toggle {
+    display: block;
+  }
+}
+
+/* Close-Button nur auf mobilen Geräten */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+  display: none;
+}
+
+
+@media (max-width: 768px) {
+  .close-btn {
+    display: block;
+  }
+}
+
+
 
   .vehicle-list {
     width: 100%;

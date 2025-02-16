@@ -1,40 +1,49 @@
 <div class="vehicle-container">
   
-  <!-- Sidebar für Filter -->
-  <div class="sidebar">
-    <h3>Vehicle Filter</h3>
+  <!-- Sidebar Button (nur auf mobilen Geräten sichtbar) -->
+  <button *ngIf="!isDesktop" class="sidebar-toggle" (click)="toggleSidebar()">☰ Filters</button>
 
-    <label>Category:</label>
-    <select [(ngModel)]="currentVehicleType" (change)="applyFilters()">
-      <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
-    </select>
 
-    <label>Brand:</label>
-    <select [(ngModel)]="filters.brand" name="brand" (change)="onBrandChange()">
-      <option value="0">All Brands</option>
-      <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
-    </select>
+<!-- Sidebar -->
+<div class="sidebar" [class.open]="sidebarOpen">
+  <span *ngIf="!isDesktop" class="close-btn" (click)="closeSidebar()">×</span>
 
-    <label>Model:</label>
-    <select [(ngModel)]="filters.model" name="model">
-      <option value="0">All Models</option>
-      <option *ngFor="let model of models" [value]="model.id">{{ model.name }}</option>
-    </select>
 
-    <label>Max Price (€):</label>
-    <input type="number" [(ngModel)]="filters.maxPrice" name="maxPrice" />
+  <h3>Vehicle Filter</h3>
 
-    <label>Max Mileage:</label>
-    <input type="number" [(ngModel)]="filters.maxMileage" name="maxMileage" />
+  <label>Category:</label>
+  <select [(ngModel)]="currentVehicleType" (change)="applyFilters()">
+    <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+  </select>
 
-    <label>Year from:</label>
-    <select [(ngModel)]="filters.minYear" name="minYear">
-      <option value="0">All Years</option>
-      <option *ngFor="let year of firstRegistrationYears" [value]="year">{{ year }}</option>
-    </select>
+  <label>Brand:</label>
+  <select [(ngModel)]="filters.brand" name="brand" (change)="onBrandChange()">
+    <option value="0">All Brands</option>
+    <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
+  </select>
 
-    <button (click)="applyFilters()" class="filter-button">Apply Filters</button>
-  </div>
+  <label>Model:</label>
+  <select [(ngModel)]="filters.model" name="model">
+    <option value="0">All Models</option>
+    <option *ngFor="let model of models" [value]="model.id">{{ model.name }}</option>
+  </select>
+
+  <label>Max Price (€):</label>
+  <input type="number" [(ngModel)]="filters.maxPrice" name="maxPrice" />
+
+  <label>Max Mileage:</label>
+  <input type="number" [(ngModel)]="filters.maxMileage" name="maxMileage" />
+
+  <label>Year from:</label>
+  <select [(ngModel)]="filters.minYear" name="minYear">
+    <option value="0">All Years</option>
+    <option *ngFor="let year of firstRegistrationYears" [value]="year">{{ year }}</option>
+  </select>
+
+  <button type="button" (click)="applyFilters()" class="filter-button">Apply Filters</button>
+
+</div>
+
 
   
   <div class="vehicle-list">

@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,HostListener } from '@angular/core';
 import { VehicleService } from '../services/vehicle.service';
 import { Vehicle } from '../models/Vehicle';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ChangeDetectorRef } from '@angular/core';
+import { SanitizationService } from '../services/sanitization.service';
+
 
 @Component({
   selector: 'app-vehicle',
@@ -19,6 +21,8 @@ export class VehicleComponent implements OnInit {
   brands: any[] = []; // List of brands
   models: any[] = []; // List of models for selected brand
   firstRegistrationYears: number[] = []; 
+  sidebarOpen: boolean = false;
+  isDesktop: boolean = window.innerWidth > 768;
 
   filters = {
     searchTerm: '',
@@ -29,13 +33,22 @@ export class VehicleComponent implements OnInit {
     minYear: null as number | null,
   };
 
-  constructor(private vehicleService: VehicleService, private router: Router,private cdRef: ChangeDetectorRef) {}
+  constructor(private vehicleService: VehicleService
+            , private router: Router,
+             private cdRef: ChangeDetectorRef,
+             private sanitizationService: SanitizationService){}
   categories: string[] = ['Car', 'Truck', 'Motorcycle', 'Caravan'];
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.isDesktop = window.innerWidth > 768;
+  }
+
 
   ngOnInit() {
     this.loadVehicles();
     this.loadBrands(); 
     this.generateFirstRegistrationYears();
+    this.isDesktop = window.innerWidth > 768;
   }
 
   /**
@@ -83,7 +96,6 @@ export class VehicleComponent implements OnInit {
       this.models = [];
     }
   }
-
   selectVehicleType(type: string) {
     console.log("Selected vehicle type:", type); // Debugging
     this.currentVehicleType = type;
@@ -111,11 +123,11 @@ export class VehicleComponent implements OnInit {
       console.log('Checking vehicle:', v); // Debugging
       
       const matchesCategory = v.category === this.currentVehicleType;
-      const matchesSearchTerm = this.filters.searchTerm
-        ? v.name.toLowerCase().includes(this.filters.searchTerm.toLowerCase()) ||
-          v.description.toLowerCase().includes(this.filters.searchTerm.toLowerCase())
+      const sanitizedSearchTerm = this.sanitizationService.sanitizeInput(this.filters.searchTerm);
+      const matchesSearchTerm = sanitizedSearchTerm
+        ? v.name.toLowerCase().includes(sanitizedSearchTerm.toLowerCase()) ||
+          v.description.toLowerCase().includes(sanitizedSearchTerm.toLowerCase())
         : true;
-
       const matchesBrand = this.filters.brand
         ? Number(v.brandId) === Number(this.filters.brand)
         : true;
@@ -136,13 +148,18 @@ export class VehicleComponent implements OnInit {
     this.cdRef.detectChanges(); // 🔥 Manuelle Aktualisierung erzwingen!
   }
   
+
+ 
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
   
-  
+  closeSidebar() {
+    this.sidebarOpen = false;
+  }
   
 
-  /**
-   * Navigate to vehicle details page.
-   */
   goToDetail(vehicleId: number): void {
     this.router.navigate(['/vehicleMarket/vehicles', vehicleId]);
   }
