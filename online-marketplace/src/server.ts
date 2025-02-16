@@ -569,15 +569,7 @@ app.get('/api/models/:brand_id', async (req, res) => {
   }
 });
 
-app.get('/api/first-registrations', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM first_registration ORDER BY year ASC');
-    res.json(result.rows);
-  } catch (error) {
-    console.error('Error fetching first registration years:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
+
 
 
 

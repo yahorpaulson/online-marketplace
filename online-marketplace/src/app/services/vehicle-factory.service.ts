@@ -29,7 +29,7 @@ export class VehicleFactoryService {
           data.fuelType,
           data.power,
           data.description,
-          normalizedImage, // Nutze das normalisierte image
+          normalizedImage, 
           data.isSold,
           data.sellerId,
           data.location,
@@ -69,7 +69,7 @@ export class VehicleFactoryService {
           data.fuelType,
           data.power,
           data.description,
-          normalizedImage, // Nutze das normalisierte image
+          normalizedImage, 
           data.isSold,
           data.sellerId,
           data.location,
@@ -106,7 +106,7 @@ export class VehicleFactoryService {
           data.fuelType,
           data.power,
           data.description,
-          normalizedImage, // Nutze das normalisierte image
+          normalizedImage, 
           data.isSold,
           data.sellerId,
           data.location,
@@ -139,7 +139,7 @@ export class VehicleFactoryService {
           data.fuelType,
           data.power,
           data.description,
-          normalizedImage, // Nutze das normalisierte image
+          normalizedImage, 
           data.isSold,
           data.sellerId,
           data.location,
