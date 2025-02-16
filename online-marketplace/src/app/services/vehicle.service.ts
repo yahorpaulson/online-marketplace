@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { VehicleFactoryService } from './vehicle-factory.service';
 import { Vehicle } from '../models/Vehicle';
 import { VehicleData } from '../models/VehicleData';
-import { camelToSnake, snakeToCamel } from './snakeToCamel';
+import { camelToSnake, snakeToCamel } from '../utality/snakeToCamel';
 
 @Injectable({
   providedIn: 'root',

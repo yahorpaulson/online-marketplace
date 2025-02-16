@@ -22,6 +22,7 @@ export class AddVehicleComponent implements OnInit {
   powerOptions: number[] = [];
   activeVehicles:any[]=[];
   soldVehicles:any[]=[];
+  
 
 
   constructor(private fb: FormBuilder, private vehicleService: VehicleService, private authService:AuthserviceService) {
@@ -56,7 +57,7 @@ export class AddVehicleComponent implements OnInit {
 
   ngOnInit() {
     this.loadBrands();
-    this.loadFirstRegistrationYears();
+    this.generateFirstRegistrationYears();
     this.generatePowerOptions();
     this.loadUserVehicles();
   }
@@ -93,11 +94,10 @@ loadModels(brandId: number) {
   });
 }
 
-loadFirstRegistrationYears() {
-  this.vehicleService.getFirstRegistrationYears().subscribe({
-    next: (data) => this.firstRegistrationYears = data,
-    error: (err) => console.error('Error loading first registration years:', err)
-  });
+generateFirstRegistrationYears() {
+  const startYear = 1990;
+  const endYear = new Date().getFullYear(); // Aktuelles Jahr
+  this.firstRegistrationYears = Array.from({ length: endYear - startYear + 1 }, (_, i) => startYear + i);
 }
  
 onCategoryChange() {
