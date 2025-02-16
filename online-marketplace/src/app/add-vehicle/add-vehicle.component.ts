@@ -36,7 +36,7 @@ export class AddVehicleComponent implements OnInit {
       mileage: [0, [Validators.required, Validators.min(0)]],
       firstRegistration: ['', Validators.required],
       fuelType: ['', Validators.required],
-      power: [0, [Validators.required, Validators.min(0)]],
+      power: [0],
       description: ['', Validators.required],
       image: [''],
       isSold: [false], 
@@ -125,7 +125,7 @@ onSubmit() {
     return;
   }
 
-  // 🧹 Input-Daten holen & sanitisieren
+  // 🧹 Sanitize user input
   let { brand, model, firstRegistration, power, name, description, ...formData } = this.vehicleForm.value;
 
   name = this.sanitizationService.sanitizeInput(name);
@@ -140,7 +140,6 @@ onSubmit() {
     return;
   }
 
-
   const vehicleData = {
     ...formData,
     name,
@@ -150,25 +149,25 @@ onSubmit() {
     modelId: selectedModel.id,
     model: selectedModel.name,
     firstRegistration: firstRegistration ? Number(firstRegistration) : null,
-    power: power ? Number(power) : null,
+    power: power ? Number(power) : 0, // Falls power null ist, setze 0
   };
 
-  console.log('Sending vehicle data:', vehicleData);
+  console.log('🚀 Sending vehicle data:', vehicleData);
 
-  // 🚀 Fahrzeug an Backend senden
   this.vehicleService.addVehicle(vehicleData).subscribe({
     next: (response) => {
-      console.log('Vehicle added:', response);
+      console.log('✅ Vehicle added:', response);
       alert('Vehicle successfully added!');
       this.vehicleForm.reset();
-      this.loadUserVehicles(); // 🔄 Aktualisiert die Fahrzeugliste
+      this.loadUserVehicles();
     },
     error: (err) => {
-      console.error('Error adding vehicle:', err);
+      console.error('❌ Error adding vehicle:', err);
       alert(`Error adding vehicle: ${err.message}`);
     },
   });
 }
+
 
   
 
