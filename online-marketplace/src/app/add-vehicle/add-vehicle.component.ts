@@ -27,7 +27,7 @@ export class AddVehicleComponent implements OnInit {
   constructor(private fb: FormBuilder, private vehicleService: VehicleService, private authService:AuthserviceService) {
     this.vehicleForm = this.fb.group({
       name: ['', Validators.required],
-      category: ['', Validators.required], // Neue Kategorieauswahl
+      category: ['', Validators.required],
       brand: ['', Validators.required],
       model: ['', Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],
@@ -37,8 +37,8 @@ export class AddVehicleComponent implements OnInit {
       power: [0, [Validators.required, Validators.min(0)]],
       description: ['', Validators.required],
       image: [''],
-      isSold: [false],
-      sellerId: [this.authService.getUserId(), Validators.required],
+      isSold: [false], 
+      sellerId: [this.authService.getUserId()], 
       location: [''],
       doors: [4],
       seats: [5],
@@ -51,6 +51,7 @@ export class AddVehicleComponent implements OnInit {
       batteryCapacity: [null],
       range: [null],
     });
+    
   }
 
   ngOnInit() {
@@ -99,87 +100,82 @@ loadFirstRegistrationYears() {
   });
 }
  
-  onCategoryChange() {
-    const selectedCategory = this.vehicleForm.get('category')?.value;
-    this.brands = this.allBrands.filter((brand) => brand.category === selectedCategory);
-    this.models = []; // Modelle zurücksetzen
-    this.vehicleForm.get('brand')?.setValue('');
-    this.vehicleForm.get('model')?.setValue('');
-  }
+onCategoryChange() {
+  const selectedCategory = this.vehicleForm.get('category')?.value;
+  if (!selectedCategory) return;
 
-  
-  onBrandChange() {
-    const selectedBrandId = this.vehicleForm.get('brand')?.value;
-    console.log('Gewählte Marke ID:', selectedBrandId);
-  
-    this.loadModels(selectedBrandId); 
-  }
+  this.brands = this.allBrands.filter((brand) => brand.category === selectedCategory);
+  this.vehicleForm.patchValue({ brand: '', model: '' });
+  this.models = [];
+}
+
+onBrandChange() {
+  const selectedBrandId = this.vehicleForm.get('brand')?.value;
+  if (!selectedBrandId) return;
+
+  this.loadModels(selectedBrandId);
+}
+
   
 
   onSubmit() {
     if (this.vehicleForm.valid) {
-      let formData = this.vehicleForm.value;
-      
+      const { brand, model, firstRegistration, power, ...formData } = this.vehicleForm.value;
   
-      // Finde die ausgewählte Marke
-      const selectedBrand = this.allBrands.find(b => b.id === Number(formData.brand));
-      const selectedModel = this.models.find(m => m.id === Number(formData.model));
+      const selectedBrand = this.allBrands.find(b => b.id === Number(brand));
+      const selectedModel = this.models.find(m => m.id === Number(model));
   
       if (!selectedBrand || !selectedModel) {
-        alert("Ungültige Marke oder Modell ausgewählt.");
+        alert("Invalid brand or model selection.");
         return;
       }
   
-      // Erstelle ein neues Objekt für die API-Anfrage
       const vehicleData = {
         ...formData,
-        brandId: selectedBrand.id,   
-        brand: selectedBrand.name,   
-        modelId: selectedModel.id,   
-        model: selectedModel.name,   
-        firstRegistration: parseInt(formData.firstRegistration, 10), 
-        power: parseInt(formData.power, 10) ,
-        isSold: false, // Stelle sicher, dass isSold immer gesetzt ist
-        sellerId: this.authService.getUserId(), // Hier die richtige ID setzen
-        
+        brandId: selectedBrand.id,
+        brand: selectedBrand.name,
+        modelId: selectedModel.id,
+        model: selectedModel.name,
+        firstRegistration: firstRegistration ? parseInt(firstRegistration, 10) : null,
+        power: power ? parseInt(power, 10) : null,
       };
-      vehicleData.sellerId = this.authService.getUserId(); 
-      console.log('Sende Fahrzeugdaten:', vehicleData);
+  
+      console.log('Sending vehicle data:', vehicleData);
   
       this.vehicleService.addVehicle(vehicleData).subscribe({
         next: (response) => {
-          console.log('Fahrzeug hinzugefügt:', response);
-          alert('Fahrzeug erfolgreich hinzugefügt!');
+          console.log('Vehicle added:', response);
+          alert('Vehicle successfully added!');
           this.vehicleForm.reset();
+          this.loadUserVehicles(); // 🚀 Liste neu laden
         },
         error: (err) => {
-          console.error('Fehler beim Hinzufügen:', err);
-          alert(`Fehler beim Hinzufügen: ${err.message}`);
+          console.error('Error adding vehicle:', err);
+          alert(`Error adding vehicle: ${err.message}`);
         },
       });
     } else {
-      alert('Bitte füllen Sie alle erforderlichen Felder aus.');
+      alert('Please fill out all required fields.');
     }
   }
+  
 
   loadUserVehicles(): void {
     const userId = this.authService.getUserId();
-
-    if (userId === null) {
-        console.error("User ID is null. Cannot fetch user vehicles.");
-        return;
+    if (!userId) {
+      console.error("User ID is null. Cannot fetch user vehicles.");
+      return;
     }
-
+  
     this.vehicleService.getUserVehicles(userId).subscribe({
-        next: (vehicles) => {
-            this.activeVehicles = vehicles.filter(v => !v.isSold);
-            this.soldVehicles = vehicles.filter(v => v.isSold);
-            console.log("Active Vehicles:", this.activeVehicles);
-            console.log("Sold Vehicles:", this.soldVehicles);
-        },
-        error: (err) => console.error("Error fetching user vehicles:", err),
+      next: (vehicles) => {
+        this.activeVehicles = vehicles.filter(v => !v.isSold);
+        this.soldVehicles = vehicles.filter(v => v.isSold);
+      },
+      error: (err) => console.error("Error fetching user vehicles:", err),
     });
-}
+  }
+  
 
 
   deleteVehicle(vehicleId: number): void {
@@ -196,19 +192,24 @@ loadFirstRegistrationYears() {
 }
 onFileSelect(event: Event) {
   const input = event.target as HTMLInputElement;
-  
-  if (input.files && input.files.length > 0) {
-    const file = input.files[0];
-    const reader = new FileReader();
+  if (!input.files?.length) return;
 
-    reader.onload = (e: any) => {
-      // Bildvorschau anzeigen & in das Formular setzen
-      this.vehicleForm.patchValue({ image: e.target.result });
-      console.log('Selected Image:', e.target.result);
-    };
+  const file = input.files[0];
+  const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
 
-    reader.readAsDataURL(file); // Konvertiert Datei in Base64
+  if (!allowedTypes.includes(file.type)) {
+    alert("Only JPG and PNG images are allowed.");
+    return;
   }
+
+  const reader = new FileReader();
+  reader.onload = (e: any) => {
+    this.vehicleForm.patchValue({ image: e.target.result });
+    console.log('Selected Image:', e.target.result);
+  };
+
+  reader.readAsDataURL(file);
 }
+
 
 }
