@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { VehicleService } from '../services/vehicle.service';
 import { CommonModule } from '@angular/common';
 import { AuthserviceService } from '../authservice.service';
+import { SanitizationService } from '../services/sanitization.service';
 
 @Component({
   selector: 'app-add-vehicle',
@@ -25,7 +26,7 @@ export class AddVehicleComponent implements OnInit {
   
 
 
-  constructor(private fb: FormBuilder, private vehicleService: VehicleService, private authService:AuthserviceService) {
+  constructor(private fb: FormBuilder, private vehicleService: VehicleService, private authService:AuthserviceService, private sanitizationService:SanitizationService) {
     this.vehicleForm = this.fb.group({
       name: ['', Validators.required],
       category: ['', Validators.required],
@@ -118,46 +119,57 @@ onBrandChange() {
 
   
 
-  onSubmit() {
-    if (this.vehicleForm.valid) {
-      const { brand, model, firstRegistration, power, ...formData } = this.vehicleForm.value;
-  
-      const selectedBrand = this.allBrands.find(b => b.id === Number(brand));
-      const selectedModel = this.models.find(m => m.id === Number(model));
-  
-      if (!selectedBrand || !selectedModel) {
-        alert("Invalid brand or model selection.");
-        return;
-      }
-  
-      const vehicleData = {
-        ...formData,
-        brandId: selectedBrand.id,
-        brand: selectedBrand.name,
-        modelId: selectedModel.id,
-        model: selectedModel.name,
-        firstRegistration: firstRegistration ? parseInt(firstRegistration, 10) : null,
-        power: power ? parseInt(power, 10) : null,
-      };
-  
-      console.log('Sending vehicle data:', vehicleData);
-  
-      this.vehicleService.addVehicle(vehicleData).subscribe({
-        next: (response) => {
-          console.log('Vehicle added:', response);
-          alert('Vehicle successfully added!');
-          this.vehicleForm.reset();
-          this.loadUserVehicles(); // 🚀 Liste neu laden
-        },
-        error: (err) => {
-          console.error('Error adding vehicle:', err);
-          alert(`Error adding vehicle: ${err.message}`);
-        },
-      });
-    } else {
-      alert('Please fill out all required fields.');
-    }
+onSubmit() {
+  if (!this.vehicleForm.valid) {
+    alert('Please fill out all required fields.');
+    return;
   }
+
+  // 🧹 Input-Daten holen & sanitisieren
+  let { brand, model, firstRegistration, power, name, description, ...formData } = this.vehicleForm.value;
+
+  name = this.sanitizationService.sanitizeInput(name);
+  description = this.sanitizationService.sanitizeInput(description);
+
+  // 🏷️ Brand & Model validieren
+  const selectedBrand = this.allBrands.find(b => b.id === Number(brand));
+  const selectedModel = this.models.find(m => m.id === Number(model));
+
+  if (!selectedBrand || !selectedModel) {
+    alert("Invalid brand or model selection.");
+    return;
+  }
+
+
+  const vehicleData = {
+    ...formData,
+    name,
+    description,
+    brandId: selectedBrand.id,
+    brand: selectedBrand.name,
+    modelId: selectedModel.id,
+    model: selectedModel.name,
+    firstRegistration: firstRegistration ? Number(firstRegistration) : null,
+    power: power ? Number(power) : null,
+  };
+
+  console.log('Sending vehicle data:', vehicleData);
+
+  // 🚀 Fahrzeug an Backend senden
+  this.vehicleService.addVehicle(vehicleData).subscribe({
+    next: (response) => {
+      console.log('Vehicle added:', response);
+      alert('Vehicle successfully added!');
+      this.vehicleForm.reset();
+      this.loadUserVehicles(); // 🔄 Aktualisiert die Fahrzeugliste
+    },
+    error: (err) => {
+      console.error('Error adding vehicle:', err);
+      alert(`Error adding vehicle: ${err.message}`);
+    },
+  });
+}
+
   
 
   loadUserVehicles(): void {
