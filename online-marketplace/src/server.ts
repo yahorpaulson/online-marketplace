@@ -31,7 +31,8 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
-const SECRET_KEY = 'WEBTECHPROJ' //process.env['SECRET_KEY']! ;
+//const SECRET_KEY = 'WEBTECHPROJ' ;
+const SECRET_KEY = process.env['SECRET_KEY']!;
 
 /*const pool = new Pool({
  user: 'postgres',
@@ -138,10 +139,7 @@ app.post('/api/login', async (req: Request, res: Response) => {
     }
 
 
-    /*if (user.password !== password) {
-      return res.status(401).json({ message: 'Invalid username or password' });
-    }
-    */
+
 
     // Create JWT
     const token = jwt.sign(
