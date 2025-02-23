@@ -1,0 +1,17 @@
+.login-container button {
+    margin-left: 5%;
+    color: aliceblue !important;
+    background-color: rgb(60, 161, 140) !important;
+    border: none !important;
+    border-radius: 5px !important;
+    padding: 5px 15px !important;
+    cursor: pointer !important;
+    font-size: 1em !important;
+    box-sizing: border-box !important;
+    text-align: center !important;
+    appearance: none !important;
+}
+
+.login-container button:hover {
+    background-color: rgb(70, 183, 160) !important;
+}

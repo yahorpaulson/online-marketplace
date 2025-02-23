@@ -1,0 +1,24 @@
+.register-container {
+    display: flex;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+input {
+    background-color: aliceblue(243, 243, 243);
+}
+
+button {
+    margin-left: 5%;
+    color: aliceblue;
+    background-color: rgb(60, 161, 140);
+    border: none;
+    border-radius: 5px;
+    padding: 5px 15px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+button:hover {
+    background-color: rgb(70, 183, 160);
+}
