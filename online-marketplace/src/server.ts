@@ -33,13 +33,13 @@ const app = express();
 const angularApp = new AngularNodeAppEngine();
 const SECRET_KEY = 'WEBTECHPROJ' //process.env['SECRET_KEY']! ;
 
-/*const pool = new Pool({
+const pool = new Pool({
  user: 'postgres',
   host: 'localhost', 
   database: 'retail',
   password: 'postgres',
   port: 5432,
-});*/
+});
 /*const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
@@ -48,13 +48,13 @@ const SECRET_KEY = 'WEBTECHPROJ' //process.env['SECRET_KEY']! ;
   port: 5433,
 }); */
 
-const pool = new Pool({
+/*const pool = new Pool({
   user: (process.env['DB_USER']),
   host: process.env['DB_HOST'],
   database: process.env['DB_NAME'],
   password: String(process.env['DB_PASSWORD']),
   port: Number(process.env['DB_PORT'])
-});
+});*/
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -256,12 +256,15 @@ app.get('/api/messages/:userId', async (req: Request, res: Response) => {
       SELECT 
         m.*, 
         p.name AS product_name,
+        v.name AS vehicle_name,
         sender.username AS sender_username,
         receiver.username AS receiver_username
       FROM 
         messages m
       LEFT JOIN 
         products p ON m.product_id = p.id
+      LEFT JOIN 
+        vehicles v ON m.vehicle_id = v.id
       JOIN 
         users AS sender ON m.sender_id = sender.id
       JOIN 
@@ -270,7 +273,7 @@ app.get('/api/messages/:userId', async (req: Request, res: Response) => {
         m.sender_id = $1 OR m.receiver_id = $1
       ORDER BY 
         m.created_at DESC;
-  `;
+    `;
 
     const result = await pool.query(query, [userId]);
     res.status(200).json(result.rows);
@@ -279,6 +282,7 @@ app.get('/api/messages/:userId', async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 
 
