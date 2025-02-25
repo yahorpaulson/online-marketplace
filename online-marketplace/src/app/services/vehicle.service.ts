@@ -47,21 +47,20 @@ export class VehicleService {
     );
   }
   
-  addVehicle(vehicleData: VehicleData): Observable<Vehicle> {
+  addVehicle(vehicleData: VehicleData): Observable<VehicleData> {
     console.log('Sende Fahrzeugdaten an Backend (Camel Case):', vehicleData); 
     
     const snakeCaseData = camelToSnake(vehicleData); 
     console.log('Konvertierte Fahrzeugdaten (Snake Case):', snakeCaseData);
-  
+
     return this.http.post<VehicleData>('http://localhost:4000/api/vehicles', snakeCaseData).pipe(
       map((data) => {
-        console.log('Server Response (Before Conversion):', data);
-        const camelCaseData = snakeToCamel(data); 
-        console.log('Converted to Camel Case:', camelCaseData);
-        return this.vehicleFactory.createVehicleInstance(camelCaseData);
+        console.log('Server Response:', data);
+        return snakeToCamel(data); // Rückgabe als VehicleData, nicht als Vehicle
       })
     );
-  }
+}
+
   
 
   updateVehicle(id: number, vehicleData: VehicleData): Observable<Vehicle> {

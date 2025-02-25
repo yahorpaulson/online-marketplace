@@ -26,7 +26,8 @@ export class AddVehicleComponent implements OnInit {
   
 
 
-  constructor(private fb: FormBuilder, private vehicleService: VehicleService, private authService:AuthserviceService, private sanitizationService:SanitizationService) {
+  constructor(private fb: FormBuilder, private vehicleService: VehicleService, 
+    private authService:AuthserviceService, private sanitizationService:SanitizationService) {
     this.vehicleForm = this.fb.group({
       name: ['', Validators.required],
       category: ['', Validators.required],

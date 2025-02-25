@@ -37,6 +37,7 @@ export class VehicleComponent implements OnInit {
             , private router: Router,
              private cdRef: ChangeDetectorRef,
              private sanitizationService: SanitizationService){}
+
   categories: string[] = ['Car', 'Truck', 'Motorcycle', 'Caravan'];
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -115,7 +116,7 @@ export class VehicleComponent implements OnInit {
   applyFilters() {
     if (!this.currentVehicleType) return;
 
-    console.log('🔍 Applying Filters...');
+    console.log('Applying Filters...');
     console.log('Selected Vehicle Type:', this.currentVehicleType);
     console.log('Filters:', this.filters);
 
@@ -143,9 +144,9 @@ export class VehicleComponent implements OnInit {
       return matchesCategory && matchesSearchTerm && matchesBrand && matchesModel && matchesPrice && matchesMileage && matchesYear;
     });
 
-    console.log('🔍 Filter applied, updated list:', this.filteredVehicles);
+    console.log('Filter applied, updated list:', this.filteredVehicles);
 
-    this.cdRef.detectChanges(); // 🔥 Manuelle Aktualisierung erzwingen!
+    this.cdRef.detectChanges(); 
   }
   
 
